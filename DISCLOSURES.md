@@ -13,6 +13,7 @@ This document tracks all third-party libraries, APIs, external data sources, and
 - **H3 (v4)**: Uber's Hexagonal Hierarchical Spatial Indexing System.
 - **HTTPX**: Fully featured HTTP client for Python 3 with async support.
 - **Pytest**: Python testing framework.
+- **defusedxml**: XML package providing safe parsing and protection against XML vulnerabilities (XXE, entity expansion / billion laughs attacks).
 
 ## External APIs & Data Sources (Planned & Ingested)
 - **Open-Meteo**: Free weather API for precipitation, rainfall rates, and historical data.
