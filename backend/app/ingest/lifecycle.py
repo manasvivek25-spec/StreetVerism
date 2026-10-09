@@ -55,48 +55,55 @@ def resolve_superseded_ids(alerts: List[Alert], now: datetime | str) -> Set[str]
     now_dt = _to_utc_datetime(now)
     alert_map: Dict[str, Alert] = {a.id: a for a in alerts}
 
-    # Step 1: Build effective supersede edges: source -> target (source supersedes target)
-    edges: Dict[str, str] = {}
+    # Step 1: Build effective supersede edges: source -> targets (source supersedes targets)
+    edges: Dict[str, Set[str]] = {}
     for alert in alerts:
         if alert.supersedes:
-            target_id = alert.supersedes
+            target_ref = alert.supersedes
             sent_dt = _to_utc_datetime(alert.sent_at)
 
             # Supersede takes effect only when superseding alert has been published
             if sent_dt <= now_dt:
-                if target_id not in alert_map:
-                    logger.warning("Alert %s references unknown superseded alert ID '%s'. Ignoring reference.", alert.id, target_id)
+                matching_targets = [
+                    a.id for a in alerts if a.id == target_ref or a.id.startswith(f"{target_ref}#")
+                ]
+                if not matching_targets:
+                    logger.warning("Alert %s references unknown superseded alert ID '%s'. Ignoring reference.", alert.id, target_ref)
                     continue
-                edges[alert.id] = target_id
+                if alert.id not in edges:
+                    edges[alert.id] = set()
+                edges[alert.id].update(matching_targets)
 
     # Step 2: Cycle detection & resolution
-    # Detect 2-cycles (A -> B and B -> A) and general cycles
-    # For any pair where edges[A] == B and edges[B] == A:
+    # Detect 2-cycles (A -> B and B -> A)
     # Compare sent_at: keep edge from the later alert; drop edge from the earlier alert.
-    resolved_edges: Dict[str, str] = dict(edges)
-    for src, tgt in list(edges.items()):
-        if edges.get(tgt) == src:
-            logger.warning("Supersede cycle detected between %s and %s. Breaking cycle.", src, tgt)
-            src_sent = _to_utc_datetime(alert_map[src].sent_at)
-            tgt_sent = _to_utc_datetime(alert_map[tgt].sent_at)
-            if src_sent >= tgt_sent:
-                # src is newer; drop tgt -> src edge
-                if tgt in resolved_edges:
-                    del resolved_edges[tgt]
-            else:
-                # tgt is newer; drop src -> tgt edge
-                if src in resolved_edges:
-                    del resolved_edges[src]
+    resolved_edges: Dict[str, Set[str]] = {k: set(v) for k, v in edges.items()}
+    for src in list(edges.keys()):
+        for tgt in list(edges[src]):
+            if tgt in edges and src in edges[tgt]:
+                logger.warning("Supersede cycle detected between %s and %s. Breaking cycle.", src, tgt)
+                src_sent = _to_utc_datetime(alert_map[src].sent_at)
+                tgt_sent = _to_utc_datetime(alert_map[tgt].sent_at)
+                if src_sent >= tgt_sent:
+                    # src is newer; drop tgt -> src edge
+                    if tgt in resolved_edges:
+                        resolved_edges[tgt].discard(src)
+                else:
+                    # tgt is newer; drop src -> tgt edge
+                    if src in resolved_edges:
+                        resolved_edges[src].discard(tgt)
 
     # Step 3: Compute all superseded IDs by traversing chain
     superseded_ids: Set[str] = set()
-    for src, tgt in resolved_edges.items():
-        curr = tgt
+    for src in resolved_edges:
+        queue = list(resolved_edges[src])
         visited = set()
-        while curr and curr not in visited:
-            visited.add(curr)
-            superseded_ids.add(curr)
-            curr = resolved_edges.get(curr)
+        while queue:
+            curr = queue.pop(0)
+            if curr not in visited:
+                visited.add(curr)
+                superseded_ids.add(curr)
+                queue.extend(resolved_edges.get(curr, set()))
 
     return superseded_ids
 

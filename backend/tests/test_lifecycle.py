@@ -147,3 +147,65 @@ def test_expire_alert_now():
     expired = expire_alert_now(a, now_str)
     assert expired.expires_at == "2026-10-10T12:30:00.000000Z"
     assert not is_temporally_active(expired, "2026-10-10T12:30:01Z")
+
+
+def test_cancel_two_area_alert_deactivates_both_polygons():
+    """Verify Cancel referencing base identifier deactivates all multi-area polygons ({id}#1, {id}#2)."""
+    a1 = _make_alert("alt_multi#1", "2026-10-10T10:00:00Z", "2026-10-10T18:00:00Z")
+    a2 = _make_alert("alt_multi#2", "2026-10-10T10:00:00Z", "2026-10-10T18:00:00Z")
+    cancel = _make_alert("alt_cancel", "2026-10-10T11:00:00Z", "2026-10-10T11:00:00Z", supersedes="alt_multi")
+
+    alerts = [a1, a2, cancel]
+    active_before = get_active_alerts(alerts, "2026-10-10T10:30:00Z")
+    assert len(active_before) == 2
+    assert {a.id for a in active_before} == {"alt_multi#1", "alt_multi#2"}
+
+    active_after = get_active_alerts(alerts, "2026-10-10T11:30:00Z")
+    assert len(active_after) == 0
+
+
+def test_update_two_area_alert_deactivates_both_polygons():
+    """Verify Update referencing base identifier deactivates all multi-area polygons and activates replacement."""
+    a1 = _make_alert("alt_multi#1", "2026-10-10T10:00:00Z", "2026-10-10T18:00:00Z")
+    a2 = _make_alert("alt_multi#2", "2026-10-10T10:00:00Z", "2026-10-10T18:00:00Z")
+    update = _make_alert("alt_update", "2026-10-10T12:00:00Z", "2026-10-10T20:00:00Z", supersedes="alt_multi")
+
+    alerts = [a1, a2, update]
+    active = get_active_alerts(alerts, "2026-10-10T12:30:00Z")
+    assert len(active) == 1
+    assert active[0].id == "alt_update"
+
+
+def test_cap_two_reference_cancel_deactivates_both():
+    """Verify a Cancel CAP XML containing two references deactivates both referenced alerts."""
+    from backend.app.ingest.cap import parse_cap_xml
+
+    orig1 = _make_alert("REF-01", "2026-10-10T08:00:00Z", "2026-10-10T18:00:00Z")
+    orig2 = _make_alert("REF-02", "2026-10-10T08:30:00Z", "2026-10-10T18:00:00Z")
+
+    xml_cancel_multi = """<?xml version="1.0" encoding="UTF-8"?>
+    <alert xmlns="urn:oasis:names:tc:emergency:cap:1.2">
+      <identifier>CAP-CANCEL-MULTI</identifier>
+      <sender>TNSDMA</sender>
+      <sent>2026-10-10T10:00:00+00:00</sent>
+      <status>Actual</status>
+      <msgType>Cancel</msgType>
+      <references>TNSDMA,REF-01,2026-10-10T08:00:00+00:00 TNSDMA,REF-02,2026-10-10T08:30:00+00:00</references>
+      <info>
+        <category>Met</category>
+        <event>Multi-Alert Cancellation</event>
+        <area>
+          <polygon>12.97,80.21 12.98,80.21 12.98,80.22 12.97,80.21</polygon>
+        </area>
+      </info>
+    </alert>"""
+
+    cancel_records = parse_cap_xml(xml_cancel_multi)
+    assert len(cancel_records) == 2
+    assert any(c.supersedes == "REF-01" for c in cancel_records)
+    assert any(c.supersedes == "REF-02" for c in cancel_records)
+    assert any(c.id == "CAP-CANCEL-MULTI~ref2" for c in cancel_records)
+
+    all_alerts = [orig1, orig2] + cancel_records
+    active = get_active_alerts(all_alerts, "2026-10-10T10:30:00Z")
+    assert len(active) == 0

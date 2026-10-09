@@ -203,7 +203,7 @@ def parse_cap_xml(xml_content: str, is_demo: bool = True) -> List[Alert]:
         if msg_type == "cancel" and superseded_ids:
             # CAP 1.2 permits omitting <info> for Cancel messages; emit minimal cancel alert to supersede reference
             dummy_poly = GeoJSONPolygon(coordinates=[[[0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0]]])
-            return [
+            alerts = [
                 Alert(
                     id=identifier or f"cancel_{superseded_ids[0]}",
                     source="official_cap",
@@ -222,6 +222,27 @@ def parse_cap_xml(xml_content: str, is_demo: bool = True) -> List[Alert]:
                     is_replay=False,
                 )
             ]
+            for n, ref_id in enumerate(superseded_ids[1:], start=2):
+                alerts.append(
+                    Alert(
+                        id=f"{identifier}~ref{n}",
+                        source="official_cap",
+                        sender=sender,
+                        hazard="flood",
+                        severity="minor",
+                        urgency="immediate",
+                        certainty="observed",
+                        area=dummy_poly,
+                        instruction_keys=["FOLLOW_OFFICIAL_ONLY"],
+                        params={},
+                        sent_at=sent_iso,
+                        expires_at=sent_iso,
+                        supersedes=ref_id,
+                        published_by="cap_feed",
+                        is_replay=False,
+                    )
+                )
+            return alerts
         raise ValueError(f"CAP alert {identifier} contains no <info> elements.")
 
     selected_info = info_blocks[0]
@@ -336,5 +357,29 @@ def parse_cap_xml(xml_content: str, is_demo: bool = True) -> List[Alert]:
                 is_replay=False,
             )
         )
+
+    # If multiple references are present, emit one extra marker record per additional reference
+    if len(superseded_ids) > 1 and normalized_alerts:
+        marker_area = normalized_alerts[0].area
+        for n, ref_id in enumerate(superseded_ids[1:], start=2):
+            normalized_alerts.append(
+                Alert(
+                    id=f"{identifier}~ref{n}",
+                    source="official_cap",
+                    sender=sender,
+                    hazard=hazard,
+                    severity=severity,
+                    urgency=urgency,
+                    certainty=certainty,
+                    area=marker_area,
+                    instruction_keys=instruction_keys,
+                    params={},
+                    sent_at=sent_iso,
+                    expires_at=sent_iso,
+                    supersedes=ref_id,
+                    published_by="cap_feed",
+                    is_replay=False,
+                )
+            )
 
     return normalized_alerts
