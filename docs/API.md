@@ -29,6 +29,11 @@ Standard health check endpoints are accessible at both `/health` and `/api/healt
   - Devices are identified by random client-generated UUIDs (`device_id`).
   - Check-in and report coordinates are rounded to 4 decimal places (~11m precision).
   - Check-in records have a strict 48-hour retention TTL.
+- **Mock Mode (`MOCK=1`)**:
+  - In mock mode (`MOCK=1`), `/health` and `/api/health` return `"mode": "mock"`. (When a scenario is active, `"mode": "replay"`; in live mode, `"mode": "live"`).
+  - Every response across `/api/*` and `/health` includes the response header `X-Mock-Data: 1` when `MOCK=1`, allowing the frontend PWA to display an honest "Mock Data" badge.
+  - In live mode (`MOCK=0`), the `X-Mock-Data` header is absent.
+  - All mock alerts and shelters are strictly labeled as demonstration data (`sender: "... (demo)"`, `is_demo: true`).
 
 ---
 

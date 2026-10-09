@@ -48,7 +48,7 @@ class StateResponse(BaseModel):
 class HealthResponse(BaseModel):
     """System liveness and configuration status."""
     status: str = "healthy"
-    mode: Literal["live", "replay"] = "live"
+    mode: Literal["live", "replay", "mock"] = "live"
     is_replay: bool = False
     version: str = "1.0.0"
     server_time: str

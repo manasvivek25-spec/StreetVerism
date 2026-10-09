@@ -36,6 +36,39 @@ def test_health_endpoints():
         assert "version" in data
 
 
+def test_mock_mode_header_and_mode_switching(monkeypatch):
+    """Verify: with MOCK=1, /health returns mode 'mock' and X-Mock-Data: 1 is present; with MOCK=0, header is absent."""
+    # Test MOCK=1
+    monkeypatch.setenv("MOCK", "1")
+    get_settings.cache_clear()
+    res_mock = client.get("/health")
+    assert res_mock.status_code == 200
+    assert res_mock.json()["mode"] == "mock"
+    assert res_mock.headers.get("X-Mock-Data") == "1"
+
+    res_api_mock = client.get("/api/health")
+    assert res_api_mock.status_code == 200
+    assert res_api_mock.json()["mode"] == "mock"
+    assert res_api_mock.headers.get("X-Mock-Data") == "1"
+
+    # Test MOCK=0
+    monkeypatch.setenv("MOCK", "0")
+    get_settings.cache_clear()
+    res_live = client.get("/health")
+    assert res_live.status_code == 200
+    assert res_live.json()["mode"] == "live"
+    assert "X-Mock-Data" not in res_live.headers
+
+    res_api_live = client.get("/api/health")
+    assert res_api_live.status_code == 200
+    assert res_api_live.json()["mode"] == "live"
+    assert "X-Mock-Data" not in res_api_live.headers
+
+    # Reset back to MOCK=1
+    monkeypatch.setenv("MOCK", "1")
+    get_settings.cache_clear()
+
+
 def test_state_endpoint_english():
     """Verify /api/state returns complete tourist payload in English."""
     res = client.get("/api/state?lat=13.04&lng=80.23&lang=en")

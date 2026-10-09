@@ -139,12 +139,20 @@ def load_mock_checkins() -> Dict[str, Any]:
 @router.get("/health", response_model=HealthResponse, tags=["System"])
 async def get_health() -> HealthResponse:
     """Return system health status and wall-clock timestamp."""
+    settings = get_settings()
     is_rep = _SCENARIO_STATE["is_replay"]
+    if is_rep:
+        mode = "replay"
+    elif settings.mock:
+        mode = "mock"
+    else:
+        mode = "live"
+
     return HealthResponse(
         status="healthy",
-        mode="replay" if is_rep else "live",
+        mode=mode,
         is_replay=is_rep,
-        version="1.0.0",
+        version=settings.project_version,
         server_time=_now_utc(),
     )
 
