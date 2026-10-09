@@ -1,5 +1,6 @@
 """Main FastAPI application entry point for StreetVerism."""
 
+import logging
 from datetime import datetime, timezone
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -7,6 +8,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from backend.app.api.routes import get_health, router as api_router
 from backend.app.config import get_settings
 from backend.app.models.state import HealthResponse
+
+# Configure structured logging with exact logger name
+logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] [%(name)s]: %(message)s")
+logger = logging.getLogger("streetverism")
 
 settings = get_settings()
 
