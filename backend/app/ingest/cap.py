@@ -131,7 +131,7 @@ def cap_circle_to_polygon(circle_text: str) -> GeoJSONPolygon:
     deg_radius = radius_km / 111.0
     # Create buffered shapely circle point in (lng, lat)
     center = Point(lng, lat)
-    poly = center.buffer(deg_radius, resolution=16)
+    poly = center.buffer(deg_radius, quad_segs=16)
 
     coords = [[round(pt[0], 6), round(pt[1], 6)] for pt in poly.exterior.coords]
     return GeoJSONPolygon(coordinates=[coords])
@@ -200,6 +200,28 @@ def parse_cap_xml(xml_content: str, is_demo: bool = True) -> List[Alert]:
     # Select preferred <info> block (prefer language starts with 'en', else first)
     info_blocks = _find_all_elems(root, "info")
     if not info_blocks:
+        if msg_type == "cancel" and superseded_ids:
+            # CAP 1.2 permits omitting <info> for Cancel messages; emit minimal cancel alert to supersede reference
+            dummy_poly = GeoJSONPolygon(coordinates=[[[0.0, 0.0], [0.0, 0.0], [0.0, 0.0], [0.0, 0.0]]])
+            return [
+                Alert(
+                    id=identifier or f"cancel_{superseded_ids[0]}",
+                    source="official_cap",
+                    sender=sender,
+                    hazard="flood",
+                    severity="minor",
+                    urgency="immediate",
+                    certainty="observed",
+                    area=dummy_poly,
+                    instruction_keys=["FOLLOW_OFFICIAL_ONLY"],
+                    params={},
+                    sent_at=sent_iso,
+                    expires_at=sent_iso,
+                    supersedes=superseded_ids[0],
+                    published_by="cap_feed",
+                    is_replay=False,
+                )
+            ]
         raise ValueError(f"CAP alert {identifier} contains no <info> elements.")
 
     selected_info = info_blocks[0]
@@ -213,8 +235,8 @@ def parse_cap_xml(xml_content: str, is_demo: bool = True) -> List[Alert]:
     # Parse Severity
     sev_text = (_find_elem(selected_info, "severity").text or "").strip().lower() if _find_elem(selected_info, "severity") is not None else "minor"
     severity = SEVERITY_MAPPING.get(sev_text, "minor")
-    if sev_text not in SEVERITY_MAPPING:
-        logger.warning("Unknown CAP severity '%s', mapping to 'minor'.", sev_text)
+    if sev_text == "unknown" or sev_text not in SEVERITY_MAPPING:
+        logger.warning("CAP severity '%s' mapped to fallback '%s'.", sev_text, severity)
 
     # Parse Urgency
     urg_text = (_find_elem(selected_info, "urgency").text or "").strip().lower() if _find_elem(selected_info, "urgency") is not None else "expected"
@@ -222,39 +244,48 @@ def parse_cap_xml(xml_content: str, is_demo: bool = True) -> List[Alert]:
         logger.info("CAP alert %s urgency is 'Past'. Skipping.", identifier)
         return []
     urgency = URGENCY_MAPPING.get(urg_text, "expected")
-    if urg_text not in URGENCY_MAPPING:
-        logger.warning("Unknown CAP urgency '%s', mapping to 'expected'.", urg_text)
+    if urg_text == "unknown" or urg_text not in URGENCY_MAPPING:
+        logger.warning("CAP urgency '%s' mapped to fallback '%s'.", urg_text, urgency)
 
     # Parse Certainty
     cert_text = (_find_elem(selected_info, "certainty").text or "").strip().lower() if _find_elem(selected_info, "certainty") is not None else "possible"
     certainty = CERTAINTY_MAPPING.get(cert_text, "possible")
-    if cert_text not in CERTAINTY_MAPPING:
-        logger.warning("Unknown CAP certainty '%s', mapping to 'possible'.", cert_text)
+    if cert_text in ("unknown", "unlikely") or cert_text not in CERTAINTY_MAPPING:
+        logger.warning("CAP certainty '%s' mapped to fallback '%s'.", cert_text, certainty)
 
     # Parse Expires
-    expires_elem = _find_elem(selected_info, "expires")
-    if expires_elem is not None and expires_elem.text and expires_elem.text.strip():
-        exp_raw = expires_elem.text.strip()
-        if not _has_timezone_offset(exp_raw):
-            raise ValueError(f"CAP alert {identifier} <expires> timestamp '{exp_raw}' lacks required timezone offset.")
-        exp_iso = to_utc_iso(exp_raw)
+    if msg_type == "cancel":
+        # Cancel expires referenced alerts immediately; expires_at = sent_iso
+        exp_iso = sent_iso
     else:
-        sent_dt = datetime.fromisoformat(sent_iso.replace("Z", "+00:00"))
-        default_dur = SEVERITY_DEFAULT_DURATIONS.get(severity, timedelta(hours=12))
-        exp_iso = to_utc_iso(sent_dt + default_dur)
-        logger.warning("Missing <expires> tag in CAP alert %s. Defaulting to %s from severity '%s'.", identifier, exp_iso, severity)
+        expires_elem = _find_elem(selected_info, "expires")
+        if expires_elem is not None and expires_elem.text and expires_elem.text.strip():
+            exp_raw = expires_elem.text.strip()
+            if not _has_timezone_offset(exp_raw):
+                raise ValueError(f"CAP alert {identifier} <expires> timestamp '{exp_raw}' lacks required timezone offset.")
+            exp_iso = to_utc_iso(exp_raw)
+        else:
+            sent_dt = datetime.fromisoformat(sent_iso.replace("Z", "+00:00"))
+            default_dur = SEVERITY_DEFAULT_DURATIONS.get(severity, timedelta(hours=12))
+            exp_iso = to_utc_iso(sent_dt + default_dur)
+            logger.warning("Missing <expires> tag in CAP alert %s. Defaulting to %s from severity '%s'.", identifier, exp_iso, severity)
 
     # Hazard classification
     event_str = (_find_elem(selected_info, "event").text or "") if _find_elem(selected_info, "event") is not None else ""
     cat_str = (_find_elem(selected_info, "category").text or "") if _find_elem(selected_info, "category") is not None else ""
     headline_str = (_find_elem(selected_info, "headline").text or "") if _find_elem(selected_info, "headline") is not None else ""
     hazard = map_cap_event_to_hazard(event_str, cat_str, headline_str)
+    if msg_type == "cancel" and hazard == "all_clear":
+        # Cancel must NOT establish all_clear status
+        hazard = "flood"
 
     # Instructions parsing
     instruction_elem = _find_elem(selected_info, "instruction")
     instruction_text = (instruction_elem.text or "").strip() if instruction_elem is not None else ""
     instruction_keys = []
-    if hazard == "all_clear":
+    if msg_type == "cancel":
+        instruction_keys.append("FOLLOW_OFFICIAL_ONLY")
+    elif hazard == "all_clear":
         instruction_keys.append("ALL_CLEAR")
     else:
         # Default safety actions

@@ -1,7 +1,7 @@
 """Alert models according to CONTEXT.md and docs/API.md contract."""
 
 from typing import Any, Dict, List, Literal, Optional
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 
 
 class GeoJSONPolygon(BaseModel):
@@ -44,6 +44,20 @@ class AlertBase(BaseModel):
     )
     published_by: str = Field(..., description="Username or system identifier of publisher")
     is_replay: bool = Field(default=False, description="Flag indicating simulated replay data")
+
+    @field_validator("params", mode="before")
+    @classmethod
+    def _ensure_params_dict(cls, v: Any) -> Dict[str, Any]:
+        if v is None:
+            return {}
+        return v
+
+    @field_validator("supersedes", mode="before")
+    @classmethod
+    def _ensure_supersedes_nullable(cls, v: Any) -> Optional[str]:
+        if v is None or v == "":
+            return None
+        return v
 
 
 class AlertCreate(AlertBase):
