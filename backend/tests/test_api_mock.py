@@ -7,8 +7,21 @@ from backend.app.config import get_settings
 from backend.app.main import app
 
 client = TestClient(app)
-settings = get_settings()
-AUTH_HEADERS = {"X-Authority-Key": settings.authority_key}
+
+
+def auth_headers():
+    return {"X-Authority-Key": get_settings().authority_key}
+
+
+def test_missing_authority_key_fails_fast(monkeypatch):
+    """Verify system fails fast with clear RuntimeError if AUTHORITY_KEY is missing."""
+    monkeypatch.delenv("AUTHORITY_KEY", raising=False)
+    get_settings.cache_clear()
+    with pytest.raises(RuntimeError, match="CRITICAL SECURITY ERROR"):
+        get_settings()
+    # Restore key for subsequent tests
+    monkeypatch.setenv("AUTHORITY_KEY", "test-env-authority-key")
+    get_settings.cache_clear()
 
 
 def test_health_endpoints():
@@ -173,14 +186,14 @@ def test_authority_authentication_guards():
     assert res.status_code == 403
 
     # With valid header -> 200
-    res = client.get("/api/alerts", headers=AUTH_HEADERS)
+    res = client.get("/api/alerts", headers=auth_headers())
     assert res.status_code == 200
 
 
 def test_authority_alerts_crud():
     """Verify alert publishing, listing, and expiry."""
     # List alerts
-    res = client.get("/api/alerts", headers=AUTH_HEADERS)
+    res = client.get("/api/alerts", headers=auth_headers())
     assert res.status_code == 200
     initial_total = res.json()["total"]
 
@@ -211,21 +224,21 @@ def test_authority_alerts_crud():
         "published_by": "test-operator",
         "is_replay": False,
     }
-    res_post = client.post("/api/alerts", json=new_alert, headers=AUTH_HEADERS)
+    res_post = client.post("/api/alerts", json=new_alert, headers=auth_headers())
     assert res_post.status_code == 201
     created = res_post.json()
     assert "id" in created
     alert_id = created["id"]
 
     # Expire alert
-    res_del = client.delete(f"/api/alerts/{alert_id}", headers=AUTH_HEADERS)
+    res_del = client.delete(f"/api/alerts/{alert_id}", headers=auth_headers())
     assert res_del.status_code == 200
     assert res_del.json()["ok"] is True
 
 
 def test_authority_checkins_triage():
     """Verify checkins retrieval and dispatch update."""
-    res = client.get("/api/checkins", headers=AUTH_HEADERS)
+    res = client.get("/api/checkins", headers=auth_headers())
     assert res.status_code == 200
     data = res.json()
     assert "items" in data
@@ -233,7 +246,7 @@ def test_authority_checkins_triage():
     assert len(data["items"]) > 0
 
     item_id = data["items"][0]["id"]
-    res_patch = client.patch(f"/api/checkins/{item_id}", json={"handled": True}, headers=AUTH_HEADERS)
+    res_patch = client.patch(f"/api/checkins/{item_id}", json={"handled": True}, headers=auth_headers())
     assert res_patch.status_code == 200
     assert res_patch.json()["handled"] is True
 

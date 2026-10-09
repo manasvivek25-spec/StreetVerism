@@ -6,8 +6,19 @@ from typing import List
 from pydantic import BaseModel, Field
 
 
+def get_required_authority_key() -> str:
+    """Retrieve AUTHORITY_KEY from environment or fail fast with a descriptive error."""
+    key = os.getenv("AUTHORITY_KEY")
+    if not key or not key.strip():
+        raise RuntimeError(
+            "CRITICAL SECURITY ERROR: AUTHORITY_KEY environment variable is not set. "
+            "Authority endpoints require a secure shared secret. Set AUTHORITY_KEY in the environment or .env."
+        )
+    return key.strip()
+
+
 class Settings(BaseModel):
-    """Application settings loaded from environment variables."""
+    """Application settings loaded strictly from environment variables."""
 
     # Project identification
     project_name: str = "StreetVerism"
@@ -16,8 +27,8 @@ class Settings(BaseModel):
     # Mock mode flag (MOCK=1)
     mock: bool = Field(default_factory=lambda: os.getenv("MOCK", "1").lower() in ("1", "true", "yes"))
 
-    # Security
-    authority_key: str = Field(default_factory=lambda: os.getenv("AUTHORITY_KEY", "beacon-authority-secret-key-2026"))
+    # Security: Strictly required from environment, NO hardcoded default
+    authority_key: str = Field(default_factory=get_required_authority_key)
 
     # CORS configuration
     cors_origins_str: str = Field(default_factory=lambda: os.getenv("CORS_ORIGINS", "*"))

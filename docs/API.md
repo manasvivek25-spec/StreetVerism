@@ -23,7 +23,7 @@ Standard health check endpoints are accessible at both `/health` and `/api/healt
   - In REPLAY mode (`is_replay: true`), timestamps (`generated_at`, alert publication times, and evidence `age_s`) are computed against the **scenario clock**, not the real-world server clock, ensuring accurate mathematical decay.
   - The real wall-clock time is exposed in `server_time`.
 - **Authentication**:
-  - Authority endpoints require header: `X-Authority-Key: <AUTHORITY_KEY>`.
+  - Authority endpoints require header: `X-Authority-Key: $AUTHORITY_KEY`.
   - Missing or invalid key yields `401 Unauthorized` or `403 Forbidden`.
 - **Privacy & Retention**:
   - Devices are identified by random client-generated UUIDs (`device_id`).
@@ -279,7 +279,7 @@ Submits a tourist safety status check-in for emergency triage.
 #### `POST /api/alerts`
 Publishes a new official hazard alert or all-clear declaration.
 - **Headers**:
-  - `X-Authority-Key: <AUTHORITY_KEY>`
+  - `X-Authority-Key: $AUTHORITY_KEY`
 - **Request Body** (Alert payload without `id`):
 ```json
 {
@@ -306,7 +306,7 @@ Publishes a new official hazard alert or all-clear declaration.
 
 #### `GET /api/alerts?active=true`
 Lists active (non-expired, non-superseded) official alerts.
-- **Headers**: `X-Authority-Key: <AUTHORITY_KEY>`
+- **Headers**: `X-Authority-Key: $AUTHORITY_KEY`
 - **Response `200 OK`**:
 ```json
 {
@@ -338,7 +338,7 @@ Lists active (non-expired, non-superseded) official alerts.
 
 #### `DELETE /api/alerts/{id}`
 Immediately expires an active alert.
-- **Headers**: `X-Authority-Key: <AUTHORITY_KEY>`
+- **Headers**: `X-Authority-Key: $AUTHORITY_KEY`
 - **Response `200 OK`**:
 ```json
 {
@@ -350,7 +350,7 @@ Immediately expires an active alert.
 
 #### `GET /api/checkins`
 Fetches individual check-in records alongside aggregated clusters at H3 resolution 7 (~1.2km) for high-level rescue triage.
-- **Headers**: `X-Authority-Key: <AUTHORITY_KEY>`
+- **Headers**: `X-Authority-Key: $AUTHORITY_KEY`
 - **Response `200 OK`**:
 ```json
 {
@@ -386,7 +386,7 @@ Fetches individual check-in records alongside aggregated clusters at H3 resoluti
 
 #### `PATCH /api/checkins/{id}`
 Marks a check-in as handled by rescue dispatch.
-- **Headers**: `X-Authority-Key: <AUTHORITY_KEY>`
+- **Headers**: `X-Authority-Key: $AUTHORITY_KEY`
 - **Request Body**:
 ```json
 {
