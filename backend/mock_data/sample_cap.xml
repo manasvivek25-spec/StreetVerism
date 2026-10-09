@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  FABRICATED DEMONSTRATION MESSAGE - FOR STREETVERISM TESTING ONLY.
+  NOT AN OFFICIAL EMERGENCY BROADCAST.
+-->
+<alert xmlns="urn:oasis:names:tc:emergency:cap:1.2">
+  <identifier>CAP-TNSDMA-20261010-001</identifier>
+  <sender>TNSDMA (demo)</sender>
+  <sent>2026-10-10T08:00:00+05:30</sent>
+  <status>Actual</status>
+  <msgType>Alert</msgType>
+  <scope>Public</scope>
+  <references></references>
+  <info>
+    <language>en-US</language>
+    <category>Met</category>
+    <event>Flash Flood Warning</event>
+    <urgency>Immediate</urgency>
+    <severity>Extreme</severity>
+    <certainty>Observed</certainty>
+    <eventCode>
+      <valueName>SAME</valueName>
+      <value>FFW</value>
+    </eventCode>
+    <expires>2026-10-10T16:00:00+05:30</expires>
+    <headline>Severe Inundation along Adyar and Velachery Basins</headline>
+    <description>Torrential rains have breached drainage channels. Water levels rising rapidly.</description>
+    <instruction>Move to higher ground immediately. Do not attempt to cross flooded roads.</instruction>
+    <area>
+      <areaDesc>Velachery Low-Lying Sector (demo zone 1)</areaDesc>
+      <!-- CAP polygon order is: lat,lng lat,lng lat,lng ... -->
+      <polygon>12.9750,80.2100 12.9850,80.2100 12.9850,80.2250 12.9750,80.2250 12.9750,80.2100</polygon>
+    </area>
+    <area>
+      <areaDesc>Adyar River Basin Sector (demo zone 2)</areaDesc>
+      <polygon>13.0000,80.2300 13.0150,80.2300 13.0150,80.2500 13.0000,80.2500 13.0000,80.2300</polygon>
+    </area>
+  </info>
+</alert>
