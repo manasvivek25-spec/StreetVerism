@@ -110,9 +110,11 @@ DECAY_LAMBDA: float = math.log(2.0) / DECAY_HALF_LIFE_S          # ln2 / 7200
 CROWD_LOGIT_MIN: float = -3.0
 CROWD_LOGIT_MAX: float = 3.0
 
-# Cluster activity & corroboration decay thresholds
-ACTIVE_DECAY_THRESHOLD: float = 0.125                            # age <= 6 h (exp(-ln2/7200 * 21600) = 0.125)
-CORROBORATED_DECAY_THRESHOLD: float = 0.25                       # age <= 4 h (exp(-ln2/7200 * 14400) = 0.25)
+# Cluster activity & corroboration thresholds (age in seconds)
+ACTIVE_MAX_AGE_S: float = 21600.0                                # 6 hours
+CORROBORATED_MAX_AGE_S: float = 14400.0                          # 4 hours
+ACTIVE_DECAY_THRESHOLD: float = 0.125                            # derived: exp(-ln2/7200 * 21600) = 0.125
+CORROBORATED_DECAY_THRESHOLD: float = 0.25                       # derived: exp(-ln2/7200 * 14400) = 0.25
 
 # Classification thresholds
 LIKELY_P_THRESHOLD: float = 0.80
@@ -252,8 +254,9 @@ class ClusterInfo:
         self.decay_factor = math.exp(-DECAY_LAMBDA * self.dt_seconds)
         self.decayed_llr = self.llr * self.decay_factor
 
-        self.is_active = self.is_positive and (self.decay_factor >= ACTIVE_DECAY_THRESHOLD)
-        self.is_corroborated = self.is_positive and (self.decay_factor >= CORROBORATED_DECAY_THRESHOLD)
+        # Age-based thresholds (exact seconds: age <= 6h active, age <= 4h corroborated)
+        self.is_active = self.is_positive and (self.dt_seconds <= ACTIVE_MAX_AGE_S)
+        self.is_corroborated = self.is_positive and (self.dt_seconds <= CORROBORATED_MAX_AGE_S)
 
 
 # --- Core Clustering Logic ---
@@ -513,7 +516,7 @@ def assess_cell(
             if override_status == "contradicted" and deciding_sender:
                 summary = f"Claim contradicted by official all-clear from {deciding_sender} ({c.claim}) (unverified)"
             else:
-                summary = f"Weather data does not support this claim ({c.claim}) (unverified)"
+                summary = "No heavy rain recorded here, so this report is unconfirmed. Follow official guidance."
         else:
             count = len(c.reports)
             if count == 1:
@@ -685,7 +688,7 @@ def assess_cells(
                 if override_status == "contradicted" and deciding_sender:
                     summary = f"Claim contradicted by official all-clear from {deciding_sender} ({c.claim}) (unverified)"
                 else:
-                    summary = f"Weather data does not support this claim ({c.claim}) (unverified)"
+                    summary = "No heavy rain recorded here, so this report is unconfirmed. Follow official guidance."
             else:
                 count = len(c.reports)
                 if count == 1:
