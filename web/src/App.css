@@ -1,0 +1,353 @@
+#root {
+  min-height: 100vh;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: #f3f6fa;
+  color: #182536;
+}
+
+button,
+select {
+  font: inherit;
+}
+
+.app-shell {
+  width: min(1120px, 100%);
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.topbar,
+.brand,
+.card-heading,
+.panel-title,
+.status-footer,
+.shelter,
+.checkin-panel,
+.checkin-actions,
+footer {
+  display: flex;
+  align-items: center;
+}
+
+.topbar,
+.status-footer,
+.checkin-panel,
+footer {
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.brand {
+  gap: 10px;
+  color: #163c69;
+  font-size: 1.35rem;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.brand-icon {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  place-items: center;
+  border-radius: 12px;
+  background: #164e80;
+  color: white;
+}
+
+.mode-badge,
+.status-label,
+.demo-tag {
+  border-radius: 999px;
+  padding: 7px 11px;
+  background: #fff0d7;
+  color: #825000;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+
+.welcome {
+  padding: 54px 0 28px;
+}
+
+.eyebrow {
+  margin: 0 0 8px;
+  color: #63758b;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin-top: 0;
+}
+
+h1 {
+  margin-bottom: 12px;
+  font-size: clamp(2rem, 5vw, 3.3rem);
+  letter-spacing: -0.045em;
+}
+
+h2 {
+  margin-bottom: 8px;
+  font-size: 1.15rem;
+}
+
+h3 {
+  margin-bottom: 8px;
+  font-size: 1rem;
+}
+
+.muted {
+  color: #66778b;
+  line-height: 1.6;
+}
+
+.language-picker {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  max-width: 440px;
+  margin-top: 24px;
+  font-weight: 650;
+}
+
+.language-picker select {
+  min-width: 190px;
+  padding: 11px 13px;
+  border: 1px solid #d8e0e9;
+  border-radius: 10px;
+  background: white;
+  color: #182536;
+}
+
+.status-card,
+.panel,
+.checkin-panel {
+  border: 1px solid #e0e7ef;
+  border-radius: 18px;
+  background: white;
+  box-shadow: 0 5px 20px rgb(27 53 82 / 4%);
+}
+
+.status-card {
+  padding: 24px;
+}
+
+.card-heading {
+  flex-wrap: wrap;
+  gap: 13px;
+  margin-bottom: 24px;
+}
+
+.card-heading > div {
+  flex: 1;
+}
+
+.card-heading .eyebrow {
+  margin-bottom: 5px;
+}
+
+.status-symbol,
+.panel-icon {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
+  place-items: center;
+  border-radius: 12px;
+  background: #eaf2ff;
+  color: #245b99;
+  font-weight: 900;
+}
+
+.status-footer {
+  flex-wrap: wrap;
+  padding-top: 16px;
+  border-top: 1px solid #edf0f4;
+  color: #687a8e;
+  font-size: 0.82rem;
+}
+
+.content-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.panel {
+  padding: 23px;
+}
+
+.panel-title {
+  gap: 12px;
+  margin-bottom: 22px;
+}
+
+.panel-title h2 {
+  margin-bottom: 0;
+}
+
+.instruction-list {
+  display: grid;
+  gap: 15px;
+  padding-left: 22px;
+  line-height: 1.55;
+}
+
+.instruction-list li::marker {
+  color: #245b99;
+}
+
+.notice {
+  margin: 18px 0 0;
+  padding: 12px;
+  border-radius: 10px;
+  background: #f2f6fb;
+  color: #586b81;
+  font-size: 0.82rem;
+  line-height: 1.6;
+}
+
+.shelter {
+  align-items: flex-start;
+  gap: 13px;
+}
+
+.shelter-pin {
+  display: grid;
+  width: 35px;
+  height: 35px;
+  flex-shrink: 0;
+  place-items: center;
+  border-radius: 50%;
+  background: #e7f5ed;
+  color: #236d47;
+  font-weight: 800;
+}
+
+.demo-tag {
+  display: inline-block;
+  background: #f1f3f6;
+  color: #596779;
+  font-size: 0.65rem;
+}
+
+.checkin-panel {
+  flex-wrap: wrap;
+  gap: 24px;
+  margin-top: 20px;
+  padding: 24px;
+}
+
+.checkin-panel > div:first-child {
+  flex: 1;
+  min-width: 220px;
+}
+
+.checkin-panel h2 {
+  font-size: 1.35rem;
+}
+
+.checkin-panel .muted {
+  margin-bottom: 0;
+}
+
+.checkin-actions {
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.checkin-actions button {
+  padding: 12px 16px;
+  border: 0;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 750;
+}
+
+.safe-button {
+  background: #e2f5e9;
+  color: #20683e;
+}
+
+.help-button {
+  background: #ffebeb;
+  color: #a32c2c;
+}
+
+.checkin-actions button:focus-visible,
+.language-picker select:focus-visible {
+  outline: 3px solid #79a9e6;
+  outline-offset: 3px;
+}
+
+.feedback {
+  flex-basis: 100%;
+  margin: 0;
+  padding: 12px;
+  border-radius: 10px;
+  background: #edf5ff;
+  color: #214f7e;
+}
+
+footer {
+  flex-wrap: wrap;
+  margin-top: 28px;
+  padding: 20px 0;
+  color: #748296;
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+}
+
+@media (max-width: 700px) {
+  .app-shell {
+    padding: 16px;
+  }
+
+  .welcome {
+    padding-top: 38px;
+  }
+
+  .content-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .status-card,
+  .panel,
+  .checkin-panel {
+    padding: 18px;
+  }
+
+  .checkin-panel {
+    align-items: stretch;
+  }
+
+  .checkin-actions {
+    width: 100%;
+  }
+
+  .checkin-actions button {
+    flex: 1;
+  }
+
+  footer {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
