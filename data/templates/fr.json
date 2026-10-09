@@ -1,0 +1,18 @@
+{
+  "lang": "fr",
+  "reviewed": false,
+  "templates": {
+    "MOVE_TO_HIGHER_GROUND": "Rejoignez immédiatement les hauteurs. N'attendez pas.",
+    "AVOID_FLOODED_ROADS": "Évitez les routes et passages souterrains inondés.",
+    "DO_NOT_CROSS_WATER": "Ne tentez pas de franchir des cours d'eau à pied ou en voiture.",
+    "SHELTER_AT": "Réfugiez-vous immédiatement au refuge {shelter}.",
+    "STAY_INDOORS": "Restez à l'intérieur et éloignez-vous des fenêtres.",
+    "STAY_AWAY_FROM_COAST": "Éloignez-vous des zones côtières et des plages.",
+    "KEEP_PHONE_CHARGED": "Préservez la batterie de votre téléphone et gardez vos appareils chargés.",
+    "ALL_CLEAR": "La situation est sûre. Fin d'alerte officielle.",
+    "EMERGENCY_NUMBER": "Assistance d'urgence : Composez le 112.",
+    "FOLLOW_OFFICIAL_ONLY": "Suivez uniquement les alertes officielles. Ignorez les rumeurs non vérifiées.",
+    "CHECKIN_PROMPT": "Veuillez vous enregistrer pour signaler votre état aux secours.",
+    "UNVERIFIED_WARNING": "Signalements citoyens non vérifiés dans cette zone. Faites preuve de prudence."
+  }
+}

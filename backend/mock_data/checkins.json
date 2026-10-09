@@ -1,0 +1,76 @@
+{
+  "items": [
+    {
+      "id": "chk_michaung_01",
+      "device_id": "4e75618b-8219-4cb3-a551-766cf0180a22",
+      "lat": 12.9815,
+      "lng": 80.2180,
+      "state": "need_help",
+      "language": "de",
+      "group_size": 2,
+      "note": "Trapped on 1st floor near Velachery bypass. Elderly passenger.",
+      "cell7": "87618c4f3ffffff",
+      "handled": false,
+      "recorded_at": "2026-10-10T11:45:00Z"
+    },
+    {
+      "id": "chk_michaung_02",
+      "device_id": "9bc27993-9cbf-4882-a392-581335cfa32e",
+      "lat": 12.9822,
+      "lng": 80.2195,
+      "state": "need_help",
+      "language": "en",
+      "group_size": 3,
+      "note": "Water rising above knee level. Need evacuation boat.",
+      "cell7": "87618c4f3ffffff",
+      "handled": false,
+      "recorded_at": "2026-10-10T11:50:00Z"
+    },
+    {
+      "id": "chk_michaung_03",
+      "device_id": "f2906f5c-8973-455b-91ae-b6e828453472",
+      "lat": 13.0368,
+      "lng": 80.2676,
+      "state": "safe",
+      "language": "fr",
+      "group_size": 1,
+      "note": "Safely reached Corporation Evacuation Camp.",
+      "cell7": "87618c4f2ffffff",
+      "handled": true,
+      "recorded_at": "2026-10-10T11:30:00Z"
+    },
+    {
+      "id": "chk_michaung_04",
+      "device_id": "aa1527ef-0c4f-45b6-b08e-15206305a2cd",
+      "lat": 13.0210,
+      "lng": 80.2230,
+      "state": "safe",
+      "language": "ja",
+      "group_size": 2,
+      "note": "At hotel 3rd floor, power intact.",
+      "cell7": "87618c4f2ffffff",
+      "handled": false,
+      "recorded_at": "2026-10-10T11:55:00Z"
+    }
+  ],
+  "clusters": [
+    {
+      "cell7": "87618c4f3ffffff",
+      "count": 2,
+      "need_help": 2,
+      "languages": {
+        "de": 2,
+        "en": 3
+      }
+    },
+    {
+      "cell7": "87618c4f2ffffff",
+      "count": 2,
+      "need_help": 0,
+      "languages": {
+        "fr": 1,
+        "ja": 2
+      }
+    }
+  ]
+}

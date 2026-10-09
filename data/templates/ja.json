@@ -1,0 +1,18 @@
+{
+  "lang": "ja",
+  "reviewed": false,
+  "templates": {
+    "MOVE_TO_HIGHER_GROUND": "直ちに高台へ避難してください。待たないでください。",
+    "AVOID_FLOODED_ROADS": "冠水した道路やアンダーパスを避けてください。",
+    "DO_NOT_CROSS_WATER": "増水した河川や道路を徒歩や車で渡らないでください。",
+    "SHELTER_AT": "直ちに避難所【{shelter}】へ避難してください。",
+    "STAY_INDOORS": "窓から離れ、屋内に留まってください。",
+    "STAY_AWAY_FROM_COAST": "海岸や沿岸地域から直ちに離れてください。",
+    "KEEP_PHONE_CHARGED": "スマートフォンのバッテリーを節約し、充電を維持してください。",
+    "ALL_CLEAR": "安全が確認されました。公式の警報解除。",
+    "EMERGENCY_NUMBER": "緊急通報: 112 にダイヤルしてください。",
+    "FOLLOW_OFFICIAL_ONLY": "公式警報のみに従ってください。未確認のデマ情報に惑わされないでください。",
+    "CHECKIN_PROMPT": "救助隊に安全状況を知らせるため、安否確認を行ってください。",
+    "UNVERIFIED_WARNING": "このエリアには未確認の市民報告があります。十分注意してください。"
+  }
+}

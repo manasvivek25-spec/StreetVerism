@@ -1,0 +1,18 @@
+{
+  "lang": "en",
+  "reviewed": true,
+  "templates": {
+    "MOVE_TO_HIGHER_GROUND": "Move to higher ground immediately. Do not wait.",
+    "AVOID_FLOODED_ROADS": "Avoid flooded roads and underpasses.",
+    "DO_NOT_CROSS_WATER": "Do not attempt to walk or drive through moving water.",
+    "SHELTER_AT": "Take shelter immediately at {shelter}.",
+    "STAY_INDOORS": "Stay indoors away from windows.",
+    "STAY_AWAY_FROM_COAST": "Stay away from coastal waters and beaches.",
+    "KEEP_PHONE_CHARGED": "Conserve phone battery and keep devices charged.",
+    "ALL_CLEAR": "Conditions are safe. Official all clear.",
+    "EMERGENCY_NUMBER": "Emergency Assistance: Dial 112.",
+    "FOLLOW_OFFICIAL_ONLY": "Follow official alerts only. Disregard unverified social rumors.",
+    "CHECKIN_PROMPT": "Please check in to let emergency teams know your safety status.",
+    "UNVERIFIED_WARNING": "Unverified crowd reports in this area. Exercise caution."
+  }
+}

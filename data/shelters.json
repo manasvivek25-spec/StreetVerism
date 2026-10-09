@@ -1,0 +1,42 @@
+[
+  {
+    "id": "sh_chennai_01",
+    "name": "Community Relief Center - Velachery",
+    "name_local": "சமூக நிவாரண மையம் - வேளச்சேரி",
+    "lat": 12.9815,
+    "lng": 80.2180,
+    "open": true,
+    "is_demo": true,
+    "capacity": 350
+  },
+  {
+    "id": "sh_chennai_02",
+    "name": "Corporation Evacuation Camp - Mylapore",
+    "name_local": "மாநகராட்சி நிவாரண முகாம் - மயிலாப்பூர்",
+    "lat": 13.0368,
+    "lng": 80.2676,
+    "open": true,
+    "is_demo": true,
+    "capacity": 500
+  },
+  {
+    "id": "sh_chennai_03",
+    "name": "Govt High School Cyclone Center - Saidapet",
+    "name_local": "அரசு மேல்நிலைப்பள்ளி புயல் மையம் - சைதாப்பேட்டை",
+    "lat": 13.0210,
+    "lng": 80.2230,
+    "open": true,
+    "is_demo": true,
+    "capacity": 420
+  },
+  {
+    "id": "sh_chennai_04",
+    "name": "Disaster Relief Hall - Guindy",
+    "name_local": "பேரிடர் நிவாரண அரங்கம் - கிண்டி",
+    "lat": 13.0067,
+    "lng": 80.2025,
+    "open": false,
+    "is_demo": true,
+    "capacity": 250
+  }
+]

@@ -1,0 +1,2127 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "StreetVerism API",
+    "description": "Real-Time Crisis Communication & Verified Action Layer for Foreign Tourists During Extreme Weather Events.",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/health": {
+      "get": {
+        "tags": [
+          "System"
+        ],
+        "summary": "Root health check",
+        "description": "Root health check returning server status and wall-clock timestamp.",
+        "operationId": "root_health_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/health": {
+      "get": {
+        "tags": [
+          "System"
+        ],
+        "summary": "Get Health",
+        "description": "Return system health status and wall-clock timestamp.",
+        "operationId": "get_health_api_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/state": {
+      "get": {
+        "tags": [
+          "Tourist"
+        ],
+        "summary": "Get State",
+        "description": "Return crisis status, instructions, evidence, and nearest shelters for coordinates.",
+        "operationId": "get_state_api_state_get",
+        "parameters": [
+          {
+            "name": "lat",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "number",
+              "maximum": 90.0,
+              "minimum": -90.0,
+              "description": "Tourist latitude",
+              "title": "Lat"
+            },
+            "description": "Tourist latitude"
+          },
+          {
+            "name": "lng",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "number",
+              "maximum": 180.0,
+              "minimum": -180.0,
+              "description": "Tourist longitude",
+              "title": "Lng"
+            },
+            "description": "Tourist longitude"
+          },
+          {
+            "name": "lang",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "Preferred language code",
+              "default": "en",
+              "title": "Lang"
+            },
+            "description": "Preferred language code"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StateResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/cells": {
+      "get": {
+        "tags": [
+          "Tourist"
+        ],
+        "summary": "Get Cells",
+        "description": "Return GeoJSON FeatureCollection of evaluated cells intersecting the bounding box.\n\nGuaranteed in mock mode to include all five status classifications:\nofficial_hazard, likely_hazard, unverified, contradicted, clear.",
+        "operationId": "get_cells_api_cells_get",
+        "parameters": [
+          {
+            "name": "bbox",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Bounding box in minLng,minLat,maxLng,maxLat format",
+              "title": "Bbox"
+            },
+            "description": "Bounding box in minLng,minLat,maxLng,maxLat format"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CellFeatureCollection"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/shelters": {
+      "get": {
+        "tags": [
+          "Tourist"
+        ],
+        "summary": "Get Shelters",
+        "description": "Return list of registered safe zones and emergency shelters.",
+        "operationId": "get_shelters_api_shelters_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ShelterListResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/templates/{lang}": {
+      "get": {
+        "tags": [
+          "Tourist"
+        ],
+        "summary": "Get Templates",
+        "description": "Return raw template catalog for client offline caching.",
+        "operationId": "get_templates_api_templates__lang__get",
+        "parameters": [
+          {
+            "name": "lang",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Lang"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Get Templates Api Templates  Lang  Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/reports": {
+      "post": {
+        "tags": [
+          "Tourist"
+        ],
+        "summary": "Submit Report",
+        "description": "Submit a ground-truth crowd report (unverified until clustered and corroborated).",
+        "operationId": "submit_report_api_reports_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReportCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/checkin": {
+      "post": {
+        "tags": [
+          "Tourist"
+        ],
+        "summary": "Submit Checkin",
+        "description": "Record a tourist safe or need_help check-in for triage.",
+        "operationId": "submit_checkin_api_checkin_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CheckinCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckinCreateResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/alerts": {
+      "post": {
+        "tags": [
+          "Authority"
+        ],
+        "summary": "Create Alert",
+        "description": "Publish a new official disaster alert or all-clear notice.",
+        "operationId": "create_alert_api_alerts_post",
+        "security": [
+          {
+            "AuthorityApiKey": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AlertCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Alert"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Authority"
+        ],
+        "summary": "List Alerts",
+        "description": "Fetch all active published alerts.",
+        "operationId": "list_alerts_api_alerts_get",
+        "security": [
+          {
+            "AuthorityApiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "active",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "description": "Filter for active alerts",
+              "default": true,
+              "title": "Active"
+            },
+            "description": "Filter for active alerts"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AlertListResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/alerts/{alert_id}": {
+      "delete": {
+        "tags": [
+          "Authority"
+        ],
+        "summary": "Expire Alert",
+        "description": "Immediately expire an active alert.",
+        "operationId": "expire_alert_api_alerts__alert_id__delete",
+        "security": [
+          {
+            "AuthorityApiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "alert_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Alert Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AlertExpireResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/checkins": {
+      "get": {
+        "tags": [
+          "Authority"
+        ],
+        "summary": "List Checkins",
+        "description": "Retrieve individual check-in records alongside aggregated H3 res-7 triage clusters.",
+        "operationId": "list_checkins_api_checkins_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckinListResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "AuthorityApiKey": []
+          }
+        ]
+      }
+    },
+    "/api/checkins/{checkin_id}": {
+      "patch": {
+        "tags": [
+          "Authority"
+        ],
+        "summary": "Handle Checkin",
+        "description": "Mark a tourist check-in as handled by rescue operators.",
+        "operationId": "handle_checkin_api_checkins__checkin_id__patch",
+        "security": [
+          {
+            "AuthorityApiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "checkin_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Checkin Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CheckinUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckinItem"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/scenario/start": {
+      "post": {
+        "tags": [
+          "Scenario"
+        ],
+        "summary": "Start Scenario",
+        "description": "Launch historical scenario playback.",
+        "operationId": "start_scenario_api_scenario_start_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ScenarioStart"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScenarioStatus"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/scenario/seek": {
+      "post": {
+        "tags": [
+          "Scenario"
+        ],
+        "summary": "Seek Scenario",
+        "description": "Seek the replay scenario clock to a specific timestamp or offset.\n\nAccepts exactly one of 't' or 'offset_s' (422 validation enforced).\nClamps within scenario start/end bounds.",
+        "operationId": "seek_scenario_api_scenario_seek_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ScenarioSeek"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScenarioStatus"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/scenario/reset": {
+      "post": {
+        "tags": [
+          "Scenario"
+        ],
+        "summary": "Reset Scenario",
+        "description": "Stop scenario playback and revert to live mode.",
+        "operationId": "reset_scenario_api_scenario_reset_post",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScenarioResetResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/scenario/status": {
+      "get": {
+        "tags": [
+          "Scenario"
+        ],
+        "summary": "Get Scenario Status",
+        "description": "Get current status of scenario replay clock.",
+        "operationId": "get_scenario_status_api_scenario_status_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScenarioStatus"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/route": {
+      "get": {
+        "tags": [
+          "Tourist"
+        ],
+        "summary": "Get Hazard Aware Route",
+        "description": "Generate hazard-aware route avoiding cells marked official_hazard or likely_hazard.",
+        "operationId": "get_hazard_aware_route_api_route_get",
+        "parameters": [
+          {
+            "name": "from_lat",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "number",
+              "maximum": 90.0,
+              "minimum": -90.0,
+              "title": "From Lat"
+            }
+          },
+          {
+            "name": "from_lng",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "number",
+              "maximum": 180.0,
+              "minimum": -180.0,
+              "title": "From Lng"
+            }
+          },
+          {
+            "name": "to_shelter",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "To Shelter"
+            }
+          },
+          {
+            "name": "lang",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "en",
+              "title": "Lang"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RouteResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Alert": {
+        "properties": {
+          "source": {
+            "type": "string",
+            "enum": [
+              "official_manual",
+              "official_cap",
+              "weather_api",
+              "replay"
+            ],
+            "title": "Source",
+            "description": "Data origin for the alert"
+          },
+          "sender": {
+            "type": "string",
+            "title": "Sender",
+            "description": "Issuing agency, e.g. TNSDMA (demo)"
+          },
+          "hazard": {
+            "type": "string",
+            "enum": [
+              "flood",
+              "cyclone",
+              "heavy_rain",
+              "all_clear"
+            ],
+            "title": "Hazard",
+            "description": "Hazard type or all_clear notice"
+          },
+          "severity": {
+            "type": "string",
+            "enum": [
+              "minor",
+              "moderate",
+              "severe",
+              "extreme"
+            ],
+            "title": "Severity",
+            "description": "Severity category"
+          },
+          "urgency": {
+            "type": "string",
+            "enum": [
+              "immediate",
+              "expected",
+              "future"
+            ],
+            "title": "Urgency",
+            "description": "Urgency of response needed"
+          },
+          "certainty": {
+            "type": "string",
+            "enum": [
+              "observed",
+              "likely",
+              "possible"
+            ],
+            "title": "Certainty",
+            "description": "Degree of certainty"
+          },
+          "area": {
+            "$ref": "#/components/schemas/GeoJSONPolygon",
+            "description": "GeoJSON Polygon area where coordinates are [lng, lat]"
+          },
+          "instruction_keys": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Instruction Keys",
+            "description": "Template keys corresponding to safety instructions"
+          },
+          "params": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Params",
+            "description": "Template parameters such as shelter IDs"
+          },
+          "sent_at": {
+            "type": "string",
+            "title": "Sent At",
+            "description": "ISO-8601 UTC timestamp of publication"
+          },
+          "expires_at": {
+            "type": "string",
+            "title": "Expires At",
+            "description": "ISO-8601 UTC timestamp of alert expiry"
+          },
+          "supersedes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Supersedes",
+            "description": "ID of a previous alert superseded by this one"
+          },
+          "published_by": {
+            "type": "string",
+            "title": "Published By",
+            "description": "Username or system identifier of publisher"
+          },
+          "is_replay": {
+            "type": "boolean",
+            "title": "Is Replay",
+            "description": "Flag indicating simulated replay data",
+            "default": false
+          },
+          "id": {
+            "type": "string",
+            "title": "Id",
+            "description": "Unique alert identifier"
+          }
+        },
+        "type": "object",
+        "required": [
+          "source",
+          "sender",
+          "hazard",
+          "severity",
+          "urgency",
+          "certainty",
+          "area",
+          "sent_at",
+          "expires_at",
+          "published_by",
+          "id"
+        ],
+        "title": "Alert",
+        "description": "Full alert model containing server-assigned ID."
+      },
+      "AlertCreate": {
+        "properties": {
+          "source": {
+            "type": "string",
+            "enum": [
+              "official_manual",
+              "official_cap",
+              "weather_api",
+              "replay"
+            ],
+            "title": "Source",
+            "description": "Data origin for the alert"
+          },
+          "sender": {
+            "type": "string",
+            "title": "Sender",
+            "description": "Issuing agency, e.g. TNSDMA (demo)"
+          },
+          "hazard": {
+            "type": "string",
+            "enum": [
+              "flood",
+              "cyclone",
+              "heavy_rain",
+              "all_clear"
+            ],
+            "title": "Hazard",
+            "description": "Hazard type or all_clear notice"
+          },
+          "severity": {
+            "type": "string",
+            "enum": [
+              "minor",
+              "moderate",
+              "severe",
+              "extreme"
+            ],
+            "title": "Severity",
+            "description": "Severity category"
+          },
+          "urgency": {
+            "type": "string",
+            "enum": [
+              "immediate",
+              "expected",
+              "future"
+            ],
+            "title": "Urgency",
+            "description": "Urgency of response needed"
+          },
+          "certainty": {
+            "type": "string",
+            "enum": [
+              "observed",
+              "likely",
+              "possible"
+            ],
+            "title": "Certainty",
+            "description": "Degree of certainty"
+          },
+          "area": {
+            "$ref": "#/components/schemas/GeoJSONPolygon",
+            "description": "GeoJSON Polygon area where coordinates are [lng, lat]"
+          },
+          "instruction_keys": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Instruction Keys",
+            "description": "Template keys corresponding to safety instructions"
+          },
+          "params": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Params",
+            "description": "Template parameters such as shelter IDs"
+          },
+          "sent_at": {
+            "type": "string",
+            "title": "Sent At",
+            "description": "ISO-8601 UTC timestamp of publication"
+          },
+          "expires_at": {
+            "type": "string",
+            "title": "Expires At",
+            "description": "ISO-8601 UTC timestamp of alert expiry"
+          },
+          "supersedes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Supersedes",
+            "description": "ID of a previous alert superseded by this one"
+          },
+          "published_by": {
+            "type": "string",
+            "title": "Published By",
+            "description": "Username or system identifier of publisher"
+          },
+          "is_replay": {
+            "type": "boolean",
+            "title": "Is Replay",
+            "description": "Flag indicating simulated replay data",
+            "default": false
+          }
+        },
+        "type": "object",
+        "required": [
+          "source",
+          "sender",
+          "hazard",
+          "severity",
+          "urgency",
+          "certainty",
+          "area",
+          "sent_at",
+          "expires_at",
+          "published_by"
+        ],
+        "title": "AlertCreate",
+        "description": "Alert publication payload without server-assigned ID."
+      },
+      "AlertExpireResponse": {
+        "properties": {
+          "ok": {
+            "type": "boolean",
+            "title": "Ok",
+            "default": true
+          },
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "expired_at": {
+            "type": "string",
+            "title": "Expired At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "expired_at"
+        ],
+        "title": "AlertExpireResponse",
+        "description": "Response when expiring an active alert."
+      },
+      "AlertListResponse": {
+        "properties": {
+          "alerts": {
+            "items": {
+              "$ref": "#/components/schemas/Alert"
+            },
+            "type": "array",
+            "title": "Alerts"
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          }
+        },
+        "type": "object",
+        "required": [
+          "alerts",
+          "total"
+        ],
+        "title": "AlertListResponse",
+        "description": "Enveloped response for active alerts list."
+      },
+      "CellFeature": {
+        "properties": {
+          "type": {
+            "type": "string",
+            "const": "Feature",
+            "title": "Type",
+            "default": "Feature"
+          },
+          "geometry": {
+            "$ref": "#/components/schemas/GeoJSONPolygonGeometry"
+          },
+          "properties": {
+            "$ref": "#/components/schemas/CellProperties"
+          }
+        },
+        "type": "object",
+        "required": [
+          "geometry",
+          "properties"
+        ],
+        "title": "CellFeature",
+        "description": "GeoJSON Feature representing a single H3 cell boundary and status."
+      },
+      "CellFeatureCollection": {
+        "properties": {
+          "type": {
+            "type": "string",
+            "const": "FeatureCollection",
+            "title": "Type",
+            "default": "FeatureCollection"
+          },
+          "features": {
+            "items": {
+              "$ref": "#/components/schemas/CellFeature"
+            },
+            "type": "array",
+            "title": "Features"
+          }
+        },
+        "type": "object",
+        "required": [
+          "features"
+        ],
+        "title": "CellFeatureCollection",
+        "description": "GeoJSON FeatureCollection returned by /api/cells."
+      },
+      "CellProperties": {
+        "properties": {
+          "cell": {
+            "type": "string",
+            "title": "Cell",
+            "description": "H3 index string at resolution 8"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "official_hazard",
+              "likely_hazard",
+              "unverified",
+              "contradicted",
+              "clear"
+            ],
+            "title": "Status",
+            "description": "Deterministic status classification"
+          },
+          "p_hazard": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "P Hazard",
+            "description": "Posterior probability of hazard"
+          },
+          "updated_at": {
+            "type": "string",
+            "title": "Updated At",
+            "description": "ISO-8601 UTC timestamp"
+          }
+        },
+        "type": "object",
+        "required": [
+          "cell",
+          "status",
+          "p_hazard",
+          "updated_at"
+        ],
+        "title": "CellProperties",
+        "description": "Properties for an evaluated H3 cell."
+      },
+      "CheckinCluster": {
+        "properties": {
+          "cell7": {
+            "type": "string",
+            "title": "Cell7"
+          },
+          "count": {
+            "type": "integer",
+            "title": "Count"
+          },
+          "need_help": {
+            "type": "integer",
+            "title": "Need Help"
+          },
+          "languages": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "type": "object",
+            "title": "Languages"
+          }
+        },
+        "type": "object",
+        "required": [
+          "cell7",
+          "count",
+          "need_help",
+          "languages"
+        ],
+        "title": "CheckinCluster",
+        "description": "Aggregated triage cluster grouped by H3 res-7 cell."
+      },
+      "CheckinCreate": {
+        "properties": {
+          "device_id": {
+            "type": "string",
+            "title": "Device Id",
+            "description": "Device UUID"
+          },
+          "lat": {
+            "type": "number",
+            "maximum": 90.0,
+            "minimum": -90.0,
+            "title": "Lat",
+            "description": "Latitude in decimal degrees"
+          },
+          "lng": {
+            "type": "number",
+            "maximum": 180.0,
+            "minimum": -180.0,
+            "title": "Lng",
+            "description": "Longitude in decimal degrees"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "safe",
+              "need_help"
+            ],
+            "title": "State",
+            "description": "Tourist safety condition"
+          },
+          "language": {
+            "type": "string",
+            "title": "Language",
+            "description": "Tourist preferred language code",
+            "default": "en"
+          },
+          "group_size": {
+            "type": "integer",
+            "maximum": 50.0,
+            "minimum": 1.0,
+            "title": "Group Size",
+            "description": "Number of people in traveling group",
+            "default": 1
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 500
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note",
+            "description": "Optional SOS or medical note"
+          }
+        },
+        "type": "object",
+        "required": [
+          "device_id",
+          "lat",
+          "lng",
+          "state"
+        ],
+        "title": "CheckinCreate",
+        "description": "Tourist check-in submission."
+      },
+      "CheckinCreateResponse": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "recorded_at": {
+            "type": "string",
+            "title": "Recorded At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "recorded_at"
+        ],
+        "title": "CheckinCreateResponse",
+        "description": "Response after check-in is logged."
+      },
+      "CheckinItem": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "device_id": {
+            "type": "string",
+            "title": "Device Id"
+          },
+          "lat": {
+            "type": "number",
+            "title": "Lat"
+          },
+          "lng": {
+            "type": "number",
+            "title": "Lng"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "safe",
+              "need_help"
+            ],
+            "title": "State"
+          },
+          "language": {
+            "type": "string",
+            "title": "Language"
+          },
+          "group_size": {
+            "type": "integer",
+            "title": "Group Size"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          },
+          "cell7": {
+            "type": "string",
+            "title": "Cell7",
+            "description": "Aggregated parent H3 res-7 cell"
+          },
+          "handled": {
+            "type": "boolean",
+            "title": "Handled",
+            "default": false
+          },
+          "recorded_at": {
+            "type": "string",
+            "title": "Recorded At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "device_id",
+          "lat",
+          "lng",
+          "state",
+          "language",
+          "group_size",
+          "cell7",
+          "recorded_at"
+        ],
+        "title": "CheckinItem",
+        "description": "Full check-in record for authority view."
+      },
+      "CheckinListResponse": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/CheckinItem"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "clusters": {
+            "items": {
+              "$ref": "#/components/schemas/CheckinCluster"
+            },
+            "type": "array",
+            "title": "Clusters"
+          }
+        },
+        "type": "object",
+        "required": [
+          "items",
+          "clusters"
+        ],
+        "title": "CheckinListResponse",
+        "description": "Enveloped response for check-ins and clustered triage."
+      },
+      "CheckinUpdate": {
+        "properties": {
+          "handled": {
+            "type": "boolean",
+            "title": "Handled"
+          }
+        },
+        "type": "object",
+        "required": [
+          "handled"
+        ],
+        "title": "CheckinUpdate",
+        "description": "Payload to update handling status of a check-in."
+      },
+      "EvidenceItem": {
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "official",
+              "rain",
+              "crowd"
+            ],
+            "title": "Type",
+            "description": "Source of evidence"
+          },
+          "summary": {
+            "type": "string",
+            "title": "Summary",
+            "description": "Human-readable explanation for Why UI"
+          },
+          "age_s": {
+            "type": "integer",
+            "title": "Age S",
+            "description": "Age of evidence relative to effective clock in seconds"
+          },
+          "weight": {
+            "type": "number",
+            "title": "Weight",
+            "description": "Calculated log-odds or probability contribution"
+          }
+        },
+        "type": "object",
+        "required": [
+          "type",
+          "summary",
+          "age_s",
+          "weight"
+        ],
+        "title": "EvidenceItem",
+        "description": "Explainable Bayesian evidence component contributing to cell status."
+      },
+      "GeoJSONLineString": {
+        "properties": {
+          "type": {
+            "type": "string",
+            "const": "LineString",
+            "title": "Type",
+            "default": "LineString"
+          },
+          "coordinates": {
+            "items": {
+              "items": {
+                "type": "number"
+              },
+              "type": "array"
+            },
+            "type": "array",
+            "title": "Coordinates"
+          }
+        },
+        "type": "object",
+        "required": [
+          "coordinates"
+        ],
+        "title": "GeoJSONLineString",
+        "description": "GeoJSON LineString with [lng, lat] vertices."
+      },
+      "GeoJSONPolygon": {
+        "properties": {
+          "type": {
+            "type": "string",
+            "const": "Polygon",
+            "title": "Type",
+            "default": "Polygon"
+          },
+          "coordinates": {
+            "items": {
+              "items": {
+                "items": {
+                  "type": "number"
+                },
+                "type": "array"
+              },
+              "type": "array"
+            },
+            "type": "array",
+            "title": "Coordinates"
+          }
+        },
+        "type": "object",
+        "required": [
+          "coordinates"
+        ],
+        "title": "GeoJSONPolygon",
+        "description": "GeoJSON Polygon Geometry with [lng, lat] coordinate rings."
+      },
+      "GeoJSONPolygonGeometry": {
+        "properties": {
+          "type": {
+            "type": "string",
+            "const": "Polygon",
+            "title": "Type",
+            "default": "Polygon"
+          },
+          "coordinates": {
+            "items": {
+              "items": {
+                "items": {
+                  "type": "number"
+                },
+                "type": "array"
+              },
+              "type": "array"
+            },
+            "type": "array",
+            "title": "Coordinates"
+          }
+        },
+        "type": "object",
+        "required": [
+          "coordinates"
+        ],
+        "title": "GeoJSONPolygonGeometry",
+        "description": "GeoJSON Polygon Geometry strictly containing [lng, lat] coordinate rings."
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "HealthResponse": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "title": "Status",
+            "default": "healthy"
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "live",
+              "replay"
+            ],
+            "title": "Mode",
+            "default": "live"
+          },
+          "is_replay": {
+            "type": "boolean",
+            "title": "Is Replay",
+            "default": false
+          },
+          "version": {
+            "type": "string",
+            "title": "Version",
+            "default": "1.0.0"
+          },
+          "server_time": {
+            "type": "string",
+            "title": "Server Time"
+          }
+        },
+        "type": "object",
+        "required": [
+          "server_time"
+        ],
+        "title": "HealthResponse",
+        "description": "System liveness and configuration status."
+      },
+      "RenderedInstruction": {
+        "properties": {
+          "key": {
+            "type": "string",
+            "title": "Key",
+            "description": "Template key identifier"
+          },
+          "text": {
+            "type": "string",
+            "title": "Text",
+            "description": "Localized text message"
+          },
+          "reviewed": {
+            "type": "boolean",
+            "title": "Reviewed",
+            "description": "True if vetted by humans (en, hi, ta)"
+          },
+          "original_en": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Original En",
+            "description": "English fallback text when machine-translated"
+          }
+        },
+        "type": "object",
+        "required": [
+          "key",
+          "text",
+          "reviewed"
+        ],
+        "title": "RenderedInstruction",
+        "description": "Safety action rendered from reviewed or translated template."
+      },
+      "ReportCreate": {
+        "properties": {
+          "device_id": {
+            "type": "string",
+            "title": "Device Id",
+            "description": "Client device UUID"
+          },
+          "lat": {
+            "type": "number",
+            "maximum": 90.0,
+            "minimum": -90.0,
+            "title": "Lat",
+            "description": "Latitude in decimal degrees"
+          },
+          "lng": {
+            "type": "number",
+            "maximum": 180.0,
+            "minimum": -180.0,
+            "title": "Lng",
+            "description": "Longitude in decimal degrees"
+          },
+          "claim": {
+            "type": "string",
+            "enum": [
+              "flooded",
+              "blocked",
+              "safe"
+            ],
+            "title": "Claim",
+            "description": "Ground observation claim"
+          },
+          "text": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 500
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Text",
+            "description": "Optional text description"
+          }
+        },
+        "type": "object",
+        "required": [
+          "device_id",
+          "lat",
+          "lng",
+          "claim"
+        ],
+        "title": "ReportCreate",
+        "description": "Payload for submitting a crowd ground-truth observation."
+      },
+      "ReportResponse": {
+        "properties": {
+          "accepted": {
+            "type": "boolean",
+            "title": "Accepted",
+            "default": true
+          },
+          "cell": {
+            "type": "string",
+            "title": "Cell",
+            "description": "Affected H3 res-8 cell"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status",
+            "description": "Updated cell status"
+          }
+        },
+        "type": "object",
+        "required": [
+          "cell",
+          "status"
+        ],
+        "title": "ReportResponse",
+        "description": "Response when a crowd report is processed."
+      },
+      "RouteResponse": {
+        "properties": {
+          "route": {
+            "$ref": "#/components/schemas/GeoJSONLineString"
+          },
+          "steps": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Steps"
+          },
+          "distance_m": {
+            "type": "number",
+            "title": "Distance M"
+          },
+          "hazard_cells_avoided": {
+            "type": "integer",
+            "title": "Hazard Cells Avoided"
+          }
+        },
+        "type": "object",
+        "required": [
+          "route",
+          "steps",
+          "distance_m",
+          "hazard_cells_avoided"
+        ],
+        "title": "RouteResponse",
+        "description": "Hazard-aware evacuation route avoiding hazard cells."
+      },
+      "ScenarioResetResponse": {
+        "properties": {
+          "ok": {
+            "type": "boolean",
+            "title": "Ok",
+            "default": true
+          },
+          "mode": {
+            "type": "string",
+            "title": "Mode",
+            "default": "live"
+          },
+          "is_replay": {
+            "type": "boolean",
+            "title": "Is Replay",
+            "default": false
+          }
+        },
+        "type": "object",
+        "title": "ScenarioResetResponse",
+        "description": "Response returned upon resetting to live mode."
+      },
+      "ScenarioSeek": {
+        "properties": {
+          "t": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "T",
+            "description": "Target ISO-8601 UTC timestamp"
+          },
+          "offset_s": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Offset S",
+            "description": "Offset seconds from scenario start"
+          }
+        },
+        "type": "object",
+        "title": "ScenarioSeek",
+        "description": "Payload to jump the scenario clock."
+      },
+      "ScenarioStart": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name",
+            "description": "Scenario identifier, e.g. michaung_replay"
+          },
+          "speed": {
+            "type": "number",
+            "maximum": 60.0,
+            "exclusiveMinimum": 0.0,
+            "title": "Speed",
+            "description": "Playback speed multiplier",
+            "default": 1.0
+          }
+        },
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "title": "ScenarioStart",
+        "description": "Payload to launch historical scenario replay."
+      },
+      "ScenarioStatus": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name",
+            "description": "Active scenario name or 'live'"
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "live",
+              "replay"
+            ],
+            "title": "Mode",
+            "description": "Operating mode"
+          },
+          "is_running": {
+            "type": "boolean",
+            "title": "Is Running",
+            "description": "Whether scenario is currently playing"
+          },
+          "paused": {
+            "type": "boolean",
+            "title": "Paused",
+            "description": "Whether playback is paused",
+            "default": false
+          },
+          "speed": {
+            "type": "number",
+            "title": "Speed",
+            "description": "Clock multiplier",
+            "default": 1.0
+          },
+          "current_time": {
+            "type": "string",
+            "title": "Current Time",
+            "description": "Effective current time (ISO-8601 UTC)"
+          },
+          "elapsed_s": {
+            "type": "integer",
+            "title": "Elapsed S",
+            "description": "Elapsed seconds since scenario start",
+            "default": 0
+          },
+          "scenario_start": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Scenario Start",
+            "description": "Start timestamp of scenario"
+          },
+          "scenario_end": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Scenario End",
+            "description": "End timestamp of scenario"
+          },
+          "is_replay": {
+            "type": "boolean",
+            "title": "Is Replay",
+            "description": "True if operating in replay mode"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "mode",
+          "is_running",
+          "current_time",
+          "is_replay"
+        ],
+        "title": "ScenarioStatus",
+        "description": "Current state of replay engine and clock."
+      },
+      "Shelter": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id",
+            "description": "Unique shelter identifier"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name",
+            "description": "English/Latin name of shelter"
+          },
+          "name_local": {
+            "type": "string",
+            "title": "Name Local",
+            "description": "Local script name, e.g. Tamil"
+          },
+          "lat": {
+            "type": "number",
+            "title": "Lat",
+            "description": "Latitude"
+          },
+          "lng": {
+            "type": "number",
+            "title": "Lng",
+            "description": "Longitude"
+          },
+          "open": {
+            "type": "boolean",
+            "title": "Open",
+            "description": "Whether shelter is currently accepting evacuees",
+            "default": true
+          },
+          "is_demo": {
+            "type": "boolean",
+            "title": "Is Demo",
+            "description": "Indicates demonstration/sample shelter data",
+            "default": true
+          },
+          "capacity": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Capacity",
+            "description": "Max shelter occupancy"
+          },
+          "distance_m": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Distance M",
+            "description": "Computed distance from tourist location in meters"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "name_local",
+          "lat",
+          "lng"
+        ],
+        "title": "Shelter",
+        "description": "Emergency evacuation center or safe shelter."
+      },
+      "ShelterListResponse": {
+        "properties": {
+          "shelters": {
+            "items": {
+              "$ref": "#/components/schemas/Shelter"
+            },
+            "type": "array",
+            "title": "Shelters"
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          }
+        },
+        "type": "object",
+        "required": [
+          "shelters",
+          "total"
+        ],
+        "title": "ShelterListResponse",
+        "description": "Enveloped response for shelter catalog."
+      },
+      "StateResponse": {
+        "properties": {
+          "cell": {
+            "type": "string",
+            "title": "Cell",
+            "description": "Current H3 res-8 cell"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "official_hazard",
+              "likely_hazard",
+              "unverified",
+              "contradicted",
+              "clear"
+            ],
+            "title": "Status",
+            "description": "Cell hazard classification"
+          },
+          "p_hazard": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "P Hazard",
+            "description": "Posterior hazard probability"
+          },
+          "headline_key": {
+            "type": "string",
+            "title": "Headline Key",
+            "description": "Dominant template key for UI banner"
+          },
+          "alerts": {
+            "items": {
+              "$ref": "#/components/schemas/Alert"
+            },
+            "type": "array",
+            "title": "Alerts",
+            "description": "Active official alerts covering this cell"
+          },
+          "instructions": {
+            "items": {
+              "$ref": "#/components/schemas/RenderedInstruction"
+            },
+            "type": "array",
+            "title": "Instructions",
+            "description": "Rendered prioritized safety actions"
+          },
+          "evidence": {
+            "items": {
+              "$ref": "#/components/schemas/EvidenceItem"
+            },
+            "type": "array",
+            "title": "Evidence",
+            "description": "Transparent Bayesian evidence list"
+          },
+          "nearest_shelters": {
+            "items": {
+              "$ref": "#/components/schemas/Shelter"
+            },
+            "type": "array",
+            "title": "Nearest Shelters",
+            "description": "Nearby open evacuation centers"
+          },
+          "is_replay": {
+            "type": "boolean",
+            "title": "Is Replay",
+            "description": "Whether state is emitted by replay engine",
+            "default": false
+          },
+          "generated_at": {
+            "type": "string",
+            "title": "Generated At",
+            "description": "Timestamp based on effective clock (scenario clock in replay)"
+          },
+          "server_time": {
+            "type": "string",
+            "title": "Server Time",
+            "description": "Actual server wall-clock time (ISO-8601 UTC)"
+          }
+        },
+        "type": "object",
+        "required": [
+          "cell",
+          "status",
+          "p_hazard",
+          "headline_key",
+          "generated_at",
+          "server_time"
+        ],
+        "title": "StateResponse",
+        "description": "Unified crisis response returned to tourist PWA for their location."
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    },
+    "securitySchemes": {
+      "AuthorityApiKey": {
+        "type": "apiKey",
+        "description": "Pre-shared administrative key for disaster management authority endpoints",
+        "in": "header",
+        "name": "X-Authority-Key"
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "System",
+      "description": "Liveness and operational status"
+    },
+    {
+      "name": "Tourist",
+      "description": "Public crisis status, instructions, and tourist check-ins"
+    },
+    {
+      "name": "Authority",
+      "description": "Administrative alert publishing and triage dashboard (Protected)"
+    },
+    {
+      "name": "Scenario",
+      "description": "Historical replay scenario controls and clock seeking"
+    }
+  ]
+}

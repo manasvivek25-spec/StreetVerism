@@ -1,0 +1,68 @@
+[
+  {
+    "id": "alt_michaung_01",
+    "source": "official_manual",
+    "sender": "TNSDMA (demo)",
+    "hazard": "flood",
+    "severity": "extreme",
+    "urgency": "immediate",
+    "certainty": "observed",
+    "area": {
+      "type": "Polygon",
+      "coordinates": [
+        [
+          [80.20, 13.00],
+          [80.25, 13.00],
+          [80.25, 13.06],
+          [80.20, 13.06],
+          [80.20, 13.00]
+        ]
+      ]
+    },
+    "instruction_keys": [
+      "MOVE_TO_HIGHER_GROUND",
+      "AVOID_FLOODED_ROADS",
+      "DO_NOT_CROSS_WATER"
+    ],
+    "params": {
+      "shelter": "sh_chennai_01"
+    },
+    "sent_at": "2026-10-10T10:00:00Z",
+    "expires_at": "2026-10-10T22:00:00Z",
+    "supersedes": null,
+    "published_by": "tnsdma-duty-officer",
+    "is_replay": false
+  },
+  {
+    "id": "alt_michaung_02",
+    "source": "official_manual",
+    "sender": "IMD (demo)",
+    "hazard": "cyclone",
+    "severity": "severe",
+    "urgency": "immediate",
+    "certainty": "likely",
+    "area": {
+      "type": "Polygon",
+      "coordinates": [
+        [
+          [80.22, 12.95],
+          [80.28, 12.95],
+          [80.28, 13.02],
+          [80.22, 13.02],
+          [80.22, 12.95]
+        ]
+      ]
+    },
+    "instruction_keys": [
+      "STAY_INDOORS",
+      "STAY_AWAY_FROM_COAST",
+      "KEEP_PHONE_CHARGED"
+    ],
+    "params": {},
+    "sent_at": "2026-10-10T10:30:00Z",
+    "expires_at": "2026-10-10T20:00:00Z",
+    "supersedes": null,
+    "published_by": "imd-cyclone-warning",
+    "is_replay": false
+  }
+]
