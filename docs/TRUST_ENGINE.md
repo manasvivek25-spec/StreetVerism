@@ -75,6 +75,10 @@ For an observer reporting with sensitivity $s = P(\text{Positive} \mid H)$ and s
 - **Half-Life ($T_{1/2}$)**: $7,200 \text{ seconds}$ (2 hours)
 - **Decay Constant ($\lambda$)**: $\frac{\ln 2}{7200} \approx 9.62939 \times 10^{-5} \text{ s}^{-1}$
 - **Decay Factor**: $d(t) = \exp(-\lambda \cdot \Delta t)$ where $\Delta t$ is elapsed seconds since the cluster's **earliest** report.
+- **Cluster Age Thresholds**:
+  - **Active Cluster**: cluster age $\Delta t \le 21,600 \text{ s}$ (6 hours). Derived decay factor: $d(21600) = 0.125$.
+  - **Corroborated Cluster**: cluster age $\Delta t \le 14,400 \text{ s}$ (4 hours). Derived decay factor: $d(14400) = 0.25$.
+  - *Implementation Note*: The engine evaluates cluster validity using exact elapsed seconds (`age_s <= 21600` and `age_s <= 14400`), keeping decay factor thresholds as derived analytical references to avoid floating-point epsilon discrepancies.
 - **Crowd Clamping**: $\text{crowd\_logit\_clipped} = \text{clamp}(\sum \text{LLR}_i \cdot d_i(t), -3.0, +3.0)$.
 - **Rain Independence**: Rain evidence enters **exclusively** via the prior; the rain line in the evidence breakdown is display-only and is never added to the posterior.
 
@@ -167,18 +171,18 @@ For an observer reporting with sensitivity $s = P(\text{Positive} \mid H)$ and s
 
 The following table is produced deterministically by `backend/scripts/trust_demo.py`:
 
-| Scenario | Rain 3h | Terrain | Reports | Raw Crowd | Clipped | Prior p | Final p | Status | Headline Key |
-|---|---|---|---|---|---|---|---|---|---|
-| Single fresh rumor on dry cell | 0.0 mm | Normal | 1 | +1.54 | +1.54 | 0.018 | 0.079 | `contradicted` | `FOLLOW_OFFICIAL_ONLY` |
-| Single rumor on flood-prone cell | 0.0 mm | Flood-prone | 1 | +1.54 | +1.54 | 0.076 | 0.277 | `unverified` | `UNVERIFIED_WARNING` |
-| 3 distinct reports with 25 mm rain (flood-prone) | 25.0 mm | Flood-prone | 3 | +4.62 | +3.00 | 0.231 | 0.858 | `likely_hazard` | `AVOID_FLOODED_ROADS` |
-| 50 duplicate reports (same text) | 0.0 mm | Flood-prone | 50 | +1.54 | +1.54 | 0.076 | 0.277 | `unverified` | `UNVERIFIED_WARNING` |
-| 100 distinct devices (crowd clip bound) | 0.0 mm | Normal | 100 | +154.04 | +3.00 | 0.018 | 0.269 | `unverified` | `UNVERIFIED_WARNING` |
-| Decay check at t = +0 h (half-life 2 h) | 25.0 mm | Flood-prone | 1 | +1.54 | +1.54 | 0.231 | 0.584 | `unverified` | `UNVERIFIED_WARNING` |
-| Decay check at t = +2 h (half-life 2 h) | 25.0 mm | Flood-prone | 1 | +0.77 | +0.77 | 0.231 | 0.394 | `unverified` | `UNVERIFIED_WARNING` |
-| Decay check at t = +4 h (half-life 2 h) | 25.0 mm | Flood-prone | 1 | +0.39 | +0.39 | 0.231 | 0.307 | `unverified` | `UNVERIFIED_WARNING` |
-| Decay check at t = +6 h (half-life 2 h) | 25.0 mm | Flood-prone | 1 | +0.19 | +0.19 | 0.231 | 0.268 | `unverified` | `UNVERIFIED_WARNING` |
-| Official all_clear contradicting rumor | 25.0 mm | Flood-prone | 1 | +1.54 | +1.54 | 0.231 | 0.010 | `contradicted` | `FOLLOW_OFFICIAL_ONLY` |
+| Scenario | Rain 3h | Rain 24h | Terrain | Reports | Raw Crowd | Clipped | Prior p | Final p | Status | Headline Key |
+|---|---|---|---|---|---|---|---|---|---|---|
+| Single fresh rumor on dry cell | 0.0 mm | 0.0 mm | Normal | 1 | +1.54 | +1.54 | 0.018 | 0.079 | `contradicted` | `FOLLOW_OFFICIAL_ONLY` |
+| Single rumor on flood-prone cell | 0.0 mm | 0.0 mm | Flood-prone | 1 | +1.54 | +1.54 | 0.076 | 0.277 | `unverified` | `UNVERIFIED_WARNING` |
+| 3 distinct reports with 25 mm rain (flood-prone) | 25.0 mm | 30.0 mm | Flood-prone | 3 | +4.62 | +3.00 | 0.231 | 0.858 | `likely_hazard` | `AVOID_FLOODED_ROADS` |
+| 50 duplicate reports (same text) | 0.0 mm | 0.0 mm | Flood-prone | 50 | +1.54 | +1.54 | 0.076 | 0.277 | `unverified` | `UNVERIFIED_WARNING` |
+| 100 distinct devices (crowd clip bound) | 0.0 mm | 0.0 mm | Normal | 100 | +154.04 | +3.00 | 0.018 | 0.269 | `unverified` | `UNVERIFIED_WARNING` |
+| Decay check at t = +0 h (half-life 2 h) | 25.0 mm | 30.0 mm | Flood-prone | 1 | +1.54 | +1.54 | 0.231 | 0.584 | `unverified` | `UNVERIFIED_WARNING` |
+| Decay check at t = +2 h (half-life 2 h) | 25.0 mm | 30.0 mm | Flood-prone | 1 | +0.77 | +0.77 | 0.231 | 0.394 | `unverified` | `UNVERIFIED_WARNING` |
+| Decay check at t = +4 h (half-life 2 h) | 25.0 mm | 30.0 mm | Flood-prone | 1 | +0.39 | +0.39 | 0.231 | 0.307 | `unverified` | `UNVERIFIED_WARNING` |
+| Decay check at t = +6 h (half-life 2 h) | 25.0 mm | 30.0 mm | Flood-prone | 1 | +0.19 | +0.19 | 0.231 | 0.268 | `unverified` | `UNVERIFIED_WARNING` |
+| Official all_clear contradicting rumor | 25.0 mm | 30.0 mm | Flood-prone | 1 | +1.54 | +1.54 | 0.231 | 0.010 | `contradicted` | `FOLLOW_OFFICIAL_ONLY` |
 
 ---
 
@@ -200,3 +204,5 @@ Reaching `likely_hazard` requires both plausible weather and **fresh, independen
    - The weights are calibrated for Chennai coastal terrain and monsoon rainfall intensities. In arid or mountainous topographies, runoff coefficients and soil saturation curves differ significantly and would require regional recalibration.
 3. **No Sensor Feedback**:
    - Ground IoT water level sensors (e.g. ultrasonic depth gauges) are not yet integrated into the prior; only gridded precipitation and static elevation vulnerability are currently modeled.
+4. **Upstream Releases & Non-Rain Floods**:
+   - Floods can occur without local rain (such as sudden reservoir or dam sluice gate releases, upstream river overflow, or municipal drainage/pump failures). Therefore, classifying a report as `contradicted` via low prior is strictly a **weather-plausibility judgment**, not a finding of falsehood, fake news, or debunking. The user-facing evidence explicitly states: *"No heavy rain recorded here, so this report is unconfirmed. Follow official guidance."*

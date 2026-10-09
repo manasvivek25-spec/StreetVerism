@@ -228,6 +228,52 @@ def test_decay_half_life_exact():
     assert res_0.p_hazard > res_2h.p_hazard > res_4h.p_hazard > res_6h.p_hazard > prior_p
 
 
+def test_cluster_age_boundary_seconds():
+    """Verify cluster active and corroborated boundaries at exactly 4h, 4h+1s, 6h, 6h+1s."""
+    from backend.app.trust.engine import cluster_reports
+
+    t_report = _make_utc_dt("2026-10-10T12:00:00Z")
+    report = [_make_report("r1", "dev_1", ANCHOR_CELL, "flooded", "Flooded street", t_report.isoformat())]
+
+    # At exactly 4h (14400s): corroborated is True, active is True
+    t_4h = t_report + timedelta(seconds=14400)
+    clusters_4h = cluster_reports(report, ANCHOR_CELL, t_4h)
+    assert len(clusters_4h) == 1
+    assert clusters_4h[0].is_corroborated is True
+    assert clusters_4h[0].is_active is True
+
+    # At 4h + 1s (14401s): corroborated is False, active is True
+    t_4h_1s = t_report + timedelta(seconds=14401)
+    clusters_4h_1s = cluster_reports(report, ANCHOR_CELL, t_4h_1s)
+    assert len(clusters_4h_1s) == 1
+    assert clusters_4h_1s[0].is_corroborated is False
+    assert clusters_4h_1s[0].is_active is True
+
+    # At exactly 6h (21600s): corroborated is False, active is True
+    t_6h = t_report + timedelta(seconds=21600)
+    clusters_6h = cluster_reports(report, ANCHOR_CELL, t_6h)
+    assert len(clusters_6h) == 1
+    assert clusters_6h[0].is_corroborated is False
+    assert clusters_6h[0].is_active is True
+
+    # At 6h + 1s (21601s): corroborated is False, active is False
+    t_6h_1s = t_report + timedelta(seconds=21601)
+    clusters_6h_1s = cluster_reports(report, ANCHOR_CELL, t_6h_1s)
+    assert len(clusters_6h_1s) == 1
+    assert clusters_6h_1s[0].is_corroborated is False
+    assert clusters_6h_1s[0].is_active is False
+
+    # Check assess_cell impact:
+    # Dry terrain with positive report: active cluster triggers 'contradicted' (low prior guard)
+    feat_dry = CellFeatures(rain_mm_3h=0.0, rain_mm_24h=0.0, flood_prone=False, rain_available=True)
+    res_active_at_6h = assess_cell(ANCHOR_CELL, feat_dry, report, [], t_6h)
+    assert res_active_at_6h.status == "contradicted"
+
+    # Beyond 6h (6h + 1s): cluster is inactive, no active claims -> returns to 'clear'
+    res_inactive_at_6h_1s = assess_cell(ANCHOR_CELL, feat_dry, report, [], t_6h_1s)
+    assert res_inactive_at_6h_1s.status == "clear"
+
+
 def test_clipping_both_directions():
     """Verify bidirectional clamping at -3.0 and +3.0."""
     now = _make_utc_dt("2026-10-10T12:00:00Z")
@@ -458,7 +504,7 @@ def test_contradicted_via_low_prior_guard():
     assert res_contradicted.status == "contradicted"
     assert res_contradicted.headline_key == "FOLLOW_OFFICIAL_ONLY"
     crowd_item = [e for e in res_contradicted.evidence if e.type == "crowd"][0]
-    assert "Weather data does not support this claim" in crowd_item.summary
+    assert crowd_item.summary == "No heavy rain recorded here, so this report is unconfirmed. Follow official guidance."
 
     # 2. Same cell but rain_available = False (missing radar data) -> cannot prove safety -> unverified
     features_stale = CellFeatures(rain_mm_3h=0.0, rain_mm_24h=0.0, flood_prone=False, rain_available=False)

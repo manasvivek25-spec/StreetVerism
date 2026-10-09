@@ -104,14 +104,15 @@ def run_scenarios():
     res_clr = assess_cell(ANCHOR_CELL, feat_rain, rep_clr, alert_clr, now)
     scenarios.append(("Official all_clear contradicting rumor", feat_rain, len(rep_clr), res_clr))
 
-    print("| Scenario | Rain 3h | Terrain | Reports | Raw Crowd | Clipped | Prior p | Final p | Status | Headline Key |")
-    print("|---|---|---|---|---|---|---|---|---|---|")
+    print("| Scenario | Rain 3h | Rain 24h | Terrain | Reports | Raw Crowd | Clipped | Prior p | Final p | Status | Headline Key |")
+    print("|---|---|---|---|---|---|---|---|---|---|---|")
     for name, feat, num_rep, res in scenarios:
         fp_str = "Flood-prone" if feat.flood_prone else "Normal"
         r3_str = f"{feat.rain_mm_3h:.1f} mm" if feat.rain_mm_3h is not None else "0.0 mm"
+        r24_str = f"{feat.rain_mm_24h:.1f} mm" if feat.rain_mm_24h is not None else "0.0 mm"
         prior_p = 1.0 / (1.0 + math.exp(-res.prior_logit))
         print(
-            f"| {name} | {r3_str} | {fp_str} | {num_rep} | {res.crowd_logit_raw:+.2f} | {res.crowd_logit_clipped:+.2f} | {prior_p:.3f} | {res.p_hazard:.3f} | `{res.status}` | `{res.headline_key}` |"
+            f"| {name} | {r3_str} | {r24_str} | {fp_str} | {num_rep} | {res.crowd_logit_raw:+.2f} | {res.crowd_logit_clipped:+.2f} | {prior_p:.3f} | {res.p_hazard:.3f} | `{res.status}` | `{res.headline_key}` |"
         )
 
 
