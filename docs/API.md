@@ -6,6 +6,24 @@ Standard health check endpoints are accessible at both `/health` and `/api/healt
 
 ---
 
+## Changes since Contract v1 (Team Diff & Additions)
+
+The following table documents all additive fields, envelope wrappers, and behavioral refinements established during backend stabilization, provided for Teams B and C:
+
+| Endpoint / Area | Original Contract v1 | Implemented Addition / Deviation | Rationale & Team Notes |
+|---|---|---|---|
+| `GET /api/state` | Contained `generated_at` and `reviewed` flag | Added `server_time` (ISO-8601 UTC) and `instructions[].original_en` (`null` when `reviewed=true`; English string when `reviewed=false`) | Enables wall-clock drift auditing during replay; allows tourist UI to show human English fallback alongside machine translation. |
+| `POST /api/checkin` | Returned `{"id": "..."}` | Returns `{"id": "...", "recorded_at": "ISO-8601 UTC"}` | Confirms check-in receipt timestamp to tourist client. |
+| `GET /api/shelters` | Bare list `[Shelter, ...]` | Enveloped as `{"shelters": [...], "total": int}`; added optional `capacity: int` on shelter items | Consistent envelope convention; lets console/dispatch view max occupancy. |
+| `GET /api/alerts?active=true` | Bare list `[Alert, ...]` | Enveloped as `{"alerts": [...], "total": int}` | Consistent envelope convention across all catalog queries. |
+| `POST /api/scenario/seek` | Loosely specified `{t}` parameter | Strictly accepts XOR: `{"t": "ISO-8601"}` OR `{"offset_s": int}`. Returns HTTP 422 if both or neither provided. Clamps to bounds. | Disambiguates absolute timestamp seeking vs relative seconds seeking without silent failures. |
+| `GET /api/scenario/status` & `POST /api/scenario/start` | Undefined status response schema | Concrete response: `{"name", "mode": "live"\|"replay"\|"mock", "is_running", "paused", "speed", "current_time", "elapsed_s", "scenario_start", "scenario_end", "is_replay"}` | Full clock observability for replay scrubbing UI. |
+| `GET /health` & `GET /api/health` | Undefined health response schema | Returns `{"status": "healthy", "mode": "live"\|"replay"\|"mock", "is_replay": bool, "version": str, "server_time": str}` | Standardized health check for Docker, reverse proxies, and team monitoring. |
+| Global Headers | No mock header | Response header `X-Mock-Data: 1` present on all `/api/*` and `/health` responses when `MOCK=1`; omitted when `MOCK=0` | Allows frontend to show honest "Mock data" banner without changing JSON payload shapes. |
+| Error Responses | Generic HTTP errors | Documented standard error envelopes: 401, 403, 422, 429 schemas | Deterministic error handling across client apps. |
+
+---
+
 ## 1. Global Conventions & Standards
 
 - **Coordinates**:
@@ -483,5 +501,44 @@ Hazard-aware route avoiding cells marked `official_hazard` or `likely_hazard`.
   ],
   "distance_m": 850.0,
   "hazard_cells_avoided": 2
+}
+```
+
+---
+
+### 3.6 Standard Error Responses
+
+- **401 Unauthorized** (Missing or empty `X-Authority-Key` on protected endpoints):
+```json
+{
+  "detail": "Missing required header: X-Authority-Key"
+}
+```
+
+- **403 Forbidden** (Invalid `X-Authority-Key` credentials):
+```json
+{
+  "detail": "Invalid X-Authority-Key credentials"
+}
+```
+
+- **422 Unprocessable Entity** (Validation error, e.g. XOR violation on scenario seek or coordinate bounds):
+```json
+{
+  "detail": [
+    {
+      "type": "value_error",
+      "loc": ["body"],
+      "msg": "Payload must contain exactly one of 't' or 'offset_s'",
+      "input": {}
+    }
+  ]
+}
+```
+
+- **429 Too Many Requests** (Rate limit exceeded on crowd reports or check-in submissions):
+```json
+{
+  "detail": "Rate limit exceeded. Too many requests submitted from this device. Please retry shortly."
 }
 ```
