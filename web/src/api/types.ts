@@ -1,124 +1,139 @@
 export type Language = 'en' | 'hi' | 'ta' | 'fr' | 'de' | 'ja';
 
-export type HazardStatus = 'SAFE' | 'ADVISORY' | 'WARNING' | 'EMERGENCY' | 'UNVERIFIED';
+export type CellStatus = 'official_hazard' | 'likely_hazard' | 'unverified' | 'contradicted' | 'clear';
 
-export type CheckInState = 'SAFE' | 'HELP_NEEDED' | 'UNKNOWN';
+export type CheckInState = 'safe' | 'need_help';
 
-export interface CrowdClaim {
-  id: string;
-  claim_type: string;
-  description: string;
-  timestamp: string;
-  location?: string;
-  confidence_score?: number;
-  [key: string]: unknown;
-}
+export type ClaimType = 'flooded' | 'blocked' | 'safe';
 
 export interface Alert {
   id: string;
-  title: string;
-  severity: string;
-  description: string;
-  timestamp: string;
-  area?: string;
-  [key: string]: unknown;
-}
-
-export interface Instruction {
-  id: string;
-  step: number;
-  text: string;
-  category?: string;
-  [key: string]: unknown;
-}
-
-export interface Evidence {
-  id: string;
-  type: string;
   source: string;
-  details?: string;
-  timestamp?: string;
-  [key: string]: unknown;
+  sender: string;
+  hazard: string;
+  severity: string;
+  urgency: string;
+  certainty: string;
+  area: {
+    type: string;
+    coordinates: number[][][];
+  };
+  instruction_keys: string[];
+  params: Record<string, unknown>;
+  sent_at: string;
+  expires_at: string;
+  supersedes?: string | null;
+  published_by: string;
+  is_replay: boolean;
+}
+
+export interface RenderedInstruction {
+  key: string;
+  text: string;
+  reviewed: boolean;
+  original_en?: string | null;
+}
+
+export interface EvidenceItem {
+  type: 'official' | 'rain' | 'crowd';
+  summary: string;
+  age_s: number;
+  weight: number;
 }
 
 export interface Shelter {
   id: string;
   name: string;
-  address?: string;
-  capacity?: number;
-  occupancy?: number;
-  is_verified: boolean;
-  latitude?: number;
-  longitude?: number;
-  [key: string]: unknown;
+  name_local: string;
+  lat: number;
+  lng: number;
+  open: boolean;
+  is_demo: boolean;
+  capacity?: number | null;
+  distance_m?: number | null;
+}
+
+export interface HealthResponse {
+  status: string;
+  mode: 'live' | 'replay' | 'mock' | string;
+  is_replay: boolean;
+  version: string;
+  server_time: string;
 }
 
 export interface StateResponse {
-  language: Language;
-  hazard_status: HazardStatus;
-  headline?: string;
-  summary?: string;
-  unverified_claim?: CrowdClaim | null;
+  cell: string;
+  status: CellStatus;
+  p_hazard: number;
+  headline_key: string;
   alerts: Alert[];
-  instructions: Instruction[];
-  evidence: Evidence[];
-  shelters: Shelter[];
-  is_demo?: boolean;
-  [key: string]: unknown;
+  instructions: RenderedInstruction[];
+  evidence: EvidenceItem[];
+  nearest_shelters: Shelter[];
+  is_replay: boolean;
+  generated_at: string;
+  server_time: string;
 }
 
 export interface CheckInRequest {
-  status: CheckInState;
-  state?: CheckInState;
-  device_id?: string;
-  user_id?: string;
-  language?: Language;
+  device_id: string;
+  lat: number;
+  lng: number;
+  state: CheckInState;
+  language?: string;
   group_size?: number;
-  lat?: number;
-  lng?: number;
-  location?: {
-    latitude: number;
-    longitude: number;
-  };
   note?: string;
-  [key: string]: unknown;
 }
 
 export interface CheckInResponse {
-  success: boolean;
-  message?: string;
-  recorded_at?: string;
-  status: CheckInState;
-  [key: string]: unknown;
+  id: string;
+  recorded_at: string;
 }
 
 export interface ReportRequest {
-  description?: string;
+  device_id: string;
+  lat: number;
+  lng: number;
+  claim: ClaimType;
   text?: string;
-  claim?: 'flooded' | 'blocked' | 'safe' | string;
-  claim_type?: 'flooded' | 'blocked' | 'safe' | string;
-  category?: string;
-  device_id?: string;
-  lat?: number;
-  lng?: number;
-  location?: {
-    latitude: number;
-    longitude: number;
-  };
-  photo_url?: string;
-  [key: string]: unknown;
 }
 
 export interface ReportResponse {
-  success: boolean;
-  report_id?: string;
-  message?: string;
-  timestamp?: string;
-  [key: string]: unknown;
+  accepted: boolean;
+  cell: string;
+  status: string;
 }
 
 export interface TemplatesResponse {
+  lang: string;
+  reviewed: boolean;
   templates: Record<string, string>;
-  categories?: string[];
-  [key: string]: unknown;
+}
+
+export interface ShelterListResponse {
+  shelters: Shelter[];
+  total: number;
+}
+
+export interface CellProperties {
+  cell: string;
+  status: CellStatus;
+  p_hazard: number;
+  updated_at: string;
+}
+
+export interface GeoJSONPolygonGeometry {
+  type: 'Polygon';
+  coordinates: number[][][];
+}
+
+export interface CellFeature {
+  type: 'Feature';
+  geometry: GeoJSONPolygonGeometry;
+  properties: CellProperties;
+}
+
+export interface CellFeatureCollection {
+  type: 'FeatureCollection';
+  features: CellFeature[];
 }
