@@ -5,7 +5,12 @@ from typing import Any, Dict, List, Optional, Tuple
 from fastapi import HTTPException
 
 from backend.app.geo import cell_to_geojson_boundary, cells_in_bbox
-from backend.app.models import CellFeature, CellFeatureCollection, GeoJSONPolygon
+from backend.app.models.cell import (
+    CellFeature,
+    CellFeatureCollection,
+    CellProperties,
+    GeoJSONPolygonGeometry,
+)
 from backend.app.services.context import DataContext
 from backend.app.trust import assess_cells
 
@@ -129,18 +134,17 @@ def get_cells_for_bbox(bbox_str: str, ctx: DataContext) -> CellFeatureCollection
         if rounded_ring and rounded_ring[0] != rounded_ring[-1]:
             rounded_ring.append(rounded_ring[0])
 
-        polygon_geom = GeoJSONPolygon(type="Polygon", coordinates=[rounded_ring])
+        polygon_geom = GeoJSONPolygonGeometry(type="Polygon", coordinates=[rounded_ring])
 
         feat = CellFeature(
             type="Feature",
-            id=c,
             geometry=polygon_geom,
-            properties={
-                "cell": c,
-                "status": asm.status,
-                "p_hazard": round(asm.p_hazard, 4),
-                "updated_at": updated_at_iso,
-            },
+            properties=CellProperties(
+                cell=c,
+                status=asm.status,
+                p_hazard=round(asm.p_hazard, 4),
+                updated_at=updated_at_iso,
+            ),
         )
         features_list.append(feat)
 

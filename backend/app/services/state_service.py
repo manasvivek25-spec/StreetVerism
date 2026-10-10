@@ -40,7 +40,8 @@ def is_cell_in_scenario_groups(cell: str, scenario: Scenario) -> bool:
     c_lat, c_lng = cell_to_latlng(cell)
     pt = Point(c_lng, c_lat)
     for group in scenario.area_groups:
-        geom = shape(group.polygon)
+        poly = group.polygon.model_dump() if hasattr(group.polygon, "model_dump") else group.polygon
+        geom = shape(poly)
         if geom.contains(pt) or geom.touches(pt):
             return True
     return False

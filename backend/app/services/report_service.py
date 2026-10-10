@@ -18,12 +18,9 @@ RATE_LIMIT_WINDOW_SECONDS: int = 600  # 10 minutes per device per cell
 
 
 def validate_report_payload(payload: ReportCreate) -> None:
-    """Validate report fields: UUID format, coordinate ranges, claim enum, and max text length."""
-    # Validate UUID
-    try:
-        uuid.UUID(str(payload.device_id))
-    except (ValueError, AttributeError):
-        raise HTTPException(status_code=422, detail="Invalid device_id: must be a valid UUID string.")
+    """Validate report fields: device_id format, coordinate ranges, claim enum, and max text length."""
+    if not payload.device_id or len(payload.device_id.strip()) == 0:
+        raise HTTPException(status_code=422, detail="Invalid device_id: must not be empty.")
 
     # Validate coordinate ranges
     if not (-90.0 <= payload.lat <= 90.0):
@@ -32,10 +29,10 @@ def validate_report_payload(payload: ReportCreate) -> None:
         raise HTTPException(status_code=422, detail=f"Longitude {payload.lng} out of range [-180.0, 180.0].")
 
     # Validate claim enum
-    if payload.claim not in ("flooded", "impassable", "normal"):
+    if payload.claim not in ("flooded", "blocked", "safe", "impassable", "normal"):
         raise HTTPException(
             status_code=422,
-            detail=f"Invalid claim '{payload.claim}'. Must be one of: flooded, impassable, normal.",
+            detail=f"Invalid claim '{payload.claim}'. Must be one of: flooded, blocked, safe.",
         )
 
     # Validate text length

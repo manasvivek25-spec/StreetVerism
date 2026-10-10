@@ -25,11 +25,9 @@ RETENTION_WINDOW_HOURS: int = 48
 
 def validate_checkin_payload(payload: CheckinCreate) -> None:
     """Validate check-in submission fields."""
-    # 1. UUID device_id
-    try:
-        uuid.UUID(str(payload.device_id))
-    except (ValueError, AttributeError):
-        raise HTTPException(status_code=422, detail="Invalid device_id: must be a valid UUID string.")
+    # 1. Non-empty device_id
+    if not payload.device_id or len(payload.device_id.strip()) == 0:
+        raise HTTPException(status_code=422, detail="Invalid device_id: must not be empty.")
 
     # 2. Coordinate ranges
     if not (-90.0 <= payload.lat <= 90.0):

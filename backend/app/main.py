@@ -4,7 +4,7 @@ import asyncio
 import logging
 import os
 from contextlib import asynccontextmanager
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 from fastapi import FastAPI, Request
@@ -74,8 +74,9 @@ async def lifespan(app: FastAPI):
             while True:
                 try:
                     await asyncio.sleep(3600)
-                    now_epoch = datetime.now(timezone.utc).timestamp()
-                    get_checkin_repo().delete_older_than(now_epoch - 48 * 3600)
+                    now_utc = datetime.now(timezone.utc)
+                    cutoff_iso = (now_utc - timedelta(hours=48)).isoformat()
+                    get_checkin_repo().delete_older_than(cutoff_iso)
                     logger.debug("Hourly check-in retention purge completed.")
                 except asyncio.CancelledError:
                     break

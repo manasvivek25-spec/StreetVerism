@@ -174,3 +174,24 @@ class ScenarioClock:
                 "is_replay": True,
                 "finished": finished,
             }
+
+    @property
+    def speed(self) -> float:
+        """Current playback multiplier."""
+        with self._lock:
+            return self._speed
+
+    @property
+    def is_running(self) -> bool:
+        """Whether clock is actively advancing."""
+        return bool(self.status()["is_running"])
+
+    @property
+    def is_paused(self) -> bool:
+        """Whether playback speed is 0.0."""
+        return bool(self.status()["paused"])
+
+    def is_finished(self) -> bool:
+        """Whether clock has reached scenario end timestamp."""
+        return bool(self.status()["finished"])
+

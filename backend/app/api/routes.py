@@ -88,6 +88,7 @@ _SHELTER_REPO: ShelterRepo = SqliteShelterRepo()
 _SCENARIO: Optional[Scenario] = None
 _SCENARIO_CLOCK: Optional[ScenarioClock] = None
 _REPLAY_OVERLAY: ReplayOverlay = ReplayOverlay()
+_IS_REPLAY_ACTIVE: bool = False
 
 
 def get_alert_repo() -> AlertRepo:
@@ -151,27 +152,25 @@ def init_scenario(scenario_path: Path, shelters_path: Path) -> Scenario:
 
 def autostart_replay(bookmark_name: str) -> None:
     """Seek to named bookmark and start playback at 1x."""
-    global _SCENARIO, _SCENARIO_CLOCK
+    global _SCENARIO, _SCENARIO_CLOCK, _IS_REPLAY_ACTIVE
     if _SCENARIO is None or _SCENARIO_CLOCK is None:
         return
     bm = next((b for b in _SCENARIO.bookmarks if b.name == bookmark_name), None)
     _SCENARIO_CLOCK.start(speed=1.0)
+    _IS_REPLAY_ACTIVE = True
     if bm:
         _SCENARIO_CLOCK.seek(offset_s=bm.t_offset_s)
     clear_cells_cache()
 
 
 def _get_context(eval_now: Optional[datetime] = None) -> DataContext:
-    global _SCENARIO_CLOCK, _SCENARIO, _REPLAY_OVERLAY, _ALERT_REPO, _REPORT_REPO
-    if _SCENARIO_CLOCK is not None and (_SCENARIO_CLOCK.is_running or _SCENARIO_CLOCK.is_paused):
-        effective_mode = "replay"
-    else:
-        effective_mode = "live"
+    global _SCENARIO_CLOCK, _SCENARIO, _REPLAY_OVERLAY, _ALERT_REPO, _REPORT_REPO, _IS_REPLAY_ACTIVE
+    effective_mode = "replay" if (_IS_REPLAY_ACTIVE and _SCENARIO_CLOCK is not None) else "live"
 
     return build_data_context(
         mode=effective_mode,
-        scenario_clock=_SCENARIO_CLOCK,
-        scenario=_SCENARIO,
+        scenario_clock=_SCENARIO_CLOCK if effective_mode == "replay" else None,
+        scenario=_SCENARIO if effective_mode == "replay" else None,
         overlay=_REPLAY_OVERLAY,
         alert_repo=_ALERT_REPO,
         report_repo=_REPORT_REPO,
@@ -289,8 +288,8 @@ async def get_health() -> HealthResponse:
         )
 
     # Live or Replay mode
-    global _SCENARIO_CLOCK
-    if _SCENARIO_CLOCK is not None and (_SCENARIO_CLOCK.is_running or _SCENARIO_CLOCK.is_paused):
+    global _SCENARIO_CLOCK, _IS_REPLAY_ACTIVE
+    if _IS_REPLAY_ACTIVE and _SCENARIO_CLOCK is not None:
         sim_iso = _SCENARIO_CLOCK.sim_time().isoformat()
         replay_obj = {
             "label": REPLAY_LABEL,
@@ -617,12 +616,13 @@ async def start_scenario_endpoint(payload: ScenarioStart) -> ScenarioStatus:
     if not scenario_path.exists():
         raise HTTPException(status_code=404, detail=f"Scenario '{payload.name}' not found")
 
-    global _SCENARIO, _SCENARIO_CLOCK
+    global _SCENARIO, _SCENARIO_CLOCK, _IS_REPLAY_ACTIVE
     if _SCENARIO is None or _SCENARIO.name != payload.name:
         init_scenario(scenario_path, root / "data" / "shelters.json")
 
     assert _SCENARIO_CLOCK is not None
     _SCENARIO_CLOCK.start(speed=payload.speed)
+    _IS_REPLAY_ACTIVE = True
     clear_cells_cache()
 
     return _build_scenario_status_response()
@@ -630,14 +630,19 @@ async def start_scenario_endpoint(payload: ScenarioStart) -> ScenarioStatus:
 
 @router.post("/scenario/seek", response_model=ScenarioStatus, tags=["Scenario"])
 async def seek_scenario_endpoint(payload: ScenarioSeek) -> ScenarioStatus:
-    """Seek the replay scenario clock to a specific timestamp or offset."""
+    """Seek the replay scenario clock to a specific timestamp, offset, or bookmark."""
     settings = get_settings()
     if settings.mock:
         start_dt = datetime.fromisoformat(_SCENARIO_STATE["scenario_start"].replace("Z", "+00:00"))
         end_dt = datetime.fromisoformat(_SCENARIO_STATE["scenario_end"].replace("Z", "+00:00"))
         max_duration = int((end_dt - start_dt).total_seconds())
 
-        if payload.offset_s is not None:
+        if payload.bookmark is not None:
+            if payload.bookmark == "golden_moment":
+                target_offset = 39600
+            else:
+                target_offset = 0
+        elif payload.offset_s is not None:
             target_offset = max(0, min(payload.offset_s, max_duration))
         else:
             assert payload.t is not None
@@ -660,12 +665,27 @@ async def seek_scenario_endpoint(payload: ScenarioSeek) -> ScenarioStatus:
         )
         return ScenarioStatus(**_SCENARIO_STATE)
 
-    global _SCENARIO_CLOCK
+    global _SCENARIO_CLOCK, _SCENARIO, _IS_REPLAY_ACTIVE
     if _SCENARIO_CLOCK is None:
         raise HTTPException(status_code=400, detail="Scenario clock has not been initialized. Call /scenario/start first.")
 
+    target_offset_s = payload.offset_s
+    target_t_dt = None
+    if payload.bookmark is not None:
+        if _SCENARIO is None:
+            raise HTTPException(status_code=400, detail="Scenario not loaded")
+        bm = next((b for b in _SCENARIO.bookmarks if b.name == payload.bookmark), None)
+        if not bm:
+            raise HTTPException(status_code=404, detail=f"Bookmark '{payload.bookmark}' not found")
+        target_offset_s = bm.t_offset_s
+    elif payload.t is not None:
+        try:
+            target_t_dt = datetime.fromisoformat(payload.t.replace("Z", "+00:00"))
+        except ValueError:
+            raise HTTPException(status_code=422, detail="Invalid ISO-8601 timestamp in 't'")
+
     try:
-        _SCENARIO_CLOCK.seek(t=payload.t, offset_s=payload.offset_s)
+        _SCENARIO_CLOCK.seek(t=target_t_dt, offset_s=target_offset_s)
     except ValueError as e:
         raise HTTPException(status_code=422, detail=str(e))
 
@@ -692,9 +712,10 @@ async def reset_scenario_endpoint() -> ScenarioResetResponse:
         )
         return ScenarioResetResponse(ok=True, mode="live", is_replay=False)
 
-    global _SCENARIO_CLOCK, _REPLAY_OVERLAY
+    global _SCENARIO_CLOCK, _REPLAY_OVERLAY, _IS_REPLAY_ACTIVE
     if _SCENARIO_CLOCK is not None:
         _SCENARIO_CLOCK.reset()
+    _IS_REPLAY_ACTIVE = False
     _REPLAY_OVERLAY.clear()
     clear_cells_cache()
 
@@ -715,9 +736,9 @@ async def get_scenario_status_endpoint() -> ScenarioStatus:
 
 
 def _build_scenario_status_response() -> ScenarioStatus:
-    global _SCENARIO, _SCENARIO_CLOCK
+    global _SCENARIO, _SCENARIO_CLOCK, _IS_REPLAY_ACTIVE
     now_iso = _now_utc()
-    if _SCENARIO is None or _SCENARIO_CLOCK is None or not (_SCENARIO_CLOCK.is_running or _SCENARIO_CLOCK.is_paused):
+    if not _IS_REPLAY_ACTIVE or _SCENARIO is None or _SCENARIO_CLOCK is None:
         return ScenarioStatus(
             name="live",
             mode="live",
@@ -732,7 +753,7 @@ def _build_scenario_status_response() -> ScenarioStatus:
         )
 
     sim_dt = _SCENARIO_CLOCK.sim_time()
-    elapsed = int(_SCENARIO_CLOCK.elapsed_sim_seconds())
+    elapsed = int((sim_dt - _SCENARIO.t0).total_seconds())
     bookmarks_list = [
         {"name": b.name, "t_offset_s": b.t_offset_s, "description": b.description}
         for b in _SCENARIO.bookmarks

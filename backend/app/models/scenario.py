@@ -14,13 +14,13 @@ class ScenarioSeek(BaseModel):
     """Payload to jump the scenario clock."""
     t: Optional[str] = Field(default=None, description="Target ISO-8601 UTC timestamp")
     offset_s: Optional[int] = Field(default=None, description="Offset seconds from scenario start")
+    bookmark: Optional[str] = Field(default=None, description="Optional named scenario bookmark")
 
     @model_validator(mode="after")
     def validate_exactly_one_field(self) -> "ScenarioSeek":
-        has_t = self.t is not None
-        has_offset = self.offset_s is not None
-        if (has_t and has_offset) or (not has_t and not has_offset):
-            raise ValueError("Payload must contain exactly one of 't' or 'offset_s'")
+        count = sum(x is not None for x in (self.t, self.offset_s, self.bookmark))
+        if count != 1:
+            raise ValueError("Payload must contain exactly one of 't', 'offset_s', or 'bookmark'")
         return self
 
 
