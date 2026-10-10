@@ -186,11 +186,11 @@ def test_cap_two_reference_cancel_deactivates_both():
     xml_cancel_multi = """<?xml version="1.0" encoding="UTF-8"?>
     <alert xmlns="urn:oasis:names:tc:emergency:cap:1.2">
       <identifier>CAP-CANCEL-MULTI</identifier>
-      <sender>TNSDMA</sender>
+      <sender>State Disaster Authority (demo)</sender>
       <sent>2026-10-10T10:00:00+00:00</sent>
       <status>Actual</status>
       <msgType>Cancel</msgType>
-      <references>TNSDMA,REF-01,2026-10-10T08:00:00+00:00 TNSDMA,REF-02,2026-10-10T08:30:00+00:00</references>
+      <references>DEMO-AUTH,REF-01,2026-10-10T08:00:00+00:00 DEMO-AUTH,REF-02,2026-10-10T08:30:00+00:00</references>
       <info>
         <category>Met</category>
         <event>Multi-Alert Cancellation</event>

@@ -151,7 +151,7 @@ For an observer reporting with sensitivity $s = P(\text{Positive} \mid H)$ and s
 ## 5. Architectural Guarantees
 
 ### Guarantee 1: Crowd Alone Can Never Become Official
-- An `official_hazard` status is **only** reachable via verified digital signatures from authorized agencies (TNSDMA, IMD, NDRF) parsed through CAP XML or console publication.
+- An `official_hazard` status is **only** reachable via verified digital signatures from authorized government disaster management authorities (parsed through CAP XML) or authenticated console publication.
 - Even if hundreds of distinct devices post unverified panic reports in a cell, the maximum crowd contribution is capped at $+3.0$ log-odds. The status can reach `likely_hazard` at most, but never `official_hazard`.
 
 ### Guarantee 2: Crowd Needs Plausible Weather to Reach Likely

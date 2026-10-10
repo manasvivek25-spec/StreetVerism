@@ -17,7 +17,7 @@ This document tracks all third-party libraries, APIs, external data sources, and
 
 ## External APIs & Data Sources (Planned & Ingested)
 - **Open-Meteo**: Free weather API for precipitation, rainfall rates, and historical data.
-- **Tamil Nadu State Disaster Management Authority (TNSDMA) & IMD**: Public alert formats / CAP feeds.
+- **Common Alerting Protocol (CAP v1.2)**: Public open standard (OASIS) used for alert ingestion parser and schema normalization.
 - **OpenStreetMap / Humanitarian Data Exchange (HDX)**: Reference shelter and boundary geo-coordinates.
 
 ## Replay Scenario & Geographic Reconstruction

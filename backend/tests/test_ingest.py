@@ -17,7 +17,7 @@ def test_manual_alert_valid_normalization():
     """Verify standard manual alert is normalized with UTC ISO timestamps and valid polygon."""
     payload = AlertCreate(
         source="official_manual",
-        sender="TNSDMA",
+        sender="State Disaster Authority (demo)",
         hazard="flood",
         severity="severe",
         urgency="immediate",
@@ -61,7 +61,7 @@ def test_manual_alert_validation_failures():
     # 3. sent_at >= expires_at
     payload_bad_time = AlertCreate(
         source="official_manual",
-        sender="TNSDMA",
+        sender="State Disaster Authority (demo)",
         hazard="flood",
         severity="severe",
         urgency="immediate",
@@ -78,7 +78,7 @@ def test_manual_alert_validation_failures():
     # 4. Unknown instruction key
     payload_bad_key = AlertCreate(
         source="official_manual",
-        sender="TNSDMA",
+        sender="State Disaster Authority (demo)",
         hazard="flood",
         severity="severe",
         urgency="immediate",
@@ -95,7 +95,7 @@ def test_manual_alert_validation_failures():
     # 5. all_clear without ALL_CLEAR instruction key
     payload_bad_all_clear = AlertCreate(
         source="official_manual",
-        sender="TNSDMA",
+        sender="State Disaster Authority (demo)",
         hazard="all_clear",
         severity="minor",
         urgency="immediate",
@@ -118,8 +118,8 @@ def test_cap_sample_xml_parsing_and_multi_area():
 
     alerts = parse_cap_xml(xml_content, is_demo=True)
     assert len(alerts) == 2, f"Expected 2 alerts from 2 areas, got {len(alerts)}"
-    assert alerts[0].id == "CAP-TNSDMA-20261010-001#1"
-    assert alerts[1].id == "CAP-TNSDMA-20261010-002#2" or alerts[1].id == "CAP-TNSDMA-20261010-001#2"
+    assert alerts[0].id == "CAP-DEMO-20261010-001#1"
+    assert alerts[1].id == "CAP-DEMO-20261010-002#2" or alerts[1].id == "CAP-DEMO-20261010-001#2"
     assert "(demo)" in alerts[0].sender
 
     # Test coordinate swap: CAP input has lat=12.9750, lng=80.2100
@@ -134,7 +134,7 @@ def test_cap_timezone_missing_rejected():
     xml_no_tz = """<?xml version="1.0" encoding="UTF-8"?>
     <alert xmlns="urn:oasis:names:tc:emergency:cap:1.2">
       <identifier>CAP-NO-TZ</identifier>
-      <sender>TNSDMA</sender>
+      <sender>State Disaster Authority (demo)</sender>
       <sent>2026-10-10T08:00:00</sent>
       <status>Actual</status>
       <msgType>Alert</msgType>
@@ -155,7 +155,7 @@ def test_cap_non_actual_status_skipped():
     xml_test = """<?xml version="1.0" encoding="UTF-8"?>
     <alert xmlns="urn:oasis:names:tc:emergency:cap:1.2">
       <identifier>CAP-TEST-001</identifier>
-      <sender>TNSDMA</sender>
+      <sender>State Disaster Authority (demo)</sender>
       <sent>2026-10-10T08:00:00+05:30</sent>
       <status>Exercise</status>
       <msgType>Alert</msgType>
@@ -211,7 +211,7 @@ def test_cap_msg_type_cancel_expires_referenced_not_all_clear():
     xml_orig = """<?xml version="1.0" encoding="UTF-8"?>
     <alert xmlns="urn:oasis:names:tc:emergency:cap:1.2">
       <identifier>CAP-ORIG-01</identifier>
-      <sender>TNSDMA</sender>
+      <sender>State Disaster Authority (demo)</sender>
       <sent>2026-10-10T08:00:00+00:00</sent>
       <status>Actual</status>
       <msgType>Alert</msgType>
@@ -231,11 +231,11 @@ def test_cap_msg_type_cancel_expires_referenced_not_all_clear():
     xml_cancel = """<?xml version="1.0" encoding="UTF-8"?>
     <alert xmlns="urn:oasis:names:tc:emergency:cap:1.2">
       <identifier>CAP-CANCEL-01</identifier>
-      <sender>TNSDMA</sender>
+      <sender>State Disaster Authority (demo)</sender>
       <sent>2026-10-10T10:00:00+00:00</sent>
       <status>Actual</status>
       <msgType>Cancel</msgType>
-      <references>TNSDMA,CAP-ORIG-01,2026-10-10T08:00:00+00:00</references>
+      <references>DEMO-AUTH,CAP-ORIG-01,2026-10-10T08:00:00+00:00</references>
       <info>
         <category>Met</category>
         <event>Flood Cancellation</event>
@@ -267,7 +267,7 @@ def test_cap_msg_type_update_supersedes():
     xml_orig = """<?xml version="1.0" encoding="UTF-8"?>
     <alert xmlns="urn:oasis:names:tc:emergency:cap:1.2">
       <identifier>CAP-UPDATE-ORIG</identifier>
-      <sender>TNSDMA</sender>
+      <sender>State Disaster Authority (demo)</sender>
       <sent>2026-10-10T08:00:00+00:00</sent>
       <status>Actual</status>
       <msgType>Alert</msgType>
@@ -283,11 +283,11 @@ def test_cap_msg_type_update_supersedes():
     xml_update = """<?xml version="1.0" encoding="UTF-8"?>
     <alert xmlns="urn:oasis:names:tc:emergency:cap:1.2">
       <identifier>CAP-UPDATE-NEW</identifier>
-      <sender>TNSDMA</sender>
+      <sender>State Disaster Authority (demo)</sender>
       <sent>2026-10-10T09:00:00+00:00</sent>
       <status>Actual</status>
       <msgType>Update</msgType>
-      <references>TNSDMA,CAP-UPDATE-ORIG,2026-10-10T08:00:00+00:00</references>
+      <references>DEMO-AUTH,CAP-UPDATE-ORIG,2026-10-10T08:00:00+00:00</references>
       <info>
         <category>Met</category>
         <event>Cyclone Warning</event>
@@ -311,7 +311,7 @@ def test_cap_urgency_past_skipped():
     xml_past = """<?xml version="1.0" encoding="UTF-8"?>
     <alert xmlns="urn:oasis:names:tc:emergency:cap:1.2">
       <identifier>CAP-PAST-01</identifier>
-      <sender>TNSDMA</sender>
+      <sender>State Disaster Authority (demo)</sender>
       <sent>2026-10-10T08:00:00+00:00</sent>
       <status>Actual</status>
       <msgType>Alert</msgType>
@@ -333,7 +333,7 @@ def test_cap_circle_area_handling():
     xml_circle = """<?xml version="1.0" encoding="UTF-8"?>
     <alert xmlns="urn:oasis:names:tc:emergency:cap:1.2">
       <identifier>CAP-CIRCLE-01</identifier>
-      <sender>TNSDMA</sender>
+      <sender>State Disaster Authority (demo)</sender>
       <sent>2026-10-10T08:00:00+00:00</sent>
       <status>Actual</status>
       <msgType>Alert</msgType>
@@ -363,7 +363,7 @@ def test_cap_enum_mapping_warnings(caplog):
     xml_enums = """<?xml version="1.0" encoding="UTF-8"?>
     <alert xmlns="urn:oasis:names:tc:emergency:cap:1.2">
       <identifier>CAP-ENUMS-01</identifier>
-      <sender>TNSDMA</sender>
+      <sender>State Disaster Authority (demo)</sender>
       <sent>2026-10-10T08:00:00+00:00</sent>
       <status>Actual</status>
       <msgType>Alert</msgType>
@@ -396,7 +396,7 @@ def test_manual_hazard_requires_at_least_one_instruction_key():
     """Verify non-all_clear hazard alert requires at least one instruction key."""
     payload = AlertCreate(
         source="official_manual",
-        sender="TNSDMA",
+        sender="State Disaster Authority (demo)",
         hazard="flood",
         severity="severe",
         urgency="immediate",
@@ -434,7 +434,7 @@ def test_alert_serialization_emits_params_and_supersedes():
     alert = Alert(
         id="alt_serial_test",
         source="official_manual",
-        sender="TNSDMA",
+        sender="State Disaster Authority (demo)",
         hazard="flood",
         severity="moderate",
         urgency="immediate",
@@ -462,7 +462,7 @@ def test_alert_serialization_emits_params_and_supersedes():
     alert_none = Alert(
         id="alt_none_test",
         source="official_manual",
-        sender="TNSDMA",
+        sender="State Disaster Authority (demo)",
         hazard="flood",
         severity="moderate",
         urgency="immediate",
