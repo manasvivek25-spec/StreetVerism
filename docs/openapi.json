@@ -34,7 +34,7 @@
           "System"
         ],
         "summary": "Get Health",
-        "description": "Return system health status and wall-clock timestamp.",
+        "description": "Return system health status, wall-clock time, and optional replay banner.",
         "operationId": "get_health_api_health_get",
         "responses": {
           "200": {
@@ -55,9 +55,9 @@
         "tags": [
           "Tourist"
         ],
-        "summary": "Get State",
+        "summary": "Get State Endpoint",
         "description": "Return crisis status, instructions, evidence, and nearest shelters for coordinates.",
-        "operationId": "get_state_api_state_get",
+        "operationId": "get_state_endpoint_api_state_get",
         "parameters": [
           {
             "name": "lat",
@@ -127,9 +127,9 @@
         "tags": [
           "Tourist"
         ],
-        "summary": "Get Cells",
-        "description": "Return GeoJSON FeatureCollection of evaluated cells intersecting the bounding box.\n\nGuaranteed in mock mode to include all five status classifications:\nofficial_hazard, likely_hazard, unverified, contradicted, clear.",
-        "operationId": "get_cells_api_cells_get",
+        "summary": "Get Cells Endpoint",
+        "description": "Return GeoJSON FeatureCollection of evaluated cells intersecting the bounding box.",
+        "operationId": "get_cells_endpoint_api_cells_get",
         "parameters": [
           {
             "name": "bbox",
@@ -172,9 +172,9 @@
         "tags": [
           "Tourist"
         ],
-        "summary": "Get Shelters",
+        "summary": "Get Shelters Endpoint",
         "description": "Return list of registered safe zones and emergency shelters.",
-        "operationId": "get_shelters_api_shelters_get",
+        "operationId": "get_shelters_endpoint_api_shelters_get",
         "responses": {
           "200": {
             "description": "Successful Response",
@@ -194,9 +194,9 @@
         "tags": [
           "Tourist"
         ],
-        "summary": "Get Templates",
+        "summary": "Get Templates Endpoint",
         "description": "Return raw template catalog for client offline caching.",
-        "operationId": "get_templates_api_templates__lang__get",
+        "operationId": "get_templates_endpoint_api_templates__lang__get",
         "parameters": [
           {
             "name": "lang",
@@ -216,7 +216,7 @@
                 "schema": {
                   "type": "object",
                   "additionalProperties": true,
-                  "title": "Response Get Templates Api Templates  Lang  Get"
+                  "title": "Response Get Templates Endpoint Api Templates  Lang  Get"
                 }
               }
             }
@@ -239,9 +239,9 @@
         "tags": [
           "Tourist"
         ],
-        "summary": "Submit Report",
-        "description": "Submit a ground-truth crowd report (unverified until clustered and corroborated).",
-        "operationId": "submit_report_api_reports_post",
+        "summary": "Submit Report Endpoint",
+        "description": "Submit a crowd report with 600s rate-limiting and immediate cell re-assessment.",
+        "operationId": "submit_report_endpoint_api_reports_post",
         "requestBody": {
           "content": {
             "application/json": {
@@ -281,9 +281,9 @@
         "tags": [
           "Tourist"
         ],
-        "summary": "Submit Checkin",
+        "summary": "Submit Checkin Endpoint",
         "description": "Record a tourist safe or need_help check-in for triage.",
-        "operationId": "submit_checkin_api_checkin_post",
+        "operationId": "submit_checkin_endpoint_api_checkin_post",
         "requestBody": {
           "content": {
             "application/json": {
@@ -323,9 +323,9 @@
         "tags": [
           "Authority"
         ],
-        "summary": "Create Alert",
+        "summary": "Create Alert Endpoint",
         "description": "Publish a new official disaster alert or all-clear notice.",
-        "operationId": "create_alert_api_alerts_post",
+        "operationId": "create_alert_endpoint_api_alerts_post",
         "security": [
           {
             "AuthorityApiKey": []
@@ -368,9 +368,9 @@
         "tags": [
           "Authority"
         ],
-        "summary": "List Alerts",
-        "description": "Fetch all active published alerts.",
-        "operationId": "list_alerts_api_alerts_get",
+        "summary": "List Alerts Endpoint",
+        "description": "Fetch active published alerts.",
+        "operationId": "list_alerts_endpoint_api_alerts_get",
         "security": [
           {
             "AuthorityApiKey": []
@@ -419,9 +419,9 @@
         "tags": [
           "Authority"
         ],
-        "summary": "Expire Alert",
+        "summary": "Expire Alert Endpoint",
         "description": "Immediately expire an active alert.",
-        "operationId": "expire_alert_api_alerts__alert_id__delete",
+        "operationId": "expire_alert_endpoint_api_alerts__alert_id__delete",
         "security": [
           {
             "AuthorityApiKey": []
@@ -467,9 +467,9 @@
         "tags": [
           "Authority"
         ],
-        "summary": "List Checkins",
-        "description": "Retrieve individual check-in records alongside aggregated H3 res-7 triage clusters.",
-        "operationId": "list_checkins_api_checkins_get",
+        "summary": "List Checkins Endpoint",
+        "description": "Retrieve check-ins deduplicated by device alongside aggregated H3 res-7 clusters.",
+        "operationId": "list_checkins_endpoint_api_checkins_get",
         "responses": {
           "200": {
             "description": "Successful Response",
@@ -494,9 +494,9 @@
         "tags": [
           "Authority"
         ],
-        "summary": "Handle Checkin",
+        "summary": "Handle Checkin Endpoint",
         "description": "Mark a tourist check-in as handled by rescue operators.",
-        "operationId": "handle_checkin_api_checkins__checkin_id__patch",
+        "operationId": "handle_checkin_endpoint_api_checkins__checkin_id__patch",
         "security": [
           {
             "AuthorityApiKey": []
@@ -552,9 +552,9 @@
         "tags": [
           "Scenario"
         ],
-        "summary": "Start Scenario",
+        "summary": "Start Scenario Endpoint",
         "description": "Launch historical scenario playback.",
-        "operationId": "start_scenario_api_scenario_start_post",
+        "operationId": "start_scenario_endpoint_api_scenario_start_post",
         "requestBody": {
           "content": {
             "application/json": {
@@ -594,9 +594,9 @@
         "tags": [
           "Scenario"
         ],
-        "summary": "Seek Scenario",
-        "description": "Seek the replay scenario clock to a specific timestamp or offset.\n\nAccepts exactly one of 't' or 'offset_s' (422 validation enforced).\nClamps within scenario start/end bounds.",
-        "operationId": "seek_scenario_api_scenario_seek_post",
+        "summary": "Seek Scenario Endpoint",
+        "description": "Seek the replay scenario clock to a specific timestamp, offset, or bookmark.",
+        "operationId": "seek_scenario_endpoint_api_scenario_seek_post",
         "requestBody": {
           "content": {
             "application/json": {
@@ -636,9 +636,9 @@
         "tags": [
           "Scenario"
         ],
-        "summary": "Reset Scenario",
+        "summary": "Reset Scenario Endpoint",
         "description": "Stop scenario playback and revert to live mode.",
-        "operationId": "reset_scenario_api_scenario_reset_post",
+        "operationId": "reset_scenario_endpoint_api_scenario_reset_post",
         "responses": {
           "200": {
             "description": "Successful Response",
@@ -658,9 +658,9 @@
         "tags": [
           "Scenario"
         ],
-        "summary": "Get Scenario Status",
-        "description": "Get current status of scenario replay clock.",
-        "operationId": "get_scenario_status_api_scenario_status_get",
+        "summary": "Get Scenario Status Endpoint",
+        "description": "Get current status of scenario replay clock with additive metadata.",
+        "operationId": "get_scenario_status_endpoint_api_scenario_status_get",
         "responses": {
           "200": {
             "description": "Successful Response",
@@ -680,9 +680,9 @@
         "tags": [
           "Tourist"
         ],
-        "summary": "Get Hazard Aware Route",
+        "summary": "Get Hazard Aware Route Endpoint",
         "description": "Generate hazard-aware route avoiding cells marked official_hazard or likely_hazard.",
-        "operationId": "get_hazard_aware_route_api_route_get",
+        "operationId": "get_hazard_aware_route_endpoint_api_route_get",
         "parameters": [
           {
             "name": "from_lat",
@@ -1169,6 +1169,12 @@
             },
             "type": "object",
             "title": "Languages"
+          },
+          "unhandled_need_help": {
+            "type": "integer",
+            "title": "Unhandled Need Help",
+            "description": "Count of unhandled need_help check-ins",
+            "default": 0
           }
         },
         "type": "object",
@@ -1275,8 +1281,16 @@
             "title": "Id"
           },
           "device_id": {
-            "type": "string",
-            "title": "Device Id"
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Device Id",
+            "description": "Device UUID (omitted in live/replay mode)"
           },
           "lat": {
             "type": "number",
@@ -1323,25 +1337,49 @@
             "title": "Handled",
             "default": false
           },
+          "created_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Created At",
+            "description": "UTC ISO-8601 creation timestamp"
+          },
           "recorded_at": {
-            "type": "string",
-            "title": "Recorded At"
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Recorded At",
+            "description": "UTC ISO-8601 recording timestamp"
+          },
+          "is_replay": {
+            "type": "boolean",
+            "title": "Is Replay",
+            "description": "True if submitted during scenario replay",
+            "default": false
           }
         },
         "type": "object",
         "required": [
           "id",
-          "device_id",
           "lat",
           "lng",
           "state",
           "language",
           "group_size",
-          "cell7",
-          "recorded_at"
+          "cell7"
         ],
         "title": "CheckinItem",
-        "description": "Full check-in record for authority view."
+        "description": "Full check-in record for authority view (device_id stripped in live/replay for privacy)."
       },
       "CheckinListResponse": {
         "properties": {
@@ -1547,6 +1585,19 @@
           "server_time": {
             "type": "string",
             "title": "Server Time"
+          },
+          "replay": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Replay",
+            "description": "Public replay banner details when mode is replay"
           }
         },
         "type": "object",
@@ -1754,6 +1805,18 @@
             ],
             "title": "Offset S",
             "description": "Offset seconds from scenario start"
+          },
+          "bookmark": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bookmark",
+            "description": "Optional named scenario bookmark"
           }
         },
         "type": "object",
@@ -1855,6 +1918,85 @@
             "type": "boolean",
             "title": "Is Replay",
             "description": "True if operating in replay mode"
+          },
+          "label": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Label",
+            "description": "Replay label banner text"
+          },
+          "disclaimer": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Disclaimer",
+            "description": "Replay disclaimer disclosure text"
+          },
+          "start_time": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Start Time",
+            "description": "Scenario start time (ISO-8601 UTC)"
+          },
+          "end_time": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "End Time",
+            "description": "Scenario end time (ISO-8601 UTC)"
+          },
+          "duration_s": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Duration S",
+            "description": "Scenario total duration in seconds"
+          },
+          "finished": {
+            "type": "boolean",
+            "title": "Finished",
+            "description": "Whether replay clock reached scenario end",
+            "default": false
+          },
+          "bookmarks": {
+            "anyOf": [
+              {
+                "items": {},
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bookmarks",
+            "description": "List of scenario narrative bookmarks"
           }
         },
         "type": "object",
@@ -2043,6 +2185,33 @@
             "type": "string",
             "title": "Server Time",
             "description": "Actual server wall-clock time (ISO-8601 UTC)"
+          },
+          "lang": {
+            "type": "string",
+            "title": "Lang",
+            "description": "Language code actually served",
+            "default": "en"
+          },
+          "coverage": {
+            "type": "string",
+            "enum": [
+              "covered",
+              "outside"
+            ],
+            "title": "Coverage",
+            "description": "Service bbox or scenario group coverage status",
+            "default": "covered"
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "live",
+              "replay",
+              "mock"
+            ],
+            "title": "Mode",
+            "description": "Operating mode of the system",
+            "default": "live"
           }
         },
         "type": "object",

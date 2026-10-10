@@ -542,3 +542,33 @@ Hazard-aware route avoiding cells marked `official_hazard` or `likely_hazard`.
   "detail": "Rate limit exceeded. Too many requests submitted from this device. Please retry shortly."
 }
 ```
+
+---
+
+### 3.7 Changes Since Contract v1
+
+The operational service layer and live API retain full backward compatibility with v1 clients while adding explicit metadata and controls:
+
+1. **Additive Metadata Fields**:
+   - `StateResponse`: adds `coverage` (`"covered"` | `"outside"`), `mode` (`"live"` | `"replay"` | `"mock"`).
+   - `HealthResponse`: adds `mode` (`"live"` | `"replay"` | `"mock"`), `replay` (object with `label`, `disclaimer`, `sim_time` during replay).
+   - `ScenarioStatus`: adds `start_time`, `end_time`, `duration_s`, `finished`, `bookmarks`, `label`, `disclaimer`.
+   - `ScenarioSeek`: supports seeking by `bookmark` name in addition to `t` and `offset_s` (exact one-of required).
+   - `CheckinCluster`: adds `unhandled_need_help` integer counter for incident commander triage.
+   - `RenderedInstruction`: carries `original_en` string when `reviewed=false` (e.g. machine-translated de/fr/ja); `original_en=null` when `reviewed=true` (en/hi/ta).
+
+2. **Standard Error Shapes**:
+   - `401 Unauthorized`: Missing `X-Authority-Key` header on `/api/alerts` or `/api/checkins`.
+   - `403 Forbidden`: Invalid `X-Authority-Key`.
+   - `404 Not Found`: Alert or Checkin ID not found, or scenario file not found.
+   - `409 Conflict`: Manual alert publication attempted during active scenario replay without override.
+   - `422 Unprocessable Entity`: Coordinate out of range, bbox delta > 0.3° or > 3,000 cells, invalid claim, or seek XOR violation.
+   - `429 Too Many Requests`: 600s per-device rate limit exceeded on `/api/reports`.
+
+3. **Operational Limits**:
+   - Max bbox span for `/api/cells`: 0.3° per side.
+   - Max evaluated cells per request: 3,000 H3 resolution-8 cells.
+   - GeoJSON geometry vertex coordinate precision: 5 decimal places (~1.1 meter resolution).
+   - Check-in retention period: 48 hours (hourly automated background purge).
+   - Privacy guarantee: `device_id` is stripped from `/api/checkins` responses in live and replay modes; coordinates rounded to 4 decimals at write time.
+
