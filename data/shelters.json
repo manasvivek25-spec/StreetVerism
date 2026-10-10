@@ -1,8 +1,8 @@
 [
   {
     "id": "sh_chennai_01",
-    "name": "Community Relief Center - Velachery",
-    "name_local": "சமூக நிவாரண மையம் - வேளச்சேரி",
+    "name": "Demo Relief Center - Velachery",
+    "name_local": "Demo Relief Center - Velachery",
     "lat": 12.9815,
     "lng": 80.2180,
     "open": true,
@@ -11,8 +11,8 @@
   },
   {
     "id": "sh_chennai_02",
-    "name": "Corporation Evacuation Camp - Mylapore",
-    "name_local": "மாநகராட்சி நிவாரண முகாம் - மயிலாப்பூர்",
+    "name": "Demo Relief Camp - Mylapore",
+    "name_local": "Demo Relief Camp - Mylapore",
     "lat": 13.0368,
     "lng": 80.2676,
     "open": true,
@@ -21,8 +21,8 @@
   },
   {
     "id": "sh_chennai_03",
-    "name": "Govt High School Cyclone Center - Saidapet",
-    "name_local": "அரசு மேல்நிலைப்பள்ளி புயல் மையம் - சைதாப்பேட்டை",
+    "name": "Demo Cyclone Center - Saidapet",
+    "name_local": "Demo Cyclone Center - Saidapet",
     "lat": 13.0210,
     "lng": 80.2230,
     "open": true,
@@ -31,8 +31,8 @@
   },
   {
     "id": "sh_chennai_04",
-    "name": "Disaster Relief Hall - Guindy",
-    "name_local": "பேரிடர் நிவாரண அரங்கம் - கிண்டி",
+    "name": "Demo Relief Hall - Guindy",
+    "name_local": "Demo Relief Hall - Guindy",
     "lat": 13.0067,
     "lng": 80.2025,
     "open": false,

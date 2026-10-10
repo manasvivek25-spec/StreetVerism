@@ -1,0 +1,1435 @@
+{
+  "name": "Cyclone Michaung Replay",
+  "label": "Replay: illustrative reconstruction",
+  "disclaimer": "Simulated data based loosely on a past event, not real or official.",
+  "based_on": "Cyclone Michaung (Dec 2023, Chennai)",
+  "is_replay": true,
+  "values_are_approximate": true,
+  "t0": "2023-12-04T00:00:00+00:00",
+  "duration_s": 86400,
+  "bookmarks": [
+    {
+      "name": "early_warning",
+      "t_offset_s": 27000,
+      "description": "Crowd reports corroborate flood hazard in Adyar before official alert"
+    },
+    {
+      "name": "viral_rumor",
+      "t_offset_s": 30600,
+      "description": "Coordinated rumor wave 1 in Central Zone collapses to unverified"
+    },
+    {
+      "name": "golden_moment",
+      "t_offset_s": 34200,
+      "description": "Adyar upgraded to official_hazard, Central Zone unverified, Calm Zone clear"
+    },
+    {
+      "name": "all_clear_contradicted",
+      "t_offset_s": 41400,
+      "description": "Official all-clear contradicts rumors in Central Zone"
+    },
+    {
+      "name": "claims_aged_out",
+      "t_offset_s": 61200,
+      "description": "Rumor reports age out beyond 6 hours, Central Zone returns to clear"
+    }
+  ],
+  "area_groups": [
+    {
+      "id": "group_1_velachery",
+      "name": "Velachery / Pallikaranai",
+      "representative_point": {
+        "name": "Velachery Center",
+        "lat": 12.975,
+        "lng": 80.22
+      },
+      "polygon": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              80.205,
+              12.96
+            ],
+            [
+              80.235,
+              12.96
+            ],
+            [
+              80.235,
+              12.99
+            ],
+            [
+              80.205,
+              12.99
+            ],
+            [
+              80.205,
+              12.96
+            ]
+          ]
+        ]
+      },
+      "keyframes": [
+        {
+          "t_offset_s": 0,
+          "rain_mm_3h": 15.0,
+          "rain_mm_24h": 30.0
+        },
+        {
+          "t_offset_s": 21600,
+          "rain_mm_3h": 80.0,
+          "rain_mm_24h": 140.0
+        },
+        {
+          "t_offset_s": 43200,
+          "rain_mm_3h": 120.0,
+          "rain_mm_24h": 240.0
+        },
+        {
+          "t_offset_s": 64800,
+          "rain_mm_3h": 70.0,
+          "rain_mm_24h": 300.0
+        },
+        {
+          "t_offset_s": 86400,
+          "rain_mm_3h": 30.0,
+          "rain_mm_24h": 320.0
+        }
+      ]
+    },
+    {
+      "id": "group_2_adyar",
+      "name": "Adyar / Saidapet",
+      "representative_point": {
+        "name": "Saidapet Bridge",
+        "lat": 13.015,
+        "lng": 80.225
+      },
+      "polygon": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              80.21,
+              13.002
+            ],
+            [
+              80.245,
+              13.002
+            ],
+            [
+              80.245,
+              13.03
+            ],
+            [
+              80.21,
+              13.03
+            ],
+            [
+              80.21,
+              13.002
+            ]
+          ]
+        ]
+      },
+      "keyframes": [
+        {
+          "t_offset_s": 0,
+          "rain_mm_3h": 5.0,
+          "rain_mm_24h": 10.0
+        },
+        {
+          "t_offset_s": 21600,
+          "rain_mm_3h": 35.0,
+          "rain_mm_24h": 50.0
+        },
+        {
+          "t_offset_s": 25200,
+          "rain_mm_3h": 40.0,
+          "rain_mm_24h": 60.0
+        },
+        {
+          "t_offset_s": 32400,
+          "rain_mm_3h": 50.0,
+          "rain_mm_24h": 80.0
+        },
+        {
+          "t_offset_s": 86400,
+          "rain_mm_3h": 20.0,
+          "rain_mm_24h": 120.0
+        }
+      ]
+    },
+    {
+      "id": "group_3_rumor",
+      "name": "Central Rumor Zone",
+      "representative_point": {
+        "name": "Central Junction",
+        "lat": 13.055,
+        "lng": 80.225
+      },
+      "polygon": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              80.21,
+              13.04
+            ],
+            [
+              80.245,
+              13.04
+            ],
+            [
+              80.245,
+              13.07
+            ],
+            [
+              80.21,
+              13.07
+            ],
+            [
+              80.21,
+              13.04
+            ]
+          ]
+        ]
+      },
+      "keyframes": [
+        {
+          "t_offset_s": 0,
+          "rain_mm_3h": 5.0,
+          "rain_mm_24h": 10.0
+        },
+        {
+          "t_offset_s": 21600,
+          "rain_mm_3h": 25.0,
+          "rain_mm_24h": 40.0
+        },
+        {
+          "t_offset_s": 28800,
+          "rain_mm_3h": 28.0,
+          "rain_mm_24h": 45.0
+        },
+        {
+          "t_offset_s": 39600,
+          "rain_mm_3h": 32.0,
+          "rain_mm_24h": 55.0
+        },
+        {
+          "t_offset_s": 59400,
+          "rain_mm_3h": 28.0,
+          "rain_mm_24h": 55.0
+        },
+        {
+          "t_offset_s": 86400,
+          "rain_mm_3h": 10.0,
+          "rain_mm_24h": 60.0
+        }
+      ]
+    },
+    {
+      "id": "group_4_coastal",
+      "name": "Coastal Zone",
+      "representative_point": {
+        "name": "Marina Coastal Reach",
+        "lat": 13.02,
+        "lng": 80.275
+      },
+      "polygon": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              80.26,
+              13.005
+            ],
+            [
+              80.29,
+              13.005
+            ],
+            [
+              80.29,
+              13.035
+            ],
+            [
+              80.26,
+              13.035
+            ],
+            [
+              80.26,
+              13.005
+            ]
+          ]
+        ]
+      },
+      "keyframes": [
+        {
+          "t_offset_s": 0,
+          "rain_mm_3h": 10.0,
+          "rain_mm_24h": 15.0
+        },
+        {
+          "t_offset_s": 21600,
+          "rain_mm_3h": 30.0,
+          "rain_mm_24h": 45.0
+        },
+        {
+          "t_offset_s": 43200,
+          "rain_mm_3h": 40.0,
+          "rain_mm_24h": 70.0
+        },
+        {
+          "t_offset_s": 86400,
+          "rain_mm_3h": 15.0,
+          "rain_mm_24h": 80.0
+        }
+      ]
+    },
+    {
+      "id": "group_5_calm",
+      "name": "Calm Zone",
+      "representative_point": {
+        "name": "Northwest Ridge",
+        "lat": 13.1,
+        "lng": 80.16
+      },
+      "polygon": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              80.145,
+              13.085
+            ],
+            [
+              80.175,
+              13.085
+            ],
+            [
+              80.175,
+              13.115
+            ],
+            [
+              80.145,
+              13.115
+            ],
+            [
+              80.145,
+              13.085
+            ]
+          ]
+        ]
+      },
+      "keyframes": [
+        {
+          "t_offset_s": 0,
+          "rain_mm_3h": 0.0,
+          "rain_mm_24h": 0.0
+        },
+        {
+          "t_offset_s": 86400,
+          "rain_mm_3h": 0.0,
+          "rain_mm_24h": 0.0
+        }
+      ]
+    }
+  ],
+  "alerts": [
+    {
+      "id": "alt_rep_coastal_early",
+      "source": "replay",
+      "sender": "State Disaster Authority (replay)",
+      "hazard": "heavy_rain",
+      "severity": "moderate",
+      "urgency": "expected",
+      "certainty": "likely",
+      "area": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              80.26,
+              13.005
+            ],
+            [
+              80.29,
+              13.005
+            ],
+            [
+              80.29,
+              13.035
+            ],
+            [
+              80.26,
+              13.035
+            ],
+            [
+              80.26,
+              13.005
+            ]
+          ]
+        ]
+      },
+      "instruction_keys": [
+        "STAY_AWAY_FROM_COAST",
+        "STAY_INDOORS"
+      ],
+      "params": {},
+      "sent_at": "2023-12-04T01:00:00+00:00",
+      "expires_at": "2023-12-04T13:00:00+00:00",
+      "supersedes": null,
+      "published_by": "state-operator",
+      "is_replay": true
+    },
+    {
+      "id": "alt_rep_velachery_early",
+      "source": "replay",
+      "sender": "State Disaster Authority (replay)",
+      "hazard": "heavy_rain",
+      "severity": "moderate",
+      "urgency": "expected",
+      "certainty": "likely",
+      "area": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              80.205,
+              12.96
+            ],
+            [
+              80.235,
+              12.96
+            ],
+            [
+              80.235,
+              12.99
+            ],
+            [
+              80.205,
+              12.99
+            ],
+            [
+              80.205,
+              12.96
+            ]
+          ]
+        ]
+      },
+      "instruction_keys": [
+        "STAY_INDOORS",
+        "KEEP_PHONE_CHARGED"
+      ],
+      "params": {},
+      "sent_at": "2023-12-04T01:00:00+00:00",
+      "expires_at": "2023-12-04T12:00:00+00:00",
+      "supersedes": null,
+      "published_by": "state-operator",
+      "is_replay": true
+    },
+    {
+      "id": "alt_rep_velachery_severe",
+      "source": "replay",
+      "sender": "State Disaster Authority (replay)",
+      "hazard": "flood",
+      "severity": "severe",
+      "urgency": "immediate",
+      "certainty": "observed",
+      "area": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              80.205,
+              12.96
+            ],
+            [
+              80.235,
+              12.96
+            ],
+            [
+              80.235,
+              12.99
+            ],
+            [
+              80.205,
+              12.99
+            ],
+            [
+              80.205,
+              12.96
+            ]
+          ]
+        ]
+      },
+      "instruction_keys": [
+        "MOVE_TO_HIGHER_GROUND",
+        "AVOID_FLOODED_ROADS",
+        "SHELTER_AT"
+      ],
+      "params": {
+        "shelter": "sh_chennai_01"
+      },
+      "sent_at": "2023-12-04T06:00:00+00:00",
+      "expires_at": "2023-12-05T00:00:00+00:00",
+      "supersedes": null,
+      "published_by": "state-operator",
+      "is_replay": true
+    },
+    {
+      "id": "alt_rep_adyar_extreme",
+      "source": "replay",
+      "sender": "State Disaster Authority (replay)",
+      "hazard": "flood",
+      "severity": "extreme",
+      "urgency": "immediate",
+      "certainty": "observed",
+      "area": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              80.21,
+              13.002
+            ],
+            [
+              80.245,
+              13.002
+            ],
+            [
+              80.245,
+              13.03
+            ],
+            [
+              80.21,
+              13.03
+            ],
+            [
+              80.21,
+              13.002
+            ]
+          ]
+        ]
+      },
+      "instruction_keys": [
+        "MOVE_TO_HIGHER_GROUND",
+        "AVOID_FLOODED_ROADS"
+      ],
+      "params": {},
+      "sent_at": "2023-12-04T09:00:00+00:00",
+      "expires_at": "2023-12-05T00:00:00+00:00",
+      "supersedes": null,
+      "published_by": "state-operator",
+      "is_replay": true
+    },
+    {
+      "id": "alt_rep_rumor_all_clear",
+      "source": "replay",
+      "sender": "State Disaster Authority (replay)",
+      "hazard": "all_clear",
+      "severity": "minor",
+      "urgency": "immediate",
+      "certainty": "observed",
+      "area": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              80.21,
+              13.04
+            ],
+            [
+              80.245,
+              13.04
+            ],
+            [
+              80.245,
+              13.07
+            ],
+            [
+              80.21,
+              13.07
+            ],
+            [
+              80.21,
+              13.04
+            ]
+          ]
+        ]
+      },
+      "instruction_keys": [
+        "ALL_CLEAR"
+      ],
+      "params": {},
+      "sent_at": "2023-12-04T11:00:00+00:00",
+      "expires_at": "2023-12-04T20:00:00+00:00",
+      "supersedes": null,
+      "published_by": "state-operator",
+      "is_replay": true
+    }
+  ],
+  "reports": [
+    {
+      "id": "rep_g2_1",
+      "device_id": "469016e3-2d5b-5951-9837-b99f155e8f73",
+      "lat": 13.015,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Kasi bridge underpass completely submerged knee deep water",
+      "created_at": "2023-12-04T07:00:00+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_g2_2",
+      "device_id": "029580d1-8d0b-5180-921f-1d6adc8b2bba",
+      "lat": 13.015,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Water entering houses near Saidapet metro station road blocked",
+      "created_at": "2023-12-04T07:25:00+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_g2_3",
+      "device_id": "253ed0a9-3572-5851-bc02-bbb3f5143849",
+      "lat": 13.015,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Adyar river overflowing onto arterial road traffic halted",
+      "created_at": "2023-12-04T07:50:00+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_rumor_w1_0",
+      "device_id": "05673de3-4567-516c-b936-3042e97f42b2",
+      "lat": 13.055,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Catastrophic flooding at Central Junction underpass water 4 feet deep",
+      "created_at": "2023-12-04T08:00:00+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_rumor_w1_1",
+      "device_id": "3ae4db55-bd1b-5da0-a2c1-4bb07f7f5ba3",
+      "lat": 13.055,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Catastrophic flooding at Central Junction underpass water 4 feet deep",
+      "created_at": "2023-12-04T08:00:15+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_rumor_w1_2",
+      "device_id": "6369972a-20fe-5a1f-93ed-e3b734e52b8d",
+      "lat": 13.055,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Catastrophic flooding at Central Junction underpass water 4 feet deep",
+      "created_at": "2023-12-04T08:00:30+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_rumor_w1_3",
+      "device_id": "e2fca68c-665e-56b2-8627-37b35eb63c74",
+      "lat": 13.055,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Catastrophic flooding at Central Junction underpass water 4 feet deep",
+      "created_at": "2023-12-04T08:00:45+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_rumor_w1_4",
+      "device_id": "21bc8919-17b0-50c2-bd21-8aa5d1582e48",
+      "lat": 13.055,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Catastrophic flooding at Central Junction underpass water 4 feet deep",
+      "created_at": "2023-12-04T08:01:00+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_rumor_w1_5",
+      "device_id": "a37a5dba-93b9-5d4d-a825-058567ed1217",
+      "lat": 13.055,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Catastrophic flooding at Central Junction underpass water 4 feet deep",
+      "created_at": "2023-12-04T08:01:15+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_rumor_w1_6",
+      "device_id": "0cff4094-eb43-564c-b1e0-9be4dfdd64ad",
+      "lat": 13.055,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Catastrophic flooding at Central Junction underpass water 4 feet deep",
+      "created_at": "2023-12-04T08:01:30+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_rumor_w1_7",
+      "device_id": "6c634bb8-67ef-5c18-b5e2-e17de4cecaa9",
+      "lat": 13.055,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Catastrophic flooding at Central Junction underpass water 4 feet deep",
+      "created_at": "2023-12-04T08:01:45+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_rumor_w1_8",
+      "device_id": "fea3620f-3e66-5d7c-a4ed-9841d9f1c6e5",
+      "lat": 13.055,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Catastrophic flooding at Central Junction underpass water 4 feet deep",
+      "created_at": "2023-12-04T08:02:00+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_rumor_w1_9",
+      "device_id": "7032e99b-1364-5d60-aa1d-a22c718b4ccf",
+      "lat": 13.055,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Catastrophic flooding at Central Junction underpass water 4 feet deep",
+      "created_at": "2023-12-04T08:02:15+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_rumor_w1_10",
+      "device_id": "55ea9dfb-ef86-55d1-87ca-555e859f2406",
+      "lat": 13.055,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Catastrophic flooding at Central Junction underpass water 4 feet deep",
+      "created_at": "2023-12-04T08:02:30+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_rumor_w1_11",
+      "device_id": "8ae7eb9f-92ab-5fae-aa3c-7849dea20729",
+      "lat": 13.055,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Catastrophic flooding at Central Junction underpass water 4 feet deep",
+      "created_at": "2023-12-04T08:02:45+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_rumor_w1_12",
+      "device_id": "cb943c42-2dd8-5e29-8697-d44c0868f612",
+      "lat": 13.055,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Catastrophic flooding at Central Junction underpass water 4 feet deep",
+      "created_at": "2023-12-04T08:03:00+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_rumor_w1_13",
+      "device_id": "451d2c12-75d1-5b35-b48e-cc690b424885",
+      "lat": 13.055,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Catastrophic flooding at Central Junction underpass water 4 feet deep",
+      "created_at": "2023-12-04T08:03:15+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_rumor_w1_14",
+      "device_id": "af433763-df13-5bde-8b1d-d3506939b020",
+      "lat": 13.055,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Catastrophic flooding at Central Junction underpass water 4 feet deep",
+      "created_at": "2023-12-04T08:03:30+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_rumor_w1_15",
+      "device_id": "70aef2aa-4e12-57f4-aa11-d6be1f25a5bf",
+      "lat": 13.055,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Catastrophic flooding at Central Junction underpass water 4 feet deep",
+      "created_at": "2023-12-04T08:03:45+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_rumor_w1_16",
+      "device_id": "f7970aac-8f93-5eb4-a273-67891180fc42",
+      "lat": 13.055,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Catastrophic flooding at Central Junction underpass water 4 feet deep",
+      "created_at": "2023-12-04T08:04:00+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_rumor_w1_17",
+      "device_id": "d8cf5bf4-9f8b-5d87-9e59-f1f0f5472f6c",
+      "lat": 13.055,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Catastrophic flooding at Central Junction underpass water 4 feet deep",
+      "created_at": "2023-12-04T08:04:15+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_rumor_w1_18",
+      "device_id": "e4b338bd-d779-5404-baf2-f7384d888f29",
+      "lat": 13.055,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Catastrophic flooding at Central Junction underpass water 4 feet deep",
+      "created_at": "2023-12-04T08:04:30+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_rumor_w1_19",
+      "device_id": "59b8cf22-bcbd-5d1e-9950-21dac7cc2b3a",
+      "lat": 13.055,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Catastrophic flooding at Central Junction underpass water 4 feet deep",
+      "created_at": "2023-12-04T08:04:45+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_rumor_w1_20",
+      "device_id": "9af8a0cd-fbef-517c-8094-af84aa0b3b61",
+      "lat": 13.055,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Catastrophic flooding at Central Junction underpass water 4 feet deep",
+      "created_at": "2023-12-04T08:05:00+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_rumor_w1_21",
+      "device_id": "2f3d77a3-ff42-59b2-9361-36416e8dfb90",
+      "lat": 13.055,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Catastrophic flooding at Central Junction underpass water 4 feet deep",
+      "created_at": "2023-12-04T08:05:15+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_rumor_w1_22",
+      "device_id": "d929b7a9-e8f0-5fe5-9e57-87c23c834ba5",
+      "lat": 13.055,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Catastrophic flooding at Central Junction underpass water 4 feet deep",
+      "created_at": "2023-12-04T08:05:30+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_rumor_w1_23",
+      "device_id": "ec034314-ec24-581d-a6db-dc82acd1522a",
+      "lat": 13.055,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Catastrophic flooding at Central Junction underpass water 4 feet deep",
+      "created_at": "2023-12-04T08:05:45+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_rumor_w1_24",
+      "device_id": "fd3e50d8-c9a3-510e-83ad-2bf6a93e22e2",
+      "lat": 13.055,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Catastrophic flooding at Central Junction underpass water 4 feet deep",
+      "created_at": "2023-12-04T08:06:00+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_rumor_w1_25",
+      "device_id": "1c4f4199-7a77-536f-a8b1-045e1dff80d1",
+      "lat": 13.055,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Catastrophic flooding at Central Junction underpass water 4 feet deep",
+      "created_at": "2023-12-04T08:06:15+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_rumor_w1_26",
+      "device_id": "d2ac097d-12a0-57d3-8e8a-c79050265d6f",
+      "lat": 13.055,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Catastrophic flooding at Central Junction underpass water 4 feet deep",
+      "created_at": "2023-12-04T08:06:30+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_rumor_w1_27",
+      "device_id": "cf11d64a-fb26-5ad8-91ee-4b661d91b7dd",
+      "lat": 13.055,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Catastrophic flooding at Central Junction underpass water 4 feet deep",
+      "created_at": "2023-12-04T08:06:45+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_rumor_w1_28",
+      "device_id": "cf610657-2031-55e1-ada1-c605a5696808",
+      "lat": 13.055,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Catastrophic flooding at Central Junction underpass water 4 feet deep",
+      "created_at": "2023-12-04T08:07:00+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_rumor_w1_29",
+      "device_id": "4a09b1dd-f894-5f65-9047-4fd4affbb621",
+      "lat": 13.055,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Catastrophic flooding at Central Junction underpass water 4 feet deep",
+      "created_at": "2023-12-04T08:07:15+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_rumor_w1_30",
+      "device_id": "beee33ec-30b4-5da2-aa0b-7dc561e0ab23",
+      "lat": 13.055,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Catastrophic flooding at Central Junction underpass water 4 feet deep",
+      "created_at": "2023-12-04T08:07:30+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_rumor_w1_31",
+      "device_id": "c8ddc379-5233-53bf-9b36-f1e06adda031",
+      "lat": 13.055,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Catastrophic flooding at Central Junction underpass water 4 feet deep",
+      "created_at": "2023-12-04T08:07:45+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_rumor_w1_32",
+      "device_id": "4ed56c27-809e-55c1-83ba-3a9f571289b2",
+      "lat": 13.055,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Catastrophic flooding at Central Junction underpass water 4 feet deep",
+      "created_at": "2023-12-04T08:08:00+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_rumor_w1_33",
+      "device_id": "bfc5ffac-0b34-5a29-9608-270e66bd316b",
+      "lat": 13.055,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Catastrophic flooding at Central Junction underpass water 4 feet deep",
+      "created_at": "2023-12-04T08:08:15+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_rumor_w1_34",
+      "device_id": "f51e48ba-9095-5008-ad52-074e43569f3c",
+      "lat": 13.055,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Catastrophic flooding at Central Junction underpass water 4 feet deep",
+      "created_at": "2023-12-04T08:08:30+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_rumor_w1_35",
+      "device_id": "ed33e6aa-4e44-5d03-8d89-eb0c3b56d77f",
+      "lat": 13.055,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Catastrophic flooding at Central Junction underpass water 4 feet deep",
+      "created_at": "2023-12-04T08:08:45+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_rumor_w1_36",
+      "device_id": "5da03f6e-a9e1-5e01-978b-e998e331ab43",
+      "lat": 13.055,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Catastrophic flooding at Central Junction underpass water 4 feet deep",
+      "created_at": "2023-12-04T08:09:00+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_rumor_w1_37",
+      "device_id": "6dac7aa7-ce33-580a-ab80-4356f2ff0825",
+      "lat": 13.055,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Catastrophic flooding at Central Junction underpass water 4 feet deep",
+      "created_at": "2023-12-04T08:09:15+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_rumor_w1_38",
+      "device_id": "e24a48fc-8904-51bf-98d8-815bd2fa073b",
+      "lat": 13.055,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Catastrophic flooding at Central Junction underpass water 4 feet deep",
+      "created_at": "2023-12-04T08:09:30+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_rumor_w1_39",
+      "device_id": "600283ae-9a20-597f-a141-793e6ba85509",
+      "lat": 13.055,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Catastrophic flooding at Central Junction underpass water 4 feet deep",
+      "created_at": "2023-12-04T08:09:45+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_rumor_w2_0",
+      "device_id": "da39230c-2652-5907-adbc-9f06b8c79acc",
+      "lat": 13.055,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Massive waterlogging reported at Central Junction intersection cars floating",
+      "created_at": "2023-12-04T09:15:00+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_rumor_w2_1",
+      "device_id": "7597d197-7816-51d3-ac58-fdb4666d9dc4",
+      "lat": 13.055,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Massive waterlogging reported at Central Junction intersection cars floating",
+      "created_at": "2023-12-04T09:15:30+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_rumor_w2_2",
+      "device_id": "674f8d88-62fb-586d-8d21-204e68ca9ec9",
+      "lat": 13.055,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Massive waterlogging reported at Central Junction intersection cars floating",
+      "created_at": "2023-12-04T09:16:00+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_rumor_w2_3",
+      "device_id": "2f273077-6e9f-5fdf-b268-f1a85f756b8e",
+      "lat": 13.055,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Massive waterlogging reported at Central Junction intersection cars floating",
+      "created_at": "2023-12-04T09:16:30+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_rumor_w2_4",
+      "device_id": "d01cd7e3-247a-5bd2-9be0-4335605ff1c8",
+      "lat": 13.055,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Massive waterlogging reported at Central Junction intersection cars floating",
+      "created_at": "2023-12-04T09:17:00+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_rumor_w2_5",
+      "device_id": "b49b9135-0467-54cf-b6b4-690010bfcab5",
+      "lat": 13.055,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Massive waterlogging reported at Central Junction intersection cars floating",
+      "created_at": "2023-12-04T09:17:30+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_rumor_w2_6",
+      "device_id": "fb40e441-7706-5bf5-9e36-c2a6790c6626",
+      "lat": 13.055,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Massive waterlogging reported at Central Junction intersection cars floating",
+      "created_at": "2023-12-04T09:18:00+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_rumor_w2_7",
+      "device_id": "203f1774-d047-5c9b-a984-ca566ff176a7",
+      "lat": 13.055,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Massive waterlogging reported at Central Junction intersection cars floating",
+      "created_at": "2023-12-04T09:18:30+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_rumor_w2_8",
+      "device_id": "50e42d62-c02e-5c2a-9622-e9da40fe587b",
+      "lat": 13.055,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Massive waterlogging reported at Central Junction intersection cars floating",
+      "created_at": "2023-12-04T09:19:00+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_rumor_w2_9",
+      "device_id": "4c1f222c-f88e-58bc-bdb9-1ee3419e8a67",
+      "lat": 13.055,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Massive waterlogging reported at Central Junction intersection cars floating",
+      "created_at": "2023-12-04T09:19:30+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_rumor_w2_10",
+      "device_id": "dc604492-b1de-55cd-a0f3-e8e256a945e1",
+      "lat": 13.055,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Massive waterlogging reported at Central Junction intersection cars floating",
+      "created_at": "2023-12-04T09:20:00+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_rumor_w2_11",
+      "device_id": "7f684a2a-ceff-5d3b-abed-2271897bf9b5",
+      "lat": 13.055,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Massive waterlogging reported at Central Junction intersection cars floating",
+      "created_at": "2023-12-04T09:20:30+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_rumor_w2_12",
+      "device_id": "9014ece4-46ac-5437-8c48-634ea882e918",
+      "lat": 13.055,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Massive waterlogging reported at Central Junction intersection cars floating",
+      "created_at": "2023-12-04T09:21:00+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_rumor_w2_13",
+      "device_id": "2fa5397f-f31c-5fc7-92fb-3916761effbd",
+      "lat": 13.055,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Massive waterlogging reported at Central Junction intersection cars floating",
+      "created_at": "2023-12-04T09:21:30+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_rumor_w2_14",
+      "device_id": "89a534ce-310d-53bb-9466-d998748f54f8",
+      "lat": 13.055,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Massive waterlogging reported at Central Junction intersection cars floating",
+      "created_at": "2023-12-04T09:22:00+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_rumor_w2_15",
+      "device_id": "9f941cc6-f2fc-59d2-8a0b-6032df3138dd",
+      "lat": 13.055,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Massive waterlogging reported at Central Junction intersection cars floating",
+      "created_at": "2023-12-04T09:22:30+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_rumor_w2_16",
+      "device_id": "9b59a25a-2fda-56f4-a1b7-97dd6fa7c852",
+      "lat": 13.055,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Massive waterlogging reported at Central Junction intersection cars floating",
+      "created_at": "2023-12-04T09:23:00+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_rumor_w2_17",
+      "device_id": "4c7627e7-8edb-59de-80e9-0c126329fcde",
+      "lat": 13.055,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Massive waterlogging reported at Central Junction intersection cars floating",
+      "created_at": "2023-12-04T09:23:30+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_rumor_w2_18",
+      "device_id": "f574fc83-ec7d-5695-a9f3-ea84ef36bbf2",
+      "lat": 13.055,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Massive waterlogging reported at Central Junction intersection cars floating",
+      "created_at": "2023-12-04T09:24:00+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_rumor_w2_19",
+      "device_id": "d38e0f0f-62ed-5306-ba5a-d27038dcfc28",
+      "lat": 13.055,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Massive waterlogging reported at Central Junction intersection cars floating",
+      "created_at": "2023-12-04T09:24:30+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_rumor_w3_0",
+      "device_id": "7328dfd4-5ea5-515e-8591-ea1fbe501ec4",
+      "lat": 13.055,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Urgent emergency Central Junction underpass completely submerged avoid area",
+      "created_at": "2023-12-04T10:30:00+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_rumor_w3_1",
+      "device_id": "5583a85d-1f4e-5d1c-9521-81bbf9fe093b",
+      "lat": 13.055,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Urgent emergency Central Junction underpass completely submerged avoid area",
+      "created_at": "2023-12-04T10:30:30+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_rumor_w3_2",
+      "device_id": "6d008f76-e669-58b3-8d86-579103240e8b",
+      "lat": 13.055,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Urgent emergency Central Junction underpass completely submerged avoid area",
+      "created_at": "2023-12-04T10:31:00+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_rumor_w3_3",
+      "device_id": "a2849f8f-5ec1-57f2-89d4-9585ec9e9075",
+      "lat": 13.055,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Urgent emergency Central Junction underpass completely submerged avoid area",
+      "created_at": "2023-12-04T10:31:30+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_rumor_w3_4",
+      "device_id": "b4e9388f-466a-5f0f-b64b-21bfe3077d71",
+      "lat": 13.055,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Urgent emergency Central Junction underpass completely submerged avoid area",
+      "created_at": "2023-12-04T10:32:00+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_rumor_w3_5",
+      "device_id": "0bfc6d0e-9284-5fed-ab93-b1c80de52759",
+      "lat": 13.055,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Urgent emergency Central Junction underpass completely submerged avoid area",
+      "created_at": "2023-12-04T10:32:30+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_rumor_w3_6",
+      "device_id": "2f86215d-40a1-5e0b-ab0a-7a5b7af79ce9",
+      "lat": 13.055,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Urgent emergency Central Junction underpass completely submerged avoid area",
+      "created_at": "2023-12-04T10:33:00+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_rumor_w3_7",
+      "device_id": "e3476edc-1b0a-5d0f-b620-13bb67353fd0",
+      "lat": 13.055,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Urgent emergency Central Junction underpass completely submerged avoid area",
+      "created_at": "2023-12-04T10:33:30+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_rumor_w3_8",
+      "device_id": "a4553e85-228d-5316-b608-ab7360482378",
+      "lat": 13.055,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Urgent emergency Central Junction underpass completely submerged avoid area",
+      "created_at": "2023-12-04T10:34:00+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_rumor_w3_9",
+      "device_id": "1cdccdc2-44b2-570d-a088-2479c3c497e6",
+      "lat": 13.055,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Urgent emergency Central Junction underpass completely submerged avoid area",
+      "created_at": "2023-12-04T10:34:30+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_rumor_w3_10",
+      "device_id": "243f5029-a9ae-5b4d-b76f-f8047642fa8b",
+      "lat": 13.055,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Urgent emergency Central Junction underpass completely submerged avoid area",
+      "created_at": "2023-12-04T10:35:00+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_rumor_w3_11",
+      "device_id": "c6fa6c71-cf82-5661-8370-4d0bbdb276b4",
+      "lat": 13.055,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Urgent emergency Central Junction underpass completely submerged avoid area",
+      "created_at": "2023-12-04T10:35:30+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_rumor_w3_12",
+      "device_id": "7a8b9a45-0126-511f-ac49-a8fac5e3ed55",
+      "lat": 13.055,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Urgent emergency Central Junction underpass completely submerged avoid area",
+      "created_at": "2023-12-04T10:36:00+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_rumor_w3_13",
+      "device_id": "3724a4a8-d3c3-5bc5-8221-6b1dbc6d8480",
+      "lat": 13.055,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Urgent emergency Central Junction underpass completely submerged avoid area",
+      "created_at": "2023-12-04T10:36:30+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_rumor_w3_14",
+      "device_id": "692d1878-ccbe-593e-b459-3f1c53e4923b",
+      "lat": 13.055,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Urgent emergency Central Junction underpass completely submerged avoid area",
+      "created_at": "2023-12-04T10:37:00+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_rumor_w3_15",
+      "device_id": "cbac9125-0ada-5d4d-87ff-cb0115970fbc",
+      "lat": 13.055,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Urgent emergency Central Junction underpass completely submerged avoid area",
+      "created_at": "2023-12-04T10:37:30+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_rumor_w3_16",
+      "device_id": "b3fbd3a8-8d52-56e3-b387-830e5e173910",
+      "lat": 13.055,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Urgent emergency Central Junction underpass completely submerged avoid area",
+      "created_at": "2023-12-04T10:38:00+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_rumor_w3_17",
+      "device_id": "45e01348-109f-5782-ac25-3943b32fd74e",
+      "lat": 13.055,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Urgent emergency Central Junction underpass completely submerged avoid area",
+      "created_at": "2023-12-04T10:38:30+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_rumor_w3_18",
+      "device_id": "676edaa3-0497-5318-8bc5-cae1d25cd0b7",
+      "lat": 13.055,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Urgent emergency Central Junction underpass completely submerged avoid area",
+      "created_at": "2023-12-04T10:39:00+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_rumor_w3_19",
+      "device_id": "3d9af6cb-d0db-554c-a880-66847514cf9f",
+      "lat": 13.055,
+      "lng": 80.225,
+      "claim": "flooded",
+      "text": "Urgent emergency Central Junction underpass completely submerged avoid area",
+      "created_at": "2023-12-04T10:39:30+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_calm_1",
+      "device_id": "bbdf662f-4f80-5b0c-8f30-133a951d8d03",
+      "lat": 13.1,
+      "lng": 80.16,
+      "claim": "safe",
+      "text": "Clear skies and dry roads in Northwest residential sector",
+      "created_at": "2023-12-04T02:00:00+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_calm_2",
+      "device_id": "f8a95c22-db3f-56c3-a68f-c9c5752ef4e6",
+      "lat": 13.1,
+      "lng": 80.16,
+      "claim": "safe",
+      "text": "Normal morning traffic on outer bypass, no waterlogging",
+      "created_at": "2023-12-04T06:00:00+00:00",
+      "tier": "default"
+    },
+    {
+      "id": "rep_calm_3",
+      "device_id": "aa5ad114-6946-5275-9beb-0b2d9cf8b294",
+      "lat": 13.1,
+      "lng": 80.16,
+      "claim": "safe",
+      "text": "Light breeze, completely clear streets and active shops",
+      "created_at": "2023-12-04T12:00:00+00:00",
+      "tier": "default"
+    }
+  ]
+}

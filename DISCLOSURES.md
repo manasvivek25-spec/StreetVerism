@@ -19,3 +19,8 @@ This document tracks all third-party libraries, APIs, external data sources, and
 - **Open-Meteo**: Free weather API for precipitation, rainfall rates, and historical data.
 - **Tamil Nadu State Disaster Management Authority (TNSDMA) & IMD**: Public alert formats / CAP feeds.
 - **OpenStreetMap / Humanitarian Data Exchange (HDX)**: Reference shelter and boundary geo-coordinates.
+
+## Replay Scenario & Geographic Reconstruction
+- **Cyclone Michaung (Dec 2023, Chennai)**: Qualitative background and timeline only (heavy rain ramping over 24 sim-hours, low-lying southern/southwestern basins worst affected, official alerts issued in phases).
+- **Hand-Authored Scenario Data (`data/scenarios/michaung_replay.json`)**: Approximate, illustrative synthetic timeline, rainfall keyframes, and crowd reports constructed strictly for demonstration and testing purposes. All values and device IDs are synthetic and approximate.
+- **Hand-Drawn Approximate Flood-Prone Polygons (`data/flood_prone.geojson`)**: Hand-drawn polygon approximations representing historically vulnerable drainage basins in Chennai (Velachery/Pallikaranai and Adyar riparian corridor) for illustrative demonstration only; not an official flood risk map.

@@ -1,0 +1,48 @@
+{
+  "type": "FeatureCollection",
+  "note": "Hand-drawn approximate polygons for illustrative demo; not an official flood risk map.",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "fp_velachery_pallikaranai",
+        "name": "Velachery / Pallikaranai Low-Lying Drainage Basin",
+        "description": "Historical marshland and low-elevation runoff collection zone",
+        "note": "Hand-drawn approximate polygons for illustrative demo; not an official flood risk map."
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [80.200, 12.955],
+            [80.240, 12.955],
+            [80.240, 12.995],
+            [80.200, 12.995],
+            [80.200, 12.955]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "fp_adyar_basin",
+        "name": "Adyar River Urban Basin",
+        "description": "Riparian corridor and low-lying Saidapet urban flood zone",
+        "note": "Hand-drawn approximate polygons for illustrative demo; not an official flood risk map."
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [80.205, 12.998],
+            [80.250, 12.998],
+            [80.250, 13.035],
+            [80.205, 13.035],
+            [80.205, 12.998]
+          ]
+        ]
+      }
+    }
+  ]
+}
