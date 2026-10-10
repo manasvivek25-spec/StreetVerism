@@ -78,6 +78,9 @@ export interface StateResponse {
   is_replay: boolean;
   generated_at: string;
   server_time: string;
+  coverage?: 'covered' | 'outside';
+  mode?: 'live' | 'replay' | 'mock';
+  weather_available?: boolean;
 }
 
 export interface CheckInRequest {

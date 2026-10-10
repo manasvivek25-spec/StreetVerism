@@ -10,6 +10,7 @@ import type {
   StateResponse,
 } from './api/types';
 import { MapView } from './components/MapView';
+import { evaluateTouristStatus } from './utils/statusHelper';
 
 const translations: Record<
   Language,
@@ -486,6 +487,13 @@ function App() {
   const activeState = stateData ?? fallbackState;
   const statusInfo = statusVisuals[activeState.status] ?? statusVisuals.clear;
   const isReplayMode = activeState.is_replay || backendHealth?.is_replay || backendHealth?.mode === 'replay';
+  const evalResult = evaluateTouristStatus({
+    status: activeState.status,
+    coverage: activeState.coverage,
+    mode: activeState.mode ?? (backendHealth?.mode as 'live' | 'replay' | 'mock' | undefined),
+    weather_available: activeState.weather_available,
+    is_replay: isReplayMode,
+  });
   const replayDisclaimer =
     backendHealth?.replay?.disclaimer || 'Simulated data based loosely on a past event, not real or official.';
 
@@ -743,7 +751,7 @@ function App() {
               userLocation={userLocation}
               shelters={activeState.nearest_shelters}
               cell={activeState.cell}
-              statusLabel={statusInfo.label}
+              statusLabel={evalResult.displayStatus}
               isReplay={isReplayMode}
               isFallback={isFallback}
               backendMode={backendHealth?.mode}
@@ -762,32 +770,55 @@ function App() {
           <div className="side-panels-column">
             {/* Status & Evidence Breakdown */}
             <div className="info-card">
-              <div className="status-header-box">
-                <div>
+              {evalResult.isOutside ? (
+                <div className="outside-coverage-card">
                   <div style={{ fontSize: '0.75rem', color: '#94a3b8', fontWeight: 750, textTransform: 'uppercase' }}>
-                    Hazard Assessment
+                    Service Boundary
                   </div>
-                  <h3 style={{ margin: 0, color: statusInfo.color, fontSize: '1.25rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <span>{statusInfo.icon}</span>
-                    <span>{statusInfo.label}</span>
+                  <h3 style={{ margin: '4px 0 10px 0', color: '#94a3b8', fontSize: '1.25rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <span>📍</span>
+                    <span>Outside Service Area</span>
                   </h3>
+                  <div style={{ padding: '12px 14px', background: 'rgba(51, 65, 85, 0.35)', border: '1px solid #475569', borderRadius: '8px', color: '#cbd5e1', fontSize: '0.88rem', lineHeight: 1.5, marginBottom: '14px' }}>
+                    {evalResult.outsideNotice}
+                  </div>
                 </div>
-                <span
-                  className="status-badge-tag"
-                  style={{
-                    backgroundColor: statusInfo.bg,
-                    color: statusInfo.color,
-                    border: `1px solid ${statusInfo.color}`,
-                    fontWeight: 700,
-                  }}
-                >
-                  {activeState.status.toUpperCase()}
-                </span>
-              </div>
+              ) : (
+                <>
+                  <div className="status-header-box">
+                    <div>
+                      <div style={{ fontSize: '0.75rem', color: '#94a3b8', fontWeight: 750, textTransform: 'uppercase' }}>
+                        Hazard Assessment
+                      </div>
+                      <h3 style={{ margin: 0, color: evalResult.isWeatherUnavailable && activeState.status === 'clear' ? '#94a3b8' : statusInfo.color, fontSize: '1.25rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <span>{evalResult.isWeatherUnavailable && activeState.status === 'clear' ? 'ℹ️' : statusInfo.icon}</span>
+                        <span>{evalResult.displayStatus}</span>
+                      </h3>
+                    </div>
+                    <span
+                      className="status-badge-tag"
+                      style={{
+                        backgroundColor: evalResult.isWeatherUnavailable && activeState.status === 'clear' ? 'rgba(148, 163, 184, 0.15)' : statusInfo.bg,
+                        color: evalResult.isWeatherUnavailable && activeState.status === 'clear' ? '#94a3b8' : statusInfo.color,
+                        border: `1px solid ${evalResult.isWeatherUnavailable && activeState.status === 'clear' ? '#64748b' : statusInfo.color}`,
+                        fontWeight: 700,
+                      }}
+                    >
+                      {evalResult.displayStatus}
+                    </span>
+                  </div>
 
-              <p style={{ fontSize: '0.88rem', color: '#cbd5e1', lineHeight: 1.5, margin: '0 0 14px 0' }}>
-                {statusInfo.description}
-              </p>
+                  {evalResult.isWeatherUnavailable ? (
+                    <div className="no-weather-notice" style={{ padding: '10px 14px', background: 'rgba(234, 179, 8, 0.12)', border: '1px solid #ca8a04', borderRadius: '6px', color: '#fef08a', fontSize: '0.88rem', lineHeight: 1.5, margin: '12px 0 14px 0' }}>
+                      ⚠️ {evalResult.weatherNotice}
+                    </div>
+                  ) : evalResult.canShowNoKnownHazard ? (
+                    <p style={{ fontSize: '0.88rem', color: '#cbd5e1', lineHeight: 1.5, margin: '0 0 14px 0' }}>
+                      {statusInfo.description}
+                    </p>
+                  ) : null}
+                </>
+              )}
 
               {/* Expandable "Why?" Evidence Accordion */}
               <details className="why-accordion" open>
