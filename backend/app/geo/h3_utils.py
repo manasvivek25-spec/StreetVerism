@@ -119,3 +119,8 @@ def haversine_distance_m(lat1: float, lng1: float, lat2: float, lng2: float) -> 
     a = math.sin(dp / 2.0) ** 2 + math.cos(p1) * math.cos(p2) * math.sin(dl / 2.0) ** 2
     c = 2.0 * math.atan2(math.sqrt(a), math.sqrt(1.0 - a))
     return round(r * c, 1)
+
+
+def grid_disk(cell: str, k: int = 1) -> Set[str]:
+    """Return all H3 cells within k steps of origin cell (including origin)."""
+    return set(h3.grid_disk(cell, k))
