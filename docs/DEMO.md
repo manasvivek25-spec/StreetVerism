@@ -23,7 +23,7 @@
 1. **Language Selection**:
    - In the Language dropdown, select **Deutsch (German)**.
    - **Observe**: The entire interface updates into German (`"Lokale Gefahrenlage"`, `"Sicherheitshinweise"`).
-   - **Honesty in Translation**: Point to the instruction list. Notice the orange badge: **"⚠️ Machine-translated"**. Below it, the English original is clearly displayed (*"Move to higher ground immediately. Do not wait."*). Tamil and English show **"✓ Reviewed"**.
+   - **Honesty in Translation**: Point to the instruction list. Notice the orange badge: **"⚠️ Machine-translated"**. Below it, the English original is clearly displayed (*"Move to higher ground immediately. Do not wait."*). Only English is verified as human-reviewed; other languages are marked as unreviewed machine translations.
 2. **Replay Disclaimer**:
    - Show the purple banner at the top: **"REPLAY: ILLUSTRATIVE RECONSTRUCTION"** with the official disclaimer: *"Simulated data based loosely on a past event, not real or official."*
 3. **H3 Spatial Map**:
