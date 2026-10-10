@@ -32,19 +32,25 @@ htmlcov/
 
 # Environment Variables & Secrets
 .env
+.env.*
+!.env.example
 .env.local
 *.sqlite
 *.sqlite3
 *.db
 
-# Node (for web team)
+# Node & Frontend
 node_modules/
+web/node_modules/
 dist/
+web/dist/
 .vite/
 
-# IDE
+# IDE & OS
 .vscode/
 .idea/
 *.swp
 *.swo
+.DS_Store
+Thumbs.db
 scratch/
