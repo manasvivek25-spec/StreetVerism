@@ -37,6 +37,10 @@ class Settings(BaseModel):
     database_url: str = Field(default_factory=lambda: os.getenv("DATABASE_URL", "sqlite:///./streetverism.db"))
     vite_api_base: str = Field(default_factory=lambda: os.getenv("VITE_API_BASE", "http://localhost:8000"))
 
+    # Service coverage & Replay Autostart
+    service_bbox: str = Field(default_factory=lambda: os.getenv("SERVICE_BBOX", "80.10,12.80,80.40,13.30"))
+    replay_autostart: str = Field(default_factory=lambda: os.getenv("REPLAY_AUTOSTART", "").strip())
+
     @property
     def cors_origins(self) -> List[str]:
         raw = [origin.strip() for origin in self.cors_origins_str.split(",") if origin.strip()]

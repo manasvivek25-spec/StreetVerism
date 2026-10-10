@@ -1,5 +1,7 @@
 """Authentication dependencies and OpenAPI security scheme."""
 
+import hmac
+
 from fastapi import HTTPException, Security, status
 from fastapi.security import APIKeyHeader
 
@@ -15,7 +17,7 @@ authority_key_header = APIKeyHeader(
 
 
 async def verify_authority_key(api_key: str = Security(authority_key_header)) -> str:
-    """Validate incoming X-Authority-Key against server configuration."""
+    """Validate incoming X-Authority-Key against server configuration using constant-time comparison."""
     settings = get_settings()
     if not api_key:
         raise HTTPException(
@@ -23,7 +25,7 @@ async def verify_authority_key(api_key: str = Security(authority_key_header)) ->
             detail="Missing required header: X-Authority-Key",
             headers={"WWW-Authenticate": "ApiKey"},
         )
-    if api_key != settings.authority_key:
+    if not hmac.compare_digest(api_key, settings.authority_key):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Invalid X-Authority-Key credentials",

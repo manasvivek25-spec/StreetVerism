@@ -10,6 +10,7 @@ from .checkin import (
     CheckinListResponse,
     CheckinUpdate,
 )
+from backend.app.trust.types import Report
 from .report import ReportCreate, ReportResponse
 from .scenario import ScenarioResetResponse, ScenarioSeek, ScenarioStart, ScenarioStatus
 from .shelter import Shelter, ShelterListResponse
@@ -32,6 +33,7 @@ __all__ = [
     "CheckinItem",
     "CheckinListResponse",
     "CheckinUpdate",
+    "Report",
     "ReportCreate",
     "ReportResponse",
     "ScenarioResetResponse",

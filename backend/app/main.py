@@ -1,16 +1,28 @@
 """Main FastAPI application entry point for StreetVerism."""
 
+import asyncio
 import logging
 import os
 from contextlib import asynccontextmanager
 from datetime import datetime, timezone
+from pathlib import Path
 
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.gzip import GZipMiddleware
 
-from backend.app.api.routes import get_health, router as api_router
+from backend.app.api.routes import (
+    autostart_replay,
+    get_checkin_repo,
+    get_health,
+    get_shelter_repo,
+    init_scenario,
+    router as api_router,
+)
 from backend.app.config import get_settings
+from backend.app.db import init_db
 from backend.app.models.state import HealthResponse
+from backend.app.services import load_and_validate_templates, seed_shelters_from_file
 
 # Configure structured logging with exact logger name
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] [%(name)s]: %(message)s")
@@ -21,6 +33,7 @@ logger = logging.getLogger("streetverism")
 async def lifespan(app: FastAPI):
     """Application startup & shutdown events with honest mode logging."""
     settings = get_settings()
+    retention_task = None
     if settings.mock:
         logger.info("StreetVerism backend started in MOCK mode (MOCK=1). Serving deterministic mock datasets.")
         env_name = os.getenv("ENVIRONMENT", os.getenv("ENV", "")).lower()
@@ -32,7 +45,53 @@ async def lifespan(app: FastAPI):
             )
     else:
         logger.info("StreetVerism backend started in LIVE mode (MOCK=0). Real external integrations enabled.")
+
+        # 1. Initialize SQLite schema idempotently
+        init_db(settings.database_url)
+
+        # 2. Seed shelters from data/shelters.json
+        project_root = Path(__file__).resolve().parent.parent.parent
+        shelters_file = project_root / "data" / "shelters.json"
+        if shelters_file.exists():
+            seed_shelters_from_file(shelters_file, get_shelter_repo())
+
+        # 3. Load & validate multilingual emergency templates
+        templates_dir = project_root / "data" / "templates"
+        if templates_dir.exists():
+            load_and_validate_templates(templates_dir)
+
+        # 4. Scenario pre-initialization & REPLAY_AUTOSTART check
+        scenario_path = project_root / "data" / "scenarios" / "michaung_replay.json"
+        if scenario_path.exists() and shelters_file.exists():
+            init_scenario(scenario_path, shelters_file)
+
+        if settings.replay_autostart:
+            autostart_replay(settings.replay_autostart)
+            logger.info("Replay scenario auto-started at bookmark '%s'", settings.replay_autostart)
+
+        # 5. Background retention task for checkins (purge records older than 48h hourly)
+        async def retention_worker():
+            while True:
+                try:
+                    await asyncio.sleep(3600)
+                    now_epoch = datetime.now(timezone.utc).timestamp()
+                    get_checkin_repo().delete_older_than(now_epoch - 48 * 3600)
+                    logger.debug("Hourly check-in retention purge completed.")
+                except asyncio.CancelledError:
+                    break
+                except Exception as ex:
+                    logger.error("Error during check-in retention purge: %s", ex)
+
+        retention_task = asyncio.create_task(retention_worker())
+
     yield
+
+    if retention_task is not None:
+        retention_task.cancel()
+        try:
+            await retention_task
+        except asyncio.CancelledError:
+            pass
 
 
 settings = get_settings()
@@ -50,7 +109,7 @@ app = FastAPI(
     ],
 )
 
-# Configure CORS middleware
+# Configure CORS and GZip middleware
 cors_allow_all = "*" in settings.cors_origins
 app.add_middleware(
     CORSMiddleware,
@@ -60,6 +119,7 @@ app.add_middleware(
     allow_headers=["Content-Type", "X-Authority-Key", "Accept", "Authorization"],
     expose_headers=["X-Mock-Data"],
 )
+app.add_middleware(GZipMiddleware, minimum_size=1024)
 
 
 @app.middleware("http")
