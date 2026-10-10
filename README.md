@@ -131,8 +131,18 @@ To maintain strict technical honesty, every feature mentioned across documentati
 - **Public Tourist App URL**: [https://street-verism.vercel.app/](https://street-verism.vercel.app/)
 - **Public Authority Console**: [https://street-verism.vercel.app/console](https://street-verism.vercel.app/console)
 - **Public Backend API**: [https://streetverism.onrender.com/](https://streetverism.onrender.com/)
-- **Judge Access Key**: `<demo authority key provided in the submission form>` *(injected via host environment variable `AUTHORITY_KEY`; never committed to git)*
-- **Demo Video**: `docs/demo.mp4 (to be added)`
+- **Demo Video Link**: `docs/demo.mp4 (to be added)`
+
+### Judge Access
+To evaluate the Authority Operations Console at [https://street-verism.vercel.app/console](https://street-verism.vercel.app/console):
+1. Open the console link in any desktop or mobile browser.
+2. When prompted for credentials, enter the secret:
+   `<demo authority key provided in the submission form>`
+   *(The production secret is securely injected into Render via the host `AUTHORITY_KEY` environment variable and is never stored in version control).*
+3. Verification capabilities available in the console:
+   - **Triage Check-Ins**: View distress check-in clusters and toggle handled status (`PATCH /api/checkins/{id}`).
+   - **Publish Alerts**: In live mode, broadcast emergency alerts; in replay mode, verify 409 rejection protects historical replay integrity.
+   - **Replay Playback Controls**: Jump to named keyframes (`golden_moment`), pause simulation clock, or reset to live operation.
 
 ---
 
