@@ -233,7 +233,7 @@ def test_authority_alerts_crud():
     # Publish alert
     new_alert = {
         "source": "official_manual",
-        "sender": "TNSDMA (demo)",
+        "sender": "State Disaster Authority (demo)",
         "hazard": "flood",
         "severity": "extreme",
         "urgency": "immediate",

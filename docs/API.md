@@ -307,7 +307,7 @@ Publishes a new official hazard alert or all-clear declaration.
 ```json
 {
   "source": "official_manual",
-  "sender": "TNSDMA",
+  "sender": "State Disaster Authority (demo)",
   "hazard": "flood",
   "severity": "extreme",
   "urgency": "immediate",
@@ -337,7 +337,7 @@ Lists active (non-expired, non-superseded) official alerts.
     {
       "id": "alt_michaung_01",
       "source": "official_manual",
-      "sender": "TNSDMA",
+      "sender": "State Disaster Authority (demo)",
       "hazard": "flood",
       "severity": "extreme",
       "urgency": "immediate",
