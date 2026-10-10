@@ -55,7 +55,7 @@ export AUTHORITY_KEY="your-strong-production-authority-secret"
 export DATABASE_URL="sqlite:///./data/streetverism.db"
 export ROUTING_API_KEY="your-openrouteservice-api-key"
 
-uvicorn backend.app.main:app --host 0.0.0.0 --port 8000 --workers 1
+uvicorn backend.app.main:app --host 0.0.0.0 --port "${PORT:-8000}" --workers 1 --proxy-headers --forwarded-allow-ips="*"
 ```
 
 ### Live Replay Demo Startup (`MOCK=0` + `REPLAY_AUTOSTART`)
@@ -65,8 +65,14 @@ export MOCK=0
 export AUTHORITY_KEY="demo-authority-secret"
 export REPLAY_AUTOSTART="golden_moment"
 
-uvicorn backend.app.main:app --host 0.0.0.0 --port 8000 --workers 1
+uvicorn backend.app.main:app --host 0.0.0.0 --port "${PORT:-8000}" --workers 1 --proxy-headers --forwarded-allow-ips="*"
 ```
+
+### Reverse Proxy & Client IP Handling
+When deployed behind reverse proxies (Render, Cloudflare, Railway, Fly.io, Nginx, ALB):
+- The server inspects the `X-Forwarded-For` header (taking the first client IP) and falls back to socket client IP.
+- Uvicorn must be started with `--proxy-headers --forwarded-allow-ips="*"` so forwarded headers are properly trusted.
+- Dual-key rate limiters on `/api/checkin` (15 req/min) and `/api/route` (30 req/min) key on this real client IP to prevent proxy-wide throttling.
 
 ### Offline Mock Mode Startup (`MOCK=1`)
 ```bash

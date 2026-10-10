@@ -205,6 +205,18 @@ def _now_utc() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
+def get_client_ip(request: Request) -> str:
+    """Extract client IP, inspecting X-Forwarded-For behind reverse proxies."""
+    forwarded = request.headers.get("x-forwarded-for")
+    if forwarded:
+        client_ip = forwarded.split(",")[0].strip()
+        if client_ip:
+            return client_ip
+    if request.client and request.client.host:
+        return request.client.host
+    return "127.0.0.1"
+
+
 def haversine_m(lat1: float, lng1: float, lat2: float, lng2: float) -> float:
     r = 6371000.0
     p1 = math.radians(lat1)
@@ -468,7 +480,7 @@ async def submit_report_endpoint(payload: ReportCreate) -> ReportResponse:
 async def submit_checkin_endpoint(payload: CheckinCreate, request: Request) -> CheckinCreateResponse:
     """Record a tourist safe or need_help check-in for triage."""
     settings = get_settings()
-    client_ip = request.client.host if request.client else "127.0.0.1"
+    client_ip = get_client_ip(request)
 
     if settings.mock:
         chk_id = f"chk_{uuid4().hex[:8]}"
@@ -516,7 +528,7 @@ async def get_route_endpoint(
     if effective_lat is None or effective_lng is None:
         raise HTTPException(status_code=422, detail="Origin coordinates (lat, lng) are required.")
 
-    client_ip = request.client.host if request.client else "127.0.0.1"
+    client_ip = get_client_ip(request)
 
     if settings.mock:
         from backend.app.routing.types import RouteKindEnum

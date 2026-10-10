@@ -463,3 +463,36 @@ def test_checkin_rate_limiting(client):
     assert resp_rej.status_code == 429
     assert "Retry-After" in resp_rej.headers
     assert "Rate limit exceeded" in resp_rej.json()["detail"]
+
+
+def test_checkin_per_ip_rate_limiting_behind_proxy(client):
+    """Verify rate limit keys on real client IP from X-Forwarded-For header behind reverse proxies."""
+    proxy_ip_headers = {"X-Forwarded-For": "203.0.113.195, 10.0.0.1"}
+
+    # 15 requests from distinct devices but same client IP
+    for i in range(15):
+        resp = client.post(
+            "/api/checkin",
+            json={"device_id": f"proxy-device-{i}", "lat": 13.0, "lng": 80.2, "state": "safe"},
+            headers=proxy_ip_headers,
+        )
+        assert resp.status_code == 200
+
+    # 16th request from the same IP (new device) should be rejected with 429
+    resp_blocked = client.post(
+        "/api/checkin",
+        json={"device_id": "proxy-device-16", "lat": 13.0, "lng": 80.2, "state": "safe"},
+        headers=proxy_ip_headers,
+    )
+    assert resp_blocked.status_code == 429
+    assert "Retry-After" in resp_blocked.headers
+
+    # Different client IP should succeed
+    other_ip_headers = {"X-Forwarded-For": "198.51.100.50"}
+    resp_other = client.post(
+        "/api/checkin",
+        json={"device_id": "proxy-device-16", "lat": 13.0, "lng": 80.2, "state": "safe"},
+        headers=other_ip_headers,
+    )
+    assert resp_other.status_code == 200
+
