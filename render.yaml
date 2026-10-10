@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: streetverism-backend
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn backend.app.main:app --host 0.0.0.0 --port $PORT --workers 1 --proxy-headers --forwarded-allow-ips="*"
+    plan: free
+    region: oregon
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: MOCK
+        value: "0"
+      - key: REPLAY_AUTOSTART
+        value: "golden_moment"
+      - key: CORS_ORIGINS
+        value: "*"
+      - key: AUTHORITY_KEY
+        generateValue: true
+      - key: ROUTING_PROVIDER
+        value: "openrouteservice"
+      # Optional: set ROUTING_API_KEY manually in Render dashboard if available
