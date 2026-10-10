@@ -1,0 +1,310 @@
+/* StreetVerism Emergency Authority Operations Console Styling */
+
+.console-root {
+  min-height: 100vh;
+  background-color: #050e18;
+  color: #e2e8f0;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, sans-serif;
+  display: flex;
+  flex-direction: column;
+}
+
+.console-header {
+  background: #091728;
+  border-bottom: 1px solid #1e3a5f;
+  padding: 14px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.console-title-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.console-badge-icon {
+  background: #3b82f6;
+  color: #ffffff;
+  font-weight: 900;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  font-size: 1.1rem;
+}
+
+.console-nav-tabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.console-tab-btn {
+  background: #0d2238;
+  border: 1px solid #1e3a5f;
+  color: #94a3b8;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+}
+
+.console-tab-btn:hover {
+  color: #ffffff;
+  border-color: #3b82f6;
+}
+
+.console-tab-btn.active {
+  background: #1d4ed8;
+  color: #ffffff;
+  border-color: #3b82f6;
+  font-weight: 700;
+}
+
+.console-container {
+  padding: 24px;
+  max-width: 1440px;
+  margin: 0 auto;
+  width: 100%;
+  flex: 1;
+}
+
+/* Password Gate Modal */
+.gate-card {
+  max-width: 440px;
+  margin: 80px auto;
+  background: #0b1f32;
+  border: 1px solid #1e3a5f;
+  border-radius: 14px;
+  padding: 32px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  text-align: center;
+}
+
+.gate-input {
+  width: 100%;
+  padding: 12px 14px;
+  background: #050e18;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  color: #ffffff;
+  font-size: 0.95rem;
+  margin-top: 14px;
+  margin-bottom: 16px;
+  box-sizing: border-box;
+}
+
+.gate-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+}
+
+/* Console Metric Cards */
+.console-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.console-metric-card {
+  background: #0b1f32;
+  border: 1px solid #1e293b;
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.console-metric-val {
+  font-size: 1.8rem;
+  font-weight: 800;
+  margin-top: 4px;
+}
+
+/* Console Panel Card */
+.console-panel {
+  background: #0b1f32;
+  border: 1px solid #1e293b;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 24px;
+}
+
+.console-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #1e293b;
+  padding-bottom: 14px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+/* Table Styling */
+.console-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  text-align: left;
+}
+
+.console-table th {
+  background: #071827;
+  color: #94a3b8;
+  padding: 12px 14px;
+  font-weight: 700;
+  border-bottom: 1px solid #1e293b;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+}
+
+.console-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid #142436;
+  vertical-align: middle;
+}
+
+.console-table tr:hover {
+  background: rgba(30, 58, 95, 0.2);
+}
+
+.row-need-help {
+  background: rgba(239, 68, 68, 0.08);
+}
+
+/* Action Buttons */
+.btn-toggle-handled {
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.2s;
+}
+
+.btn-toggle-handled.handled {
+  background: #14532d;
+  color: #86efac;
+  border-color: #22c55e;
+}
+
+.btn-toggle-handled.unhandled {
+  background: #7f1d1d;
+  color: #fca5a5;
+  border-color: #ef4444;
+}
+
+.btn-action-danger {
+  background: #7f1d1d;
+  color: #fee2e2;
+  border: 1px solid #dc2626;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-action-danger:hover {
+  background: #b91c1c;
+}
+
+/* Scenario Demo Controls Bar */
+.scenario-bar {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-top: 14px;
+}
+
+.scenario-btn {
+  background: #1e293b;
+  border: 1px solid #334155;
+  color: #cbd5e1;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.scenario-btn:hover {
+  border-color: #38bdf8;
+  color: #ffffff;
+}
+
+.scenario-btn.primary {
+  background: #0284c7;
+  color: #ffffff;
+  border-color: #38bdf8;
+}
+
+.scenario-btn.danger {
+  background: #b91c1c;
+  color: #ffffff;
+  border-color: #ef4444;
+}
+
+/* Form inputs */
+.console-form-group {
+  margin-bottom: 16px;
+}
+
+.console-label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.console-select,
+.console-input,
+.console-textarea {
+  width: 100%;
+  background: #071827;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  padding: 10px 12px;
+  color: #ffffff;
+  font-size: 0.88rem;
+  box-sizing: border-box;
+}
+
+.console-select:focus,
+.console-input:focus,
+.console-textarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+}
+
+.btn-submit-alert {
+  background: #2563eb;
+  color: #ffffff;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-submit-alert:hover {
+  background: #1d4ed8;
+}
