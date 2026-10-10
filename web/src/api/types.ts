@@ -59,6 +59,11 @@ export interface HealthResponse {
   is_replay: boolean;
   version: string;
   server_time: string;
+  replay?: {
+    label: string;
+    disclaimer: string;
+    sim_time?: string;
+  };
 }
 
 export interface StateResponse {

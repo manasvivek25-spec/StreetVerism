@@ -18,6 +18,20 @@ const getApiBase = (): string => {
   return 'http://localhost:8000';
 };
 
+export class ApiError extends Error {
+  status: number;
+  retryAfter?: number;
+  data?: unknown;
+
+  constructor(message: string, status: number, retryAfter?: number, data?: unknown) {
+    super(message);
+    this.name = 'ApiError';
+    this.status = status;
+    this.retryAfter = retryAfter;
+    this.data = data;
+  }
+}
+
 async function request<T>(endpoint: string, options?: RequestInit): Promise<T> {
   const baseUrl = getApiBase();
   const url = `${baseUrl}/api${endpoint.startsWith('/') ? endpoint : `/${endpoint}`}`;
@@ -39,17 +53,27 @@ async function request<T>(endpoint: string, options?: RequestInit): Promise<T> {
 
   if (!response.ok) {
     let errorMessage = `API request failed with status ${response.status} ${response.statusText}`;
+    let errorData: unknown = null;
     try {
-      const errorData = (await response.json()) as { message?: string; detail?: string | unknown };
-      if (errorData.message) {
-        errorMessage = errorData.message;
-      } else if (errorData.detail) {
-        errorMessage = typeof errorData.detail === 'string' ? errorData.detail : JSON.stringify(errorData.detail);
+      errorData = await response.json();
+      const parsed = errorData as { message?: string; detail?: string | unknown };
+      if (parsed.message) {
+        errorMessage = parsed.message;
+      } else if (parsed.detail) {
+        errorMessage = typeof parsed.detail === 'string' ? parsed.detail : JSON.stringify(parsed.detail);
       }
     } catch {
       // Ignore JSON parse errors for non-JSON error responses
     }
-    throw new Error(errorMessage);
+
+    const retryAfterHeader = response.headers.get('Retry-After');
+    const retryAfter = retryAfterHeader ? parseInt(retryAfterHeader, 10) : undefined;
+    if (response.status === 429) {
+      const waitMsg = retryAfter ? ` Please wait ${retryAfter} seconds before trying again.` : '';
+      errorMessage = `Rate limit exceeded.${waitMsg}`;
+    }
+
+    throw new ApiError(errorMessage, response.status, retryAfter, errorData);
   }
 
   return (await response.json()) as T;
@@ -99,8 +123,9 @@ export async function createReport(payload: ReportRequest): Promise<ReportRespon
   });
 }
 
-export async function getCells(): Promise<CellFeatureCollection> {
-  return request<CellFeatureCollection>('/cells', {
+export async function getCells(bbox?: string): Promise<CellFeatureCollection> {
+  const query = bbox ? `?bbox=${encodeURIComponent(bbox)}` : '';
+  return request<CellFeatureCollection>(`/cells${query}`, {
     method: 'GET',
   });
 }
