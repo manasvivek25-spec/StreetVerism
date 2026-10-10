@@ -15,6 +15,8 @@ from backend.app.routing.destinations import (
     select_safe_destinations,
 )
 from backend.app.routing.maps_urls import generate_maps_urls
+from backend.app.routing.ors_adapter import ORS_MANEUVER_MAP, OpenRouteServiceAdapter
+from backend.app.routing.quota import RoutingQuotaManager
 from backend.app.routing.types import (
     DEFAULT_ORS_ATTRIBUTION,
     ROUTE_WARNING_DETAILS,
@@ -49,6 +51,9 @@ __all__ = [
     "RoutingModeEnum",
     "SafeDestination",
     "StructuredStep",
+    "OpenRouteServiceAdapter",
+    "RoutingQuotaManager",
+    "ORS_MANEUVER_MAP",
     "bearing_to_compass",
     "build_avoid_set",
     "build_direct_line_route",

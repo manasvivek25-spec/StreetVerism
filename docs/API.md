@@ -575,29 +575,166 @@ Returns the current replay clock and state. When no scenario is active: `is_runn
 
 ---
 
-### 3.5 Stretch Endpoints
+### 3.5 Emergency Safe Route Endpoint
 
-#### `GET /api/route?from_lat={lat}&from_lng={lng}&to_shelter={id}&lang={lang}`
-Hazard-aware route avoiding cells marked `official_hazard` or `likely_hazard`.
-- **Response `200 OK`**:
+#### `GET /api/route`
+Calculates an emergency hazard-aware route from the tourist's current location to the nearest safe shelter, actively routing around flood hazard cells (`official_hazard` and `likely_hazard`).
+
+- **Query Parameters**:
+  - `lat` (float, required): Tourist current latitude [-90.0, 90.0] (or `from_lat` for backwards compatibility).
+  - `lng` (float, required): Tourist current longitude [-180.0, 180.0] (or `from_lng` for backwards compatibility).
+  - `shelter` (string, optional): Specific target shelter ID (or `to_shelter`). If omitted, auto-selects the closest safe open shelter.
+  - `profile` (string, optional, default `"foot-walking"`): Routing profile (`"foot-walking"` or `"driving-car"`).
+  - `reroute` (boolean, optional, default `false`): Set `true` to bypass cache and recalculate if user deviates.
+  - `prev_route_id` (string, optional): ID of previously issued route.
+  - `lang` (string, optional, default `"en"`): Response language code.
+
+- **Success Response `200 OK` (Road Route with Provider)**:
 ```json
 {
-  "route": {
+  "route_id": "rt_87002b1f8934",
+  "route_version": 1,
+  "valid_until": "2026-10-10T12:15:00Z",
+  "kind": "road_route",
+  "destination": {
+    "shelter_id": "sh_velachery_01",
+    "id": "sh_velachery_01",
+    "name": "Velachery Community Relief Centre",
+    "name_local": "வேளச்சேரி சமூக நிவாரண மையம்",
+    "lat": 12.9815,
+    "lng": 80.218,
+    "distance_m": 850.0,
+    "bearing_deg": 12.5,
+    "compass_direction": "NNE",
+    "cell": "88618c4c13fffff",
+    "status": "clear",
+    "is_safe": true,
+    "is_demo": true
+  },
+  "alternatives": [
+    {
+      "shelter_id": "sh_tidel_01",
+      "id": "sh_tidel_01",
+      "name": "TIDEL Park Relief Camp",
+      "name_local": "டைடல் பார்க் நிவாரண முகாம்",
+      "lat": 12.9892,
+      "lng": 80.2486,
+      "distance_m": 2400.0,
+      "bearing_deg": 48.0,
+      "compass_direction": "NE",
+      "cell": "88618c4c57fffff",
+      "status": "clear",
+      "is_safe": true,
+      "is_demo": true
+    }
+  ],
+  "geometry": {
     "type": "LineString",
     "coordinates": [
-      [80.2180, 12.9815],
-      [80.2175, 12.9820],
-      [80.2170, 12.9825]
+      [80.217, 12.975],
+      [80.2175, 12.978],
+      [80.218, 12.9815]
     ]
   },
-  "steps": [
-    "Head north on Trunk Rd",
-    "Turn left away from waterlogged section on 5th Ave"
-  ],
   "distance_m": 850.0,
-  "hazard_cells_avoided": 2
+  "duration_s": 612.0,
+  "steps": [
+    {
+      "maneuver": "depart",
+      "street_name": "Velachery Bypass Rd",
+      "distance_m": 250.0
+    },
+    {
+      "maneuver": "turn_left",
+      "street_name": "100 Feet Rd",
+      "distance_m": 600.0
+    },
+    {
+      "maneuver": "arrive",
+      "street_name": null,
+      "distance_m": 0.0
+    }
+  ],
+  "warnings": [],
+  "hazard_cells_avoided": 3,
+  "maps_urls": {
+    "google": "https://www.google.com/maps/dir/?api=1&origin=12.975000,80.217000&destination=12.981500,80.218000&travelmode=walking",
+    "apple": "https://maps.apple.com/?saddr=12.975000,80.217000&daddr=12.981500,80.218000&dirflg=w",
+    "geo": "geo:12.981500,80.218000?q=12.981500,80.218000(Velachery+Community+Relief+Centre)"
+  },
+  "attribution": "© openrouteservice by HeiGIT | Map data © OpenStreetMap contributors",
+  "provider": "openrouteservice",
+  "reroute": false,
+  "reason_hint": null,
+  "is_replay": false,
+  "mode_of_data": "live",
+  "generated_at": "2026-10-10T12:00:00Z"
 }
 ```
+
+- **Success Response `200 OK` (Direct-Line Fallback when Provider Offline / Unconfigured)**:
+```json
+{
+  "route_id": "rt_94bf29ad10ef",
+  "route_version": 1,
+  "valid_until": "2026-10-10T12:15:00Z",
+  "kind": "direct_line",
+  "destination": {
+    "shelter_id": "sh_velachery_01",
+    "id": "sh_velachery_01",
+    "name": "Velachery Community Relief Centre",
+    "name_local": "வேளச்சேரி சமூக நிவாரண மையம்",
+    "lat": 12.9815,
+    "lng": 80.218,
+    "distance_m": 724.0,
+    "bearing_deg": 12.5,
+    "compass_direction": "NNE",
+    "cell": "88618c4c13fffff",
+    "status": "clear",
+    "is_safe": true,
+    "is_demo": true
+  },
+  "alternatives": [],
+  "geometry": {
+    "type": "LineString",
+    "coordinates": [
+      [80.217, 12.975],
+      [80.218, 12.9815]
+    ]
+  },
+  "distance_m": 724.0,
+  "duration_s": null,
+  "steps": [],
+  "warnings": [
+    {
+      "key": "routing_unavailable",
+      "detail": "Road navigation provider is currently offline or rate-limited. Straight-line bearing displayed."
+    }
+  ],
+  "hazard_cells_avoided": 0,
+  "maps_urls": {
+    "google": "https://www.google.com/maps/dir/?api=1&origin=12.975000,80.217000&destination=12.981500,80.218000&travelmode=walking",
+    "apple": "https://maps.apple.com/?saddr=12.975000,80.217000&daddr=12.981500,80.218000&dirflg=w",
+    "geo": "geo:12.981500,80.218000?q=12.981500,80.218000(Velachery+Community+Relief+Centre)"
+  },
+  "attribution": null,
+  "provider": null,
+  "reroute": false,
+  "reason_hint": null,
+  "is_replay": false,
+  "mode_of_data": "live",
+  "generated_at": "2026-10-10T12:00:00Z"
+}
+```
+
+- **Warning Codes (`warnings[].key`)**:
+  - `destination_in_hazard`: Target shelter is inside or adjacent to an active hazard zone.
+  - `no_hazard_free_route`: No road path completely free of water could be found. Exercise extreme caution.
+  - `routing_unavailable`: Road routing provider offline, unconfigured, or rate-limited; straight-line fallback provided.
+  - `unverified_reports_nearby`: Unverified crowd reports exist near travel corridor.
+  - `outside_coverage`: Origin is outside service coverage bounding box.
+  - `start_in_hazard`: Origin is inside an active flood hazard zone.
+  - `shelter_unreachable`: All known shelters are unreachable or flooded.
 
 ---
 

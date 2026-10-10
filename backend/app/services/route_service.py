@@ -28,7 +28,16 @@ from backend.app.routing.types import (
     SafeDestination,
     StructuredStep,
 )
+from backend.app.routing.ors_adapter import OpenRouteServiceAdapter
 from backend.app.services.context import DataContext
+
+_DEFAULT_ORS_ADAPTER = OpenRouteServiceAdapter()
+
+
+def get_ors_adapter() -> OpenRouteServiceAdapter:
+    """Return singleton OpenRouteServiceAdapter instance."""
+    return _DEFAULT_ORS_ADAPTER
+
 
 # In-memory LRU route cache: (key) -> (RouteResponse, expires_at_timestamp)
 _ROUTE_CACHE: OrderedDict[Tuple[Any, ...], Tuple[RouteResponse, float]] = OrderedDict()
@@ -65,7 +74,7 @@ def check_route_rate_limit(client_id: str) -> None:
     _CLIENT_TIMESTAMPS[client_id] = timestamps
 
 
-def calculate_safe_route(
+async def calculate_safe_route(
     lat: float,
     lng: float,
     mode: str,
@@ -76,6 +85,7 @@ def calculate_safe_route(
     ctx: DataContext,
     shelter_repo: ShelterRepo,
     service_bbox: str = "80.10,12.80,80.40,13.30",
+    ors_adapter: Optional[OpenRouteServiceAdapter] = None,
 ) -> RouteResponse:
     """Calculate an emergency hazard-aware route to safety."""
     # 1. Validate coordinates
@@ -253,21 +263,57 @@ def calculate_safe_route(
             generated_at=now_iso,
         )
 
-    # 7. Build avoid set and geometry fallback (Unit 3a)
+    # 7. Build avoid set
     avoid_set = build_avoid_set(lat, lng, chosen_destination.lat, chosen_destination.lng, assessments_by_cell)
     for w in avoid_set.warnings:
         warnings.append(RouteWarningItem(key=w.value, detail=ROUTE_WARNING_DETAILS.get(w.value, w.value)))
 
-    # Direct line fallback (provider not active yet in Unit 3a)
-    warnings.append(
-        RouteWarningItem(
-            key=RouteWarningEnum.ROUTING_UNAVAILABLE.value,
-            detail=ROUTE_WARNING_DETAILS[RouteWarningEnum.ROUTING_UNAVAILABLE.value],
-        )
-    )
+    # 8. Attempt road route from provider adapter
+    adapter = ors_adapter or _DEFAULT_ORS_ADAPTER
+    road_route: Optional[RouteResult] = None
+    if adapter.is_available:
+        try:
+            road_route = await adapter.get_directions(
+                origin_lat=lat,
+                origin_lng=lng,
+                dest_lat=chosen_destination.lat,
+                dest_lng=chosen_destination.lng,
+                profile=mode,
+                avoid_set=avoid_set,
+            )
+        except Exception:
+            pass
 
-    direct_line = build_direct_line_route(lat, lng, chosen_destination.lat, chosen_destination.lng)
     maps_urls = generate_maps_urls(lat, lng, chosen_destination.lat, chosen_destination.lng, mode=mode)
+
+    if road_route and road_route.kind == RouteKindEnum.ROAD_ROUTE:
+        for w in road_route.warnings:
+            warnings.append(RouteWarningItem(key=w.value, detail=ROUTE_WARNING_DETAILS.get(w.value, w.value)))
+        route_kind = RouteKindEnum.ROAD_ROUTE
+        route_geom = road_route.geometry
+        route_dist = road_route.distance_m
+        route_duration = road_route.duration_s
+        route_steps = road_route.steps
+        hazard_avoided = road_route.hazard_cells_avoided
+        attribution = road_route.attribution
+        provider_name = road_route.provider
+    else:
+        # Fall back to direct line
+        warnings.append(
+            RouteWarningItem(
+                key=RouteWarningEnum.ROUTING_UNAVAILABLE.value,
+                detail=ROUTE_WARNING_DETAILS[RouteWarningEnum.ROUTING_UNAVAILABLE.value],
+            )
+        )
+        direct_line = build_direct_line_route(lat, lng, chosen_destination.lat, chosen_destination.lng)
+        route_kind = RouteKindEnum.DIRECT_LINE
+        route_geom = direct_line.geometry
+        route_dist = direct_line.distance_m
+        route_duration = direct_line.duration_s
+        route_steps = direct_line.steps
+        hazard_avoided = 0
+        attribution = None
+        provider_name = "direct_line"
 
     # Deduplicate warning keys
     seen_keys = set()
@@ -281,18 +327,18 @@ def calculate_safe_route(
         route_id=route_id,
         route_version=1,
         valid_until=valid_until_iso,
-        kind=RouteKindEnum.DIRECT_LINE,
+        kind=route_kind,
         destination=chosen_destination,
         alternatives=alternatives,
-        geometry=direct_line.geometry,
-        distance_m=direct_line.distance_m,
-        duration_s=direct_line.duration_s,
-        steps=direct_line.steps,
+        geometry=route_geom,
+        distance_m=route_dist,
+        duration_s=route_duration,
+        steps=route_steps,
         warnings=deduped_warnings,
-        hazard_cells_avoided=0,
+        hazard_cells_avoided=hazard_avoided,
         maps_urls=maps_urls,
-        attribution=None,  # Attribution string present ONLY when road_route is returned
-        provider="direct_line",
+        attribution=attribution,
+        provider=provider_name,
         reroute=reroute,
         reason_hint=None,
         is_replay=ctx.is_replay,

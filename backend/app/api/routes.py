@@ -548,7 +548,7 @@ async def get_route_endpoint(
         }
 
     ctx = _get_context()
-    return calculate_safe_route(
+    return await calculate_safe_route(
         lat=effective_lat,
         lng=effective_lng,
         mode=mode,

@@ -16,9 +16,9 @@ This document tracks all third-party libraries, APIs, external data sources, and
 - **defusedxml**: XML package providing safe parsing and protection against XML vulnerabilities (XXE, entity expansion / billion laughs attacks).
 
 ## External APIs & Data Sources (Planned & Ingested)
-- **Open-Meteo**: Free weather API for precipitation, rainfall rates, and historical data.
+- **Open-Meteo Weather API**: Hourly precipitation ingest (`https://api.open-meteo.com/v1/forecast`, query params: `latitude`, `longitude`, `hourly=precipitation`, `past_hours=24`, `forecast_days=1`). Open weather data licensed under [Creative Commons Attribution 4.0 International (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/). Attribution: *"Weather data by Open-Meteo.com"*. Features coarse-area quantization (0.1° grid), 15-minute in-memory caching, and failure tolerance for HTTP 429/timeouts.
 - **Common Alerting Protocol (CAP v1.2)**: Public open standard (OASIS) used for alert ingestion parser and schema normalization.
-- **OpenRouteService (HeiGIT)**: Open-source routing service provided by Heidelberg Institute for Geoinformation Technology. Subject to [HeiGIT Terms of Service](https://heigit.org/terms-of-service/). Routing results licensed under CC-BY-SA 4.0.
+- **OpenRouteService (HeiGIT)**: Open-source routing service provided by Heidelberg Institute for Geoinformation Technology. Subject to [HeiGIT Terms of Service](https://heigit.org/terms-of-service/). Routing results licensed under CC-BY-SA 4.0. Attribution: `"© openrouteservice by HeiGIT | Map data © OpenStreetMap contributors"`.
 - **OpenStreetMap**: Map data © OpenStreetMap contributors under the Open Database License (ODbL).
 - **Humanitarian Data Exchange (HDX)**: Reference shelter and boundary geo-coordinates.
 

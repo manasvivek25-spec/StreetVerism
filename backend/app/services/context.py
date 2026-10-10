@@ -47,6 +47,16 @@ class NoWeatherProvider:
         )
 
 
+from backend.app.ingest.open_meteo import OpenMeteoRainProvider
+
+_LIVE_WEATHER_PROVIDER = OpenMeteoRainProvider()
+
+
+def get_live_weather_provider() -> OpenMeteoRainProvider:
+    """Return the singleton Open-Meteo rain provider instance."""
+    return _LIVE_WEATHER_PROVIDER
+
+
 def build_data_context(
     mode: Literal["live", "replay"],
     scenario_clock: Optional[ScenarioClock],
@@ -55,6 +65,7 @@ def build_data_context(
     alert_repo: AlertRepo,
     report_repo: ReportRepo,
     injected_now: Optional[datetime] = None,
+    features_provider: Optional[Callable[[str], CellFeatures]] = None,
 ) -> DataContext:
     """Build an immutable DataContext tailored to the current operating mode."""
     if mode == "replay":
@@ -73,7 +84,7 @@ def build_data_context(
             is_replay=True,
             alerts=inputs.alerts,
             reports_by_cell=dict(reports_map),
-            features_provider=lambda c: inputs.features_for_cell(c),
+            features_provider=features_provider or (lambda c: inputs.features_for_cell(c)),
         )
 
     # Live Mode
@@ -109,11 +120,14 @@ def build_data_context(
         except Exception:
             continue
 
+    provider = features_provider or _LIVE_WEATHER_PROVIDER
+
     return DataContext(
         now=eval_now,
         mode="live",
         is_replay=False,
         alerts=active_alerts,
         reports_by_cell=dict(live_reports_map),
-        features_provider=NoWeatherProvider(),
+        features_provider=provider,
     )
+
