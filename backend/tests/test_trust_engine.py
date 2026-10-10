@@ -69,7 +69,7 @@ def _make_alert_from_polygon(
     hazard: str,
     coordinates: List[List[List[float]]],
     sent_at_iso: str = "2026-10-10T11:00:00Z",
-    sender: str = "TNSDMA (demo)",
+    sender: str = "State Disaster Authority (demo)",
     instruction_keys: List[str] = None,
 ) -> Alert:
     return Alert(
@@ -480,7 +480,7 @@ def test_contradicted_via_all_clear_when_positive_claims_active():
     features = CellFeatures()
     cell_poly_coords = cell_to_polygon_lnglat(ANCHOR_CELL)[0]
 
-    clear_alert = _make_alert_from_polygon("alt_clr", "all_clear", [cell_poly_coords], "2026-10-10T12:00:00Z", sender="TNSDMA")
+    clear_alert = _make_alert_from_polygon("alt_clr", "all_clear", [cell_poly_coords], "2026-10-10T12:00:00Z", sender="State Disaster Authority (demo)")
     report = [_make_report("r1", "dev_1", ANCHOR_CELL, "flooded", "Deep floodwaters here", "2026-10-10T12:30:00Z")]
 
     res = assess_cell(ANCHOR_CELL, features, report, [clear_alert], now)
@@ -490,7 +490,7 @@ def test_contradicted_via_all_clear_when_positive_claims_active():
 
     # Evidence shows contradicted wording
     crowd_item = [e for e in res.evidence if e.type == "crowd"][0]
-    assert "Claim contradicted by official all-clear from TNSDMA" in crowd_item.summary
+    assert "Claim contradicted by official all-clear from State Disaster Authority (demo)" in crowd_item.summary
 
 
 def test_contradicted_via_low_prior_guard():

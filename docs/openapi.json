@@ -769,7 +769,7 @@
           "sender": {
             "type": "string",
             "title": "Sender",
-            "description": "Issuing agency, e.g. TNSDMA (demo)"
+            "description": "Issuing agency, e.g. State Disaster Authority (demo)"
           },
           "hazard": {
             "type": "string",
@@ -903,7 +903,7 @@
           "sender": {
             "type": "string",
             "title": "Sender",
-            "description": "Issuing agency, e.g. TNSDMA (demo)"
+            "description": "Issuing agency, e.g. State Disaster Authority (demo)"
           },
           "hazard": {
             "type": "string",

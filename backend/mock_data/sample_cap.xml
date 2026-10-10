@@ -5,7 +5,7 @@
 -->
 <alert xmlns="urn:oasis:names:tc:emergency:cap:1.2">
   <identifier>CAP-TNSDMA-20261010-001</identifier>
-  <sender>TNSDMA (demo)</sender>
+  <sender>State Disaster Authority (demo)</sender>
   <sent>2026-10-10T08:00:00+05:30</sent>
   <status>Actual</status>
   <msgType>Alert</msgType>

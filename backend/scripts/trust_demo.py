@@ -42,7 +42,7 @@ def make_all_clear_alert(cell: str, sent_at: datetime) -> Alert:
     return Alert(
         id="alt_all_clear_demo",
         source="official_manual",
-        sender="TNSDMA (demo)",
+        sender="State Disaster Authority (demo)",
         hazard="all_clear",
         severity="minor",
         urgency="immediate",

@@ -210,7 +210,7 @@ async def get_state(
     evidence = [
         EvidenceItem(
             type="official",
-            summary="Active TNSDMA flood evacuation warning overlaps zone",
+            summary="Active State Disaster Authority flood evacuation warning overlaps zone",
             age_s=300 if is_rep else 120,
             weight=3.5,
         ),

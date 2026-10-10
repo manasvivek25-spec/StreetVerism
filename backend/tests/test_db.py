@@ -61,7 +61,7 @@ def test_timestamp_normalization_on_write(temp_db_path):
     alert = Alert(
         id="alt_test_tz",
         source="official_manual",
-        sender="TNSDMA (demo)",
+        sender="State Disaster Authority (demo)",
         hazard="flood",
         severity="extreme",
         urgency="immediate",

@@ -24,7 +24,7 @@ def _make_alert(
     return Alert(
         id=alert_id,
         source="official_manual",
-        sender="TNSDMA (demo)",
+        sender="State Disaster Authority (demo)",
         hazard=hazard,
         severity="severe",
         urgency="immediate",

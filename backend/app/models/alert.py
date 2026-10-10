@@ -15,7 +15,7 @@ class AlertBase(BaseModel):
     source: Literal["official_manual", "official_cap", "weather_api", "replay"] = Field(
         ..., description="Data origin for the alert"
     )
-    sender: str = Field(..., description="Issuing agency, e.g. TNSDMA (demo)")
+    sender: str = Field(..., description="Issuing agency, e.g. State Disaster Authority (demo)")
     hazard: Literal["flood", "cyclone", "heavy_rain", "all_clear"] = Field(
         ..., description="Hazard type or all_clear notice"
     )

@@ -103,7 +103,7 @@ Returns the crisis status, active alerts, verified template instructions, explai
     {
       "id": "alt_michaung_01",
       "source": "official_manual",
-      "sender": "TNSDMA (demo)",
+      "sender": "State Disaster Authority (demo)",
       "hazard": "flood",
       "severity": "severe",
       "urgency": "immediate",

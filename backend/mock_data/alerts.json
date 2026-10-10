@@ -2,7 +2,7 @@
   {
     "id": "alt_michaung_01",
     "source": "official_manual",
-    "sender": "TNSDMA (demo)",
+    "sender": "State Disaster Authority (demo)",
     "hazard": "flood",
     "severity": "extreme",
     "urgency": "immediate",
@@ -30,7 +30,7 @@
     "sent_at": "2026-10-10T10:00:00Z",
     "expires_at": "2026-10-10T22:00:00Z",
     "supersedes": null,
-    "published_by": "tnsdma-duty-officer",
+    "published_by": "state-duty-officer",
     "is_replay": false
   },
   {
