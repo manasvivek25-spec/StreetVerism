@@ -1044,9 +1044,9 @@ function App() {
           {/* Incident Report Card */}
           <div className="action-card" id="report-section">
             <div className="card-label">COMMUNITY OBSERVATION</div>
-            <h2 style={{ margin: '4px 0 8px 0', color: '#fff', fontSize: '1.25rem' }}>Report Local Hazard</h2>
+            <h2 style={{ margin: '4px 0 8px 0', color: '#fff', fontSize: '1.25rem' }}>Report what I see</h2>
             <p className="card-subtext">
-              Crowd observations are clustered and corroborated before influencing trust engine status.
+              Reports are shown to others as UNVERIFIED until corroborated.
             </p>
 
             <form className="report-form-group" onSubmit={(e) => void handleReportSubmit(e)}>
