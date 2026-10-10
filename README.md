@@ -202,10 +202,34 @@ npm run dev -- --port 5173      # Starts Vite dev server
 
 ---
 
-## 9. Documentation Links
+## 9. Future Scope & Technical Advancements
+
+The following roadmap items represent planned production enhancements beyond the hackathon MVP scope:
+
+1. **Live Weather Radar & Sensor Ingestion (A4)**:
+   - Direct integration with Indian Meteorological Department (IMD) radar feeds and live Open-Meteo precipitation streams to dynamically update prior hazard probabilities in real time without human intervention.
+2. **Authoritative Government CAP Feed Streaming (A5)**:
+   - Automated polling and webhook listeners for official OASIS CAP 1.2 XML/JSON feeds from disaster management agencies (NDMA/SDMA/TNSDMA) with cryptographic signature verification.
+3. **True Offline Progressive Web App (PWA) with Service Worker**:
+   - Comprehensive `service-worker.js` implementation leveraging CacheStorage for offline map tile caching, crisis instructions, and background synchronization of distress check-ins queued during cellular outages.
+4. **Physical QR Code Onboarding Signage**:
+   - High-contrast laminated QR codes deployed at tourist entry points (Chennai International Airport, Chennai Central Station, foreign consulates, and hotels) enabling zero-friction, zero-install instant web access.
+5. **Certified Native-Speaker Crisis Localization**:
+   - Professional crisis localization and fluent native speaker validation for Tamil (`ta`), Hindi (`hi`), French (`fr`), German (`de`), and Japanese (`ja`), ensuring unambiguous regional civil defence phrasing.
+6. **Managed Persistent Storage & Geospatial Indexing**:
+   - Migration from ephemeral SQLite to hosted PostgreSQL with PostGIS extensions (`ST_DWithin`, `ST_Intersects`) and connection pooling for durable incident audit trails and sub-second spatial queries.
+7. **Multi-Tenant Evaluation Sandboxes**:
+   - Isolated simulation clocks and state sessions per operator or judge, eliminating global clock contention during concurrent demonstration runs.
+8. **Zero-Data Fallback Channels (SMS & USSD)**:
+   - Lightweight SMS/USSD relay gateways allowing tourists to broadcast `"SAFE"` or `"HELP"` distress coordinates when 4G/5G mobile packet data fails but basic 2G voice signaling survives.
+
+---
+
+## 10. Documentation Links
 
 - [Frozen API Specification (docs/API.md)](docs/API.md)
 - [Trust Engine Specification (docs/TRUST_ENGINE.md)](docs/TRUST_ENGINE.md)
+- [Hazard-Aware Safe Routing Specification (docs/ROUTING.md)](docs/ROUTING.md)
 - [Scenario Replay Guide (docs/REPLAY.md)](docs/REPLAY.md)
 - [Deployment Configuration & Reverse Proxy Guide (docs/DEPLOY.md)](docs/DEPLOY.md)
 - [2-Minute Presentation Demo Script (docs/DEMO.md)](docs/DEMO.md)
@@ -213,7 +237,7 @@ npm run dev -- --port 5173      # Starts Vite dev server
 
 ---
 
-## 10. Team & AI Disclosure
+## 11. Team & AI Disclosure
 
 - **Hackathon Track**: TravelTech, IIITDM Kancheepuram
 - **Built with AI assistance**: Google Antigravity, Manus, Claude
