@@ -102,18 +102,18 @@ python backend/scripts/replay_demo.py
 | +10 h | 10:00Z | 15:30 IST | `official_hazard` (0.99) | `official_hazard` (0.99) | `unverified` (0.43) | `official_hazard` (0.99) | `clear` (0.01) |
 | +11 h | 11:00Z | 16:30 IST | `official_hazard` (0.99) | `official_hazard` (0.99) | `contradicted` (0.01) | `official_hazard` (0.99) | `clear` (0.01) |
 | +12 h | 12:00Z | 17:30 IST | `official_hazard` (0.99) | `official_hazard` (0.99) | `contradicted` (0.01) | `official_hazard` (0.99) | `clear` (0.01) |
-| +13 h | 13:00Z | 18:30 IST | `official_hazard` (0.99) | `official_hazard` (0.99) | `contradicted` (0.01) | `clear` (0.14) | `clear` (0.01) |
-| +14 h | 14:00Z | 19:30 IST | `official_hazard` (0.99) | `official_hazard` (0.99) | `contradicted` (0.01) | `clear` (0.14) | `clear` (0.01) |
-| +15 h | 15:00Z | 20:30 IST | `official_hazard` (0.99) | `official_hazard` (0.99) | `contradicted` (0.01) | `clear` (0.13) | `clear` (0.01) |
-| +16 h | 16:00Z | 21:30 IST | `official_hazard` (0.99) | `official_hazard` (0.99) | `contradicted` (0.01) | `clear` (0.12) | `clear` (0.01) |
-| +17 h | 17:00Z | 22:30 IST | `official_hazard` (0.99) | `official_hazard` (0.99) | `clear` (0.01) | `clear` (0.11) | `clear` (0.01) |
-| +18 h | 18:00Z | 23:30 IST | `official_hazard` (0.99) | `official_hazard` (0.99) | `clear` (0.01) | `clear` (0.10) | `clear` (0.02) |
-| +19 h | 19:00Z | 00:30 IST | `official_hazard` (0.99) | `official_hazard` (0.99) | `clear` (0.01) | `clear` (0.10) | `clear` (0.02) |
-| +20 h | 20:00Z | 01:30 IST | `official_hazard` (0.99) | `official_hazard` (0.99) | `clear` (0.07) | `clear` (0.09) | `clear` (0.02) |
-| +21 h | 21:00Z | 02:30 IST | `official_hazard` (0.99) | `official_hazard` (0.99) | `clear` (0.07) | `clear` (0.09) | `clear` (0.02) |
-| +22 h | 22:00Z | 03:30 IST | `official_hazard` (0.99) | `official_hazard` (0.99) | `clear` (0.06) | `clear` (0.08) | `clear` (0.02) |
-| +23 h | 23:00Z | 04:30 IST | `official_hazard` (0.99) | `official_hazard` (0.99) | `clear` (0.05) | `clear` (0.07) | `clear` (0.02) |
-| +24 h | 00:00Z | 05:30 IST | `unverified` (0.87) | `clear` (0.38) | `clear` (0.05) | `clear` (0.07) | `clear` (0.02) |
+| +13 h | 13:00Z | 18:30 IST | `official_hazard` (0.99) | `official_hazard` (0.99) | `contradicted` (0.01) | `official_hazard` (0.99) | `clear` (0.01) |
+| +14 h | 14:00Z | 19:30 IST | `official_hazard` (0.99) | `official_hazard` (0.99) | `contradicted` (0.01) | `official_hazard` (0.99) | `clear` (0.01) |
+| +15 h | 15:00Z | 20:30 IST | `official_hazard` (0.99) | `official_hazard` (0.99) | `contradicted` (0.01) | `official_hazard` (0.99) | `clear` (0.01) |
+| +16 h | 16:00Z | 21:30 IST | `official_hazard` (0.99) | `official_hazard` (0.99) | `contradicted` (0.01) | `official_hazard` (0.99) | `clear` (0.01) |
+| +17 h | 17:00Z | 22:30 IST | `official_hazard` (0.99) | `official_hazard` (0.99) | `clear` (0.01) | `official_hazard` (0.99) | `clear` (0.01) |
+| +18 h | 18:00Z | 23:30 IST | `official_hazard` (0.99) | `official_hazard` (0.99) | `clear` (0.01) | `official_hazard` (0.99) | `clear` (0.02) |
+| +19 h | 19:00Z | 00:30 IST | `official_hazard` (0.99) | `official_hazard` (0.99) | `clear` (0.01) | `official_hazard` (0.99) | `clear` (0.02) |
+| +20 h | 20:00Z | 01:30 IST | `official_hazard` (0.99) | `official_hazard` (0.99) | `clear` (0.07) | `official_hazard` (0.99) | `clear` (0.02) |
+| +21 h | 21:00Z | 02:30 IST | `official_hazard` (0.99) | `official_hazard` (0.99) | `clear` (0.07) | `official_hazard` (0.99) | `clear` (0.02) |
+| +22 h | 22:00Z | 03:30 IST | `official_hazard` (0.99) | `official_hazard` (0.99) | `clear` (0.06) | `official_hazard` (0.99) | `clear` (0.02) |
+| +23 h | 23:00Z | 04:30 IST | `official_hazard` (0.99) | `official_hazard` (0.99) | `clear` (0.05) | `official_hazard` (0.99) | `clear` (0.02) |
+| +24 h | 00:00Z | 05:30 IST | `official_hazard` (0.99) | `official_hazard` (0.99) | `clear` (0.05) | `official_hazard` (0.99) | `clear` (0.02) |
 
 ### Key Storyline Bookmarks
 
@@ -159,3 +159,4 @@ python backend/scripts/replay_demo.py
 1. **Synthetic Timelines**: The timeline is an illustrative reconstruction modeled from qualitative news and agency post-incident reports, not high-resolution millimeter gauge telemetry.
 2. **Static GeoJSON Polygons**: Weather keyframes are linearly interpolated across static 2D planar polygons rather than continuous numerical weather prediction (NWP) radar velocity fields.
 3. **Discrete H3 Centroid Evaluation**: Cells are mapped to area groups and flood-prone basins via their geographic centroids (`cell_to_latlng`). Boundary edge cells bisected by group borders adopt the group containing their center.
+4. **Official Alert Expiry vs Ground Hazards**: Real official emergency alerts may expire while physical hazards continue on the ground (e.g. standing floodwaters, compromised roads, or debris after rains cease). The scenario models active administrative warning periods, which expire at designated timestamps.
