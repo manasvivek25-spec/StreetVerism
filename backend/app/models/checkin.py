@@ -22,9 +22,9 @@ class CheckinCreateResponse(BaseModel):
 
 
 class CheckinItem(BaseModel):
-    """Full check-in record for authority view."""
+    """Full check-in record for authority view (device_id stripped in live/replay for privacy)."""
     id: str
-    device_id: str
+    device_id: Optional[str] = Field(default=None, description="Device UUID (omitted in live/replay mode)")
     lat: float
     lng: float
     state: Literal["safe", "need_help"]
@@ -33,7 +33,9 @@ class CheckinItem(BaseModel):
     note: Optional[str] = None
     cell7: str = Field(..., description="Aggregated parent H3 res-7 cell")
     handled: bool = False
-    recorded_at: str
+    created_at: Optional[str] = Field(default=None, description="UTC ISO-8601 creation timestamp")
+    recorded_at: Optional[str] = Field(default=None, description="UTC ISO-8601 recording timestamp")
+    is_replay: bool = Field(default=False, description="True if submitted during scenario replay")
 
 
 class CheckinUpdate(BaseModel):
@@ -47,6 +49,7 @@ class CheckinCluster(BaseModel):
     count: int
     need_help: int
     languages: Dict[str, int]
+    unhandled_need_help: int = Field(default=0, description="Count of unhandled need_help check-ins")
 
 
 class CheckinListResponse(BaseModel):

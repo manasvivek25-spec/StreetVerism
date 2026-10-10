@@ -126,10 +126,15 @@ def init_db(db_path: Optional[str] = None) -> None:
                 note TEXT,
                 cell7 TEXT NOT NULL,
                 handled INTEGER NOT NULL DEFAULT 0,
-                created_at TEXT NOT NULL
+                created_at TEXT NOT NULL,
+                is_replay INTEGER NOT NULL DEFAULT 0
             );
             """
         )
+        try:
+            cursor.execute("ALTER TABLE checkins ADD COLUMN is_replay INTEGER NOT NULL DEFAULT 0;")
+        except sqlite3.OperationalError:
+            pass
         cursor.execute("CREATE INDEX IF NOT EXISTS idx_checkins_created_at ON checkins(created_at);")
         cursor.execute("CREATE INDEX IF NOT EXISTS idx_checkins_cell7 ON checkins(cell7);")
 

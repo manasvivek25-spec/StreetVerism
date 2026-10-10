@@ -42,10 +42,16 @@ class ReportRepo(ABC):
     @abstractmethod
     def list_by_cell(self, cell: str) -> List[Dict[str, Any]]: ...
 
+    @abstractmethod
+    def list_all_since(self, since_iso: str) -> List[Dict[str, Any]]: ...
+
+    @abstractmethod
+    def delete_older_than(self, cutoff_iso: str) -> int: ...
+
 
 class CheckinRepo(ABC):
     @abstractmethod
-    def add(self, checkin: CheckinCreate, cell7: str, recorded_at: Optional[str] = None) -> CheckinItem: ...
+    def add(self, checkin: CheckinCreate, cell7: str, recorded_at: Optional[str] = None, is_replay: bool = False) -> CheckinItem: ...
 
     @abstractmethod
     def get(self, checkin_id: str) -> Optional[CheckinItem]: ...
@@ -55,6 +61,9 @@ class CheckinRepo(ABC):
 
     @abstractmethod
     def set_handled(self, checkin_id: str, handled: bool) -> Optional[CheckinItem]: ...
+
+    @abstractmethod
+    def delete_older_than(self, cutoff_iso: str) -> int: ...
 
 
 class ShelterRepo(ABC):
@@ -204,12 +213,26 @@ class SqliteReportRepo(ReportRepo):
             ).fetchall()
             return [dict(r) for r in rows]
 
+    def list_all_since(self, since_iso: str) -> List[Dict[str, Any]]:
+        since_utc = to_utc_iso(since_iso)
+        with get_db_connection(self.db_path) as conn:
+            rows = conn.execute(
+                "SELECT * FROM reports WHERE created_at >= ? ORDER BY created_at DESC", (since_utc,)
+            ).fetchall()
+            return [dict(r) for r in rows]
+
+    def delete_older_than(self, cutoff_iso: str) -> int:
+        cutoff_utc = to_utc_iso(cutoff_iso)
+        with get_db_connection(self.db_path) as conn:
+            res = conn.execute("DELETE FROM reports WHERE created_at < ?", (cutoff_utc,))
+            return res.rowcount
+
 
 class SqliteCheckinRepo(CheckinRepo):
     def __init__(self, db_path: Optional[str] = None):
         self.db_path = db_path
 
-    def add(self, checkin: CheckinCreate, cell7: str, recorded_at: Optional[str] = None) -> CheckinItem:
+    def add(self, checkin: CheckinCreate, cell7: str, recorded_at: Optional[str] = None, is_replay: bool = False) -> CheckinItem:
         chk_id = f"chk_{uuid4().hex[:8]}"
         recorded_iso = to_utc_iso(recorded_at or datetime.now(timezone.utc))
         lat_rounded = round(checkin.lat, 4)
@@ -217,8 +240,8 @@ class SqliteCheckinRepo(CheckinRepo):
         with get_db_connection(self.db_path) as conn:
             conn.execute(
                 """
-                INSERT INTO checkins (id, device_id, lat, lng, state, language, group_size, note, cell7, handled, created_at)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                INSERT INTO checkins (id, device_id, lat, lng, state, language, group_size, note, cell7, handled, created_at, is_replay)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     chk_id,
@@ -232,6 +255,7 @@ class SqliteCheckinRepo(CheckinRepo):
                     cell7,
                     0,
                     recorded_iso,
+                    1 if is_replay else 0,
                 ),
             )
         return CheckinItem(
@@ -245,7 +269,9 @@ class SqliteCheckinRepo(CheckinRepo):
             note=checkin.note,
             cell7=cell7,
             handled=False,
+            created_at=recorded_iso,
             recorded_at=recorded_iso,
+            is_replay=is_replay,
         )
 
     def get(self, checkin_id: str) -> Optional[CheckinItem]:
@@ -253,6 +279,8 @@ class SqliteCheckinRepo(CheckinRepo):
             row = conn.execute("SELECT * FROM checkins WHERE id = ?", (checkin_id,)).fetchone()
             if not row:
                 return None
+            keys = row.keys()
+            is_rep = bool(row["is_replay"]) if "is_replay" in keys else False
             return CheckinItem(
                 id=row["id"],
                 device_id=row["device_id"],
@@ -264,28 +292,36 @@ class SqliteCheckinRepo(CheckinRepo):
                 note=row["note"],
                 cell7=row["cell7"],
                 handled=bool(row["handled"]),
+                created_at=row["created_at"],
                 recorded_at=row["created_at"],
+                is_replay=is_rep,
             )
 
     def list_all(self) -> List[CheckinItem]:
         with get_db_connection(self.db_path) as conn:
             rows = conn.execute("SELECT * FROM checkins ORDER BY created_at DESC").fetchall()
-            return [
-                CheckinItem(
-                    id=r["id"],
-                    device_id=r["device_id"],
-                    lat=r["lat"],
-                    lng=r["lng"],
-                    state=r["state"],
-                    language=r["language"],
-                    group_size=r["group_size"],
-                    note=r["note"],
-                    cell7=r["cell7"],
-                    handled=bool(r["handled"]),
-                    recorded_at=r["created_at"],
+            items = []
+            for r in rows:
+                keys = r.keys()
+                is_rep = bool(r["is_replay"]) if "is_replay" in keys else False
+                items.append(
+                    CheckinItem(
+                        id=r["id"],
+                        device_id=r["device_id"],
+                        lat=r["lat"],
+                        lng=r["lng"],
+                        state=r["state"],
+                        language=r["language"],
+                        group_size=r["group_size"],
+                        note=r["note"],
+                        cell7=r["cell7"],
+                        handled=bool(r["handled"]),
+                        created_at=r["created_at"],
+                        recorded_at=r["created_at"],
+                        is_replay=is_rep,
+                    )
                 )
-                for r in rows
-            ]
+            return items
 
     def set_handled(self, checkin_id: str, handled: bool) -> Optional[CheckinItem]:
         with get_db_connection(self.db_path) as conn:
@@ -294,6 +330,12 @@ class SqliteCheckinRepo(CheckinRepo):
                 (1 if handled else 0, checkin_id),
             )
         return self.get(checkin_id)
+
+    def delete_older_than(self, cutoff_iso: str) -> int:
+        cutoff_utc = to_utc_iso(cutoff_iso)
+        with get_db_connection(self.db_path) as conn:
+            res = conn.execute("DELETE FROM checkins WHERE created_at < ?", (cutoff_utc,))
+            return res.rowcount
 
 
 class SqliteShelterRepo(ShelterRepo):
@@ -401,12 +443,22 @@ class InMemoryReportRepo(ReportRepo):
     def list_by_cell(self, cell: str) -> List[Dict[str, Any]]:
         return [r for r in self._reports if r["cell"] == cell]
 
+    def list_all_since(self, since_iso: str) -> List[Dict[str, Any]]:
+        since_utc = to_utc_iso(since_iso)
+        return [r for r in self._reports if r["created_at"] >= since_utc]
+
+    def delete_older_than(self, cutoff_iso: str) -> int:
+        cutoff_utc = to_utc_iso(cutoff_iso)
+        orig_count = len(self._reports)
+        self._reports = [r for r in self._reports if r["created_at"] >= cutoff_utc]
+        return orig_count - len(self._reports)
+
 
 class InMemoryCheckinRepo(CheckinRepo):
     def __init__(self, initial_items: Optional[List[CheckinItem]] = None):
         self._items: Dict[str, CheckinItem] = {item.id: item for item in (initial_items or [])}
 
-    def add(self, checkin: CheckinCreate, cell7: str, recorded_at: Optional[str] = None) -> CheckinItem:
+    def add(self, checkin: CheckinCreate, cell7: str, recorded_at: Optional[str] = None, is_replay: bool = False) -> CheckinItem:
         chk_id = f"chk_{uuid4().hex[:8]}"
         rec_iso = to_utc_iso(recorded_at or datetime.now(timezone.utc))
         item = CheckinItem(
@@ -420,7 +472,9 @@ class InMemoryCheckinRepo(CheckinRepo):
             note=checkin.note,
             cell7=cell7,
             handled=False,
+            created_at=rec_iso,
             recorded_at=rec_iso,
+            is_replay=is_replay,
         )
         self._items[chk_id] = item
         return item
@@ -429,7 +483,7 @@ class InMemoryCheckinRepo(CheckinRepo):
         return self._items.get(checkin_id)
 
     def list_all(self) -> List[CheckinItem]:
-        return list(self._items.values())
+        return sorted(self._items.values(), key=lambda c: c.created_at or c.recorded_at or "", reverse=True)
 
     def set_handled(self, checkin_id: str, handled: bool) -> Optional[CheckinItem]:
         if checkin_id in self._items:
@@ -438,6 +492,16 @@ class InMemoryCheckinRepo(CheckinRepo):
             self._items[checkin_id] = item
             return item
         return None
+
+    def delete_older_than(self, cutoff_iso: str) -> int:
+        cutoff_utc = to_utc_iso(cutoff_iso)
+        to_del = [
+            cid for cid, item in self._items.items()
+            if (item.created_at or item.recorded_at or "") < cutoff_utc
+        ]
+        for cid in to_del:
+            del self._items[cid]
+        return len(to_del)
 
 
 class InMemoryShelterRepo(ShelterRepo):

@@ -36,6 +36,13 @@ class ScenarioStatus(BaseModel):
     scenario_start: Optional[str] = Field(default=None, description="Start timestamp of scenario")
     scenario_end: Optional[str] = Field(default=None, description="End timestamp of scenario")
     is_replay: bool = Field(..., description="True if operating in replay mode")
+    label: Optional[str] = Field(default=None, description="Replay label banner text")
+    disclaimer: Optional[str] = Field(default=None, description="Replay disclaimer disclosure text")
+    start_time: Optional[str] = Field(default=None, description="Scenario start time (ISO-8601 UTC)")
+    end_time: Optional[str] = Field(default=None, description="Scenario end time (ISO-8601 UTC)")
+    duration_s: Optional[int] = Field(default=None, description="Scenario total duration in seconds")
+    finished: bool = Field(default=False, description="Whether replay clock reached scenario end")
+    bookmarks: Optional[list] = Field(default=None, description="List of scenario narrative bookmarks")
 
 
 class ScenarioResetResponse(BaseModel):

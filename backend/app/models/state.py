@@ -43,6 +43,9 @@ class StateResponse(BaseModel):
     is_replay: bool = Field(default=False, description="Whether state is emitted by replay engine")
     generated_at: str = Field(..., description="Timestamp based on effective clock (scenario clock in replay)")
     server_time: str = Field(..., description="Actual server wall-clock time (ISO-8601 UTC)")
+    lang: str = Field(default="en", description="Language code actually served")
+    coverage: Literal["covered", "outside"] = Field(default="covered", description="Service bbox or scenario group coverage status")
+    mode: Literal["live", "replay", "mock"] = Field(default="live", description="Operating mode of the system")
 
 
 class HealthResponse(BaseModel):
@@ -52,6 +55,7 @@ class HealthResponse(BaseModel):
     is_replay: bool = False
     version: str = "1.0.0"
     server_time: str
+    replay: Optional[Dict[str, Any]] = Field(default=None, description="Public replay banner details when mode is replay")
 
 
 class GeoJSONLineString(BaseModel):
