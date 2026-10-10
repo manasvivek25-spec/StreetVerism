@@ -56,20 +56,17 @@ def check_rate_limit(
     if ctx.mode == "replay":
         # Check in replay overlay
         if overlay is not None:
-            for rep in overlay.get_reports():
+            for rep in overlay.get_reports_at(now_dt):
                 if rep.device_id == device_id and rep.cell == cell:
-                    try:
-                        rep_dt = datetime.fromisoformat(rep.created_at.replace("Z", "+00:00"))
-                        elapsed = (now_dt - rep_dt).total_seconds()
-                        if 0 <= elapsed < RATE_LIMIT_WINDOW_SECONDS:
-                            retry_after = int(RATE_LIMIT_WINDOW_SECONDS - elapsed)
-                            raise HTTPException(
-                                status_code=429,
-                                detail=f"Rate limit exceeded: only one report per cell every {RATE_LIMIT_WINDOW_SECONDS} seconds.",
-                                headers={"Retry-After": str(max(1, retry_after))},
-                            )
-                    except ValueError:
-                        continue
+                    rep_dt = rep.created_at if isinstance(rep.created_at, datetime) else datetime.fromisoformat(str(rep.created_at).replace("Z", "+00:00"))
+                    elapsed = (now_dt - rep_dt).total_seconds()
+                    if 0 <= elapsed < RATE_LIMIT_WINDOW_SECONDS:
+                        retry_after = int(RATE_LIMIT_WINDOW_SECONDS - elapsed)
+                        raise HTTPException(
+                            status_code=429,
+                            detail=f"Rate limit exceeded: only one report per cell every {RATE_LIMIT_WINDOW_SECONDS} seconds.",
+                            headers={"Retry-After": str(max(1, retry_after))},
+                        )
         return
 
     # Live mode: Check database records for this cell
