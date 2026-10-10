@@ -2,7 +2,7 @@
 
 from datetime import datetime
 from typing import Any, Callable, Dict, List, Optional
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 from backend.app.models.alert import Alert, GeoJSONPolygon
 from backend.app.trust.types import CellFeatures, Report
@@ -80,9 +80,8 @@ class Scenario(BaseModel):
 
 class ReplayInputs(BaseModel):
     """Point-in-time pure projection of scenario inputs for trust engine evaluation."""
+    model_config = ConfigDict(arbitrary_types_allowed=True)
+
     alerts: List[Alert]
     reports: List[Report]
     features_for_cell: Callable[[str, datetime], CellFeatures] = Field(exclude=True)
-
-    class Config:
-        arbitrary_types_allowed = True

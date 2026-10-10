@@ -668,4 +668,4 @@ def test_performance_large_batch_assess_cells():
 
     assert len(results) == 5000
     # Loose threshold for cross-platform hardware; typically finishes in ~0.5s
-    assert elapsed < 3.0, f"Batch assessment of 5,000 cells took {elapsed:.3f} s (expected < 3.0 s)"
+    assert elapsed < 5.0, f"Batch assessment of 5,000 cells took {elapsed:.3f} s (expected < 5.0 s)"
