@@ -318,6 +318,81 @@
         }
       }
     },
+    "/api/route": {
+      "get": {
+        "tags": [
+          "Tourist"
+        ],
+        "summary": "Get Hazard Aware Route Endpoint",
+        "description": "Generate hazard-aware route avoiding cells marked official_hazard or likely_hazard.",
+        "operationId": "get_hazard_aware_route_endpoint_api_route_get",
+        "parameters": [
+          {
+            "name": "from_lat",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "number",
+              "maximum": 90.0,
+              "minimum": -90.0,
+              "title": "From Lat"
+            }
+          },
+          {
+            "name": "from_lng",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "number",
+              "maximum": 180.0,
+              "minimum": -180.0,
+              "title": "From Lng"
+            }
+          },
+          {
+            "name": "to_shelter",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "To Shelter"
+            }
+          },
+          {
+            "name": "lang",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "en",
+              "title": "Lang"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RouteResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/alerts": {
       "post": {
         "tags": [
@@ -668,81 +743,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ScenarioStatus"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/route": {
-      "get": {
-        "tags": [
-          "Tourist"
-        ],
-        "summary": "Get Hazard Aware Route Endpoint",
-        "description": "Generate hazard-aware route avoiding cells marked official_hazard or likely_hazard.",
-        "operationId": "get_hazard_aware_route_endpoint_api_route_get",
-        "parameters": [
-          {
-            "name": "from_lat",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "number",
-              "maximum": 90.0,
-              "minimum": -90.0,
-              "title": "From Lat"
-            }
-          },
-          {
-            "name": "from_lng",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "number",
-              "maximum": 180.0,
-              "minimum": -180.0,
-              "title": "From Lng"
-            }
-          },
-          {
-            "name": "to_shelter",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "To Shelter"
-            }
-          },
-          {
-            "name": "lang",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "default": "en",
-              "title": "Lang"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RouteResponse"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
                 }
               }
             }
@@ -1280,18 +1280,6 @@
             "type": "string",
             "title": "Id"
           },
-          "device_id": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Device Id",
-            "description": "Device UUID (omitted in live/replay mode)"
-          },
           "lat": {
             "type": "number",
             "title": "Lat"
@@ -1349,18 +1337,6 @@
             "title": "Created At",
             "description": "UTC ISO-8601 creation timestamp"
           },
-          "recorded_at": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Recorded At",
-            "description": "UTC ISO-8601 recording timestamp"
-          },
           "is_replay": {
             "type": "boolean",
             "title": "Is Replay",
@@ -1379,7 +1355,7 @@
           "cell7"
         ],
         "title": "CheckinItem",
-        "description": "Full check-in record for authority view (device_id stripped in live/replay for privacy)."
+        "description": "Full check-in record for authority view (device_id strictly excluded from serialization)."
       },
       "CheckinListResponse": {
         "properties": {
@@ -1457,32 +1433,6 @@
         ],
         "title": "EvidenceItem",
         "description": "Explainable Bayesian evidence component contributing to cell status."
-      },
-      "GeoJSONLineString": {
-        "properties": {
-          "type": {
-            "type": "string",
-            "const": "LineString",
-            "title": "Type",
-            "default": "LineString"
-          },
-          "coordinates": {
-            "items": {
-              "items": {
-                "type": "number"
-              },
-              "type": "array"
-            },
-            "type": "array",
-            "title": "Coordinates"
-          }
-        },
-        "type": "object",
-        "required": [
-          "coordinates"
-        ],
-        "title": "GeoJSONLineString",
-        "description": "GeoJSON LineString with [lng, lat] vertices."
       },
       "GeoJSONPolygon": {
         "properties": {
@@ -1607,6 +1557,49 @@
         "title": "HealthResponse",
         "description": "System liveness and configuration status."
       },
+      "ManeuverEnum": {
+        "type": "string",
+        "enum": [
+          "depart",
+          "turn_left",
+          "turn_right",
+          "slight_left",
+          "slight_right",
+          "sharp_left",
+          "sharp_right",
+          "continue",
+          "uturn",
+          "roundabout",
+          "arrive",
+          "unknown"
+        ],
+        "title": "ManeuverEnum",
+        "description": "Standardized navigation maneuvers mapped from raw provider codes."
+      },
+      "MapsUrls": {
+        "properties": {
+          "google": {
+            "type": "string",
+            "title": "Google"
+          },
+          "apple": {
+            "type": "string",
+            "title": "Apple"
+          },
+          "geo": {
+            "type": "string",
+            "title": "Geo"
+          }
+        },
+        "type": "object",
+        "required": [
+          "google",
+          "apple",
+          "geo"
+        ],
+        "title": "MapsUrls",
+        "description": "Native navigation links for universal fallback."
+      },
       "RenderedInstruction": {
         "properties": {
           "key": {
@@ -1727,36 +1720,295 @@
         "title": "ReportResponse",
         "description": "Response when a crowd report is processed."
       },
+      "RouteKindEnum": {
+        "type": "string",
+        "enum": [
+          "road_route",
+          "direct_line",
+          "none",
+          "mock"
+        ],
+        "title": "RouteKindEnum",
+        "description": "Type of route geometry generated."
+      },
       "RouteResponse": {
         "properties": {
-          "route": {
-            "$ref": "#/components/schemas/GeoJSONLineString"
+          "route_id": {
+            "type": "string",
+            "title": "Route Id"
+          },
+          "route_version": {
+            "type": "integer",
+            "title": "Route Version",
+            "default": 1
+          },
+          "valid_until": {
+            "type": "string",
+            "title": "Valid Until"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/RouteKindEnum"
+          },
+          "destination": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SafeDestination"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "alternatives": {
+            "items": {
+              "$ref": "#/components/schemas/SafeDestination"
+            },
+            "type": "array",
+            "title": "Alternatives"
+          },
+          "geometry": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Geometry"
+          },
+          "distance_m": {
+            "type": "number",
+            "title": "Distance M",
+            "default": 0.0
+          },
+          "duration_s": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Duration S"
           },
           "steps": {
             "items": {
-              "type": "string"
+              "$ref": "#/components/schemas/StructuredStep"
             },
             "type": "array",
             "title": "Steps"
           },
-          "distance_m": {
-            "type": "number",
-            "title": "Distance M"
+          "warnings": {
+            "items": {
+              "$ref": "#/components/schemas/RouteWarningItem"
+            },
+            "type": "array",
+            "title": "Warnings"
           },
           "hazard_cells_avoided": {
             "type": "integer",
-            "title": "Hazard Cells Avoided"
+            "title": "Hazard Cells Avoided",
+            "default": 0
+          },
+          "maps_urls": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/MapsUrls"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "attribution": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Attribution"
+          },
+          "provider": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Provider"
+          },
+          "reroute": {
+            "type": "boolean",
+            "title": "Reroute",
+            "default": false
+          },
+          "reason_hint": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reason Hint"
+          },
+          "is_replay": {
+            "type": "boolean",
+            "title": "Is Replay",
+            "default": false
+          },
+          "mode_of_data": {
+            "type": "string",
+            "enum": [
+              "live",
+              "replay",
+              "mock"
+            ],
+            "title": "Mode Of Data",
+            "default": "live"
+          },
+          "generated_at": {
+            "type": "string",
+            "title": "Generated At"
           }
         },
         "type": "object",
         "required": [
-          "route",
-          "steps",
-          "distance_m",
-          "hazard_cells_avoided"
+          "route_id",
+          "valid_until",
+          "kind",
+          "generated_at"
         ],
         "title": "RouteResponse",
-        "description": "Hazard-aware evacuation route avoiding hazard cells."
+        "description": "Complete public safe-route response complying with frozen contract specification."
+      },
+      "RouteWarningItem": {
+        "properties": {
+          "key": {
+            "type": "string",
+            "title": "Key",
+            "description": "Fixed route warning enum key"
+          },
+          "detail": {
+            "type": "string",
+            "title": "Detail",
+            "description": "Detailed explanation of the routing constraint"
+          }
+        },
+        "type": "object",
+        "required": [
+          "key",
+          "detail"
+        ],
+        "title": "RouteWarningItem",
+        "description": "Structured warning with machine-readable key and human explanation."
+      },
+      "SafeDestination": {
+        "properties": {
+          "shelter_id": {
+            "type": "string",
+            "title": "Shelter Id",
+            "description": "Unique shelter identifier"
+          },
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Id",
+            "description": "Alias for shelter_id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name",
+            "description": "English shelter name"
+          },
+          "name_local": {
+            "type": "string",
+            "title": "Name Local",
+            "description": "Localized shelter name"
+          },
+          "lat": {
+            "type": "number",
+            "maximum": 90.0,
+            "minimum": -90.0,
+            "title": "Lat"
+          },
+          "lng": {
+            "type": "number",
+            "maximum": 180.0,
+            "minimum": -180.0,
+            "title": "Lng"
+          },
+          "distance_m": {
+            "type": "number",
+            "minimum": 0.0,
+            "title": "Distance M",
+            "description": "Haversine distance from origin in meters"
+          },
+          "bearing_deg": {
+            "type": "number",
+            "exclusiveMaximum": 360.0,
+            "minimum": 0.0,
+            "title": "Bearing Deg",
+            "description": "Initial bearing from origin in degrees"
+          },
+          "compass_direction": {
+            "type": "string",
+            "title": "Compass Direction",
+            "description": "8-point compass sector: N, NE, E, SE, S, SW, W, NW"
+          },
+          "cell": {
+            "type": "string",
+            "title": "Cell",
+            "description": "H3 resolution-8 cell of the shelter"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status",
+            "description": "Bayesian hazard status of shelter cell"
+          },
+          "is_safe": {
+            "type": "boolean",
+            "title": "Is Safe",
+            "description": "Whether shelter is in a safe cell",
+            "default": true
+          },
+          "is_demo": {
+            "type": "boolean",
+            "title": "Is Demo",
+            "description": "Whether location is an illustrative demo center",
+            "default": true
+          }
+        },
+        "type": "object",
+        "required": [
+          "shelter_id",
+          "name",
+          "name_local",
+          "lat",
+          "lng",
+          "distance_m",
+          "bearing_deg",
+          "compass_direction",
+          "cell",
+          "status"
+        ],
+        "title": "SafeDestination",
+        "description": "Emergency evacuation destination with spatial relative bearing and hazard status."
       },
       "ScenarioResetResponse": {
         "properties": {
@@ -2212,6 +2464,12 @@
             "title": "Mode",
             "description": "Operating mode of the system",
             "default": "live"
+          },
+          "weather_available": {
+            "type": "boolean",
+            "title": "Weather Available",
+            "description": "Whether live weather sensor data is currently active",
+            "default": false
           }
         },
         "type": "object",
@@ -2225,6 +2483,39 @@
         ],
         "title": "StateResponse",
         "description": "Unified crisis response returned to tourist PWA for their location."
+      },
+      "StructuredStep": {
+        "properties": {
+          "maneuver": {
+            "$ref": "#/components/schemas/ManeuverEnum",
+            "description": "Standardized movement action"
+          },
+          "street_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Street Name",
+            "description": "Street or road name from map data, or null"
+          },
+          "distance_m": {
+            "type": "number",
+            "minimum": 0.0,
+            "title": "Distance M",
+            "description": "Maneuver step distance in meters"
+          }
+        },
+        "type": "object",
+        "required": [
+          "maneuver",
+          "distance_m"
+        ],
+        "title": "StructuredStep",
+        "description": "Vetted turn-by-turn navigation instruction without raw unvetted English text."
       },
       "ValidationError": {
         "properties": {

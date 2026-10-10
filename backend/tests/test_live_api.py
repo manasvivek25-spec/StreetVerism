@@ -17,7 +17,7 @@ Verifies:
 
 import os
 import time
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 import pytest
@@ -72,6 +72,8 @@ def setup_test_environment(monkeypatch):
     load_and_validate_templates(TEMPLATES_DIR)
     init_scenario(SCENARIO_FILE, SHELTERS_FILE)
     clear_cells_cache()
+    from backend.app.services.checkin_service import clear_checkin_rate_limits
+    clear_checkin_rate_limits()
 
     monkeypatch.setenv("MOCK", "0")
     monkeypatch.setenv("AUTHORITY_KEY", "test-authority-secret-key-123")
@@ -80,6 +82,7 @@ def setup_test_environment(monkeypatch):
     yield
 
     clear_cells_cache()
+    clear_checkin_rate_limits()
     get_settings.cache_clear()
 
 
@@ -133,12 +136,14 @@ def test_service_coverage_boundary(client):
     resp_inside = client.get("/api/state?lat=13.0827&lng=80.2707")
     assert resp_inside.status_code == 200
     assert resp_inside.json()["coverage"] == "covered"
+    assert resp_inside.json()["weather_available"] is False
 
     # Mumbai (outside service bounding box)
     resp_outside = client.get("/api/state?lat=18.9220&lng=72.8347")
     assert resp_outside.status_code == 200
     data_outside = resp_outside.json()
     assert data_outside["coverage"] == "outside"
+    assert data_outside["weather_available"] is False
     assert data_outside["status"] in ("clear", "normal")
 
 
@@ -234,7 +239,11 @@ def test_checkin_triage_deduplication_and_privacy(client):
     item = data["items"][0]
     assert item["state"] == "need_help"
     assert item["handled"] is False
-    assert item.get("device_id") is None  # Privacy protection: device_id never exposed!
+    # Privacy guarantee: device_id key is strictly omitted entirely (no null key)
+    assert "device_id" not in item
+    assert set(item.keys()) == {
+        "id", "lat", "lng", "cell7", "state", "language", "group_size", "note", "created_at", "handled", "is_replay"
+    }
 
     assert len(data["clusters"]) == 1
     assert data["clusters"][0]["unhandled_need_help"] == 1
@@ -365,3 +374,92 @@ def test_mock_mode_regression_preservation(monkeypatch, client):
     assert resp_health.status_code == 200
     assert resp_health.headers.get("X-Mock-Data") == "1"
     assert resp_health.json()["status"] == "healthy"
+
+
+def test_replay_checkin_wall_clock_retention_and_sorting(client):
+    """Verify check-ins in replay use wall-clock UTC and are NOT purged by 2023 sim time."""
+    headers = {"X-Authority-Key": "test-authority-secret-key-123"}
+    repo = get_checkin_repo()
+
+    # 1. Start scenario at golden_moment (sim clock is 2023-12-04)
+    client.post("/api/scenario/start", json={"name": "michaung_replay", "speed": 1.0})
+    client.post("/api/scenario/seek", json={"bookmark": "golden_moment"})
+
+    # Injected wall clocks:
+    wall_now = datetime(2026, 10, 10, 15, 0, 0, tzinfo=timezone.utc)
+    wall_later = wall_now + timedelta(minutes=5)
+
+    # 2. Submit replay check-in with injected wall clock
+    from backend.app.models import CheckinCreate
+    from backend.app.services.checkin_service import purge_expired, submit_checkin
+    from backend.app.api.routes import _get_context, get_report_repo
+
+    ctx_replay = _get_context()
+    assert ctx_replay.mode == "replay"
+    assert ctx_replay.is_replay is True
+    # The sim clock is indeed in 2023
+    assert ctx_replay.now.year == 2023
+
+    chk_replay = submit_checkin(
+        CheckinCreate(device_id="dev-replay", lat=13.015, lng=80.225, state="safe"),
+        ctx=ctx_replay,
+        checkin_repo=repo,
+        wall_clock=wall_now,
+    )
+    # Recorded timestamp is 2026 wall clock, NOT 2023!
+    assert "2026" in chk_replay.recorded_at
+
+    # 3. Submit live check-in 5 minutes later
+    client.post("/api/scenario/reset")
+    ctx_live = _get_context()
+    chk_live = submit_checkin(
+        CheckinCreate(device_id="dev-live", lat=13.015, lng=80.225, state="safe"),
+        ctx=ctx_live,
+        checkin_repo=repo,
+        wall_clock=wall_later,
+    )
+
+    # 4. Fetch list: sorts newest wall-clock first
+    list_resp = client.get("/api/checkins", headers=headers).json()
+    items = list_resp["items"]
+    assert len(items) >= 2
+    # Verify device_id is omitted from all items
+    for it in items:
+        assert "device_id" not in it
+
+    # Check that chk_live sorts ahead of chk_replay because it is 5m newer in wall time
+    item_ids = [it["id"] for it in items]
+    assert item_ids.index(chk_live.id) < item_ids.index(chk_replay.id)
+
+    # 5. Hourly retention purge job run 24 hours later in real time (within 48h window)
+    wall_24h = wall_now + timedelta(hours=24)
+    purged = purge_expired(wall_24h, checkin_repo=repo, report_repo=get_report_repo())
+    # Replay check-in must NOT be purged! (If it used 2023 sim time, it would have been purged!)
+    remaining_ids = [it.id for it in repo.list_all()]
+    assert chk_replay.id in remaining_ids
+    assert chk_live.id in remaining_ids
+
+    # 6. Hourly retention purge run 50 hours later in real time (past 48h window)
+    wall_50h = wall_now + timedelta(hours=50)
+    purge_expired(wall_50h, checkin_repo=repo, report_repo=get_report_repo())
+    remaining_after_50h = [it.id for it in repo.list_all()]
+    assert chk_replay.id not in remaining_after_50h
+
+
+def test_checkin_rate_limiting(client):
+    """Verify 429 Too Many Requests after 15 check-ins per minute."""
+    for i in range(15):
+        resp = client.post(
+            "/api/checkin",
+            json={"device_id": "rate-limit-device", "lat": 13.0, "lng": 80.2, "state": "safe"},
+        )
+        assert resp.status_code == 200
+
+    # 16th check-in rejected
+    resp_rej = client.post(
+        "/api/checkin",
+        json={"device_id": "rate-limit-device", "lat": 13.0, "lng": 80.2, "state": "safe"},
+    )
+    assert resp_rej.status_code == 429
+    assert "Retry-After" in resp_rej.headers
+    assert "Rate limit exceeded" in resp_rej.json()["detail"]

@@ -188,4 +188,5 @@ def get_state(
         lang=target_lang,
         coverage=coverage_status,
         mode=ctx.mode,
+        weather_available=bool(features.rain_available),
     )

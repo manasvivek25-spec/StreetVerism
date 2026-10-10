@@ -25,6 +25,7 @@ from backend.app.services.shelters import (
     get_nearest_shelters,
     seed_shelters_from_file,
 )
+from backend.app.services.route_service import calculate_safe_route, clear_route_cache
 from backend.app.services.state_service import get_state
 from backend.app.services.templates import (
     SUPPORTED_LANGUAGES,
@@ -58,4 +59,6 @@ __all__ = [
     "create_official_alert",
     "list_official_alerts",
     "expire_official_alert",
+    "calculate_safe_route",
+    "clear_route_cache",
 ]

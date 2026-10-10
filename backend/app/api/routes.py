@@ -13,7 +13,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 from uuid import uuid4
 
-from fastapi import APIRouter, Depends, HTTPException, Query, Security, status
+from fastapi import APIRouter, Depends, HTTPException, Query, Request, Security, status
 
 from backend.app.auth import verify_authority_key
 from backend.app.config import get_settings
@@ -75,7 +75,9 @@ from backend.app.services import (
     list_official_alerts,
     submit_checkin,
     submit_crowd_report,
+    calculate_safe_route,
 )
+from backend.app.routing.types import RouteResponse
 
 logger = logging.getLogger("streetverism.routes")
 router = APIRouter()
@@ -151,15 +153,15 @@ def init_scenario(scenario_path: Path, shelters_path: Path) -> Scenario:
 
 
 def autostart_replay(bookmark_name: str) -> None:
-    """Seek to named bookmark and start playback at 1x."""
+    """Seek to named bookmark and keep playback PAUSED (playable via scenario API)."""
     global _SCENARIO, _SCENARIO_CLOCK, _IS_REPLAY_ACTIVE
     if _SCENARIO is None or _SCENARIO_CLOCK is None:
         return
     bm = next((b for b in _SCENARIO.bookmarks if b.name == bookmark_name), None)
-    _SCENARIO_CLOCK.start(speed=1.0)
     _IS_REPLAY_ACTIVE = True
     if bm:
         _SCENARIO_CLOCK.seek(offset_s=bm.t_offset_s)
+    _SCENARIO_CLOCK.pause()
     clear_cells_cache()
 
 
@@ -463,9 +465,11 @@ async def submit_report_endpoint(payload: ReportCreate) -> ReportResponse:
 
 
 @router.post("/checkin", response_model=CheckinCreateResponse, tags=["Tourist"])
-async def submit_checkin_endpoint(payload: CheckinCreate) -> CheckinCreateResponse:
+async def submit_checkin_endpoint(payload: CheckinCreate, request: Request) -> CheckinCreateResponse:
     """Record a tourist safe or need_help check-in for triage."""
     settings = get_settings()
+    client_ip = request.client.host if request.client else "127.0.0.1"
+
     if settings.mock:
         chk_id = f"chk_{uuid4().hex[:8]}"
         cell7 = cell_to_parent(latlng_to_cell(payload.lat, payload.lng, 8), 7)
@@ -488,7 +492,74 @@ async def submit_checkin_endpoint(payload: CheckinCreate) -> CheckinCreateRespon
         return CheckinCreateResponse(id=chk_id, recorded_at=now)
 
     ctx = _get_context()
-    return submit_checkin(payload, ctx, _CHECKIN_REPO)
+    return submit_checkin(payload, ctx, _CHECKIN_REPO, client_ip=client_ip)
+
+
+@router.get("/route", tags=["Tourist"])
+async def get_route_endpoint(
+    request: Request,
+    lat: Optional[float] = Query(None, description="Tourist origin latitude"),
+    lng: Optional[float] = Query(None, description="Tourist origin longitude"),
+    from_lat: Optional[float] = Query(None, description="Alternative origin latitude parameter"),
+    from_lng: Optional[float] = Query(None, description="Alternative origin longitude parameter"),
+    mode: str = Query("walk", description="Travel mode: walk or drive"),
+    to_shelter: Optional[str] = Query(None, description="Explicit target shelter ID"),
+    reroute: bool = Query(False, description="Request rerouting with debounce"),
+    device_id: Optional[str] = Query(None, description="Device UUID for reroute debouncing"),
+    lang: Optional[str] = Query("en", description="Preferred language"),
+):
+    """Calculate an emergency hazard-aware route to the nearest safe shelter."""
+    settings = get_settings()
+    effective_lat = lat if lat is not None else from_lat
+    effective_lng = lng if lng is not None else from_lng
+
+    if effective_lat is None or effective_lng is None:
+        raise HTTPException(status_code=422, detail="Origin coordinates (lat, lng) are required.")
+
+    client_ip = request.client.host if request.client else "127.0.0.1"
+
+    if settings.mock:
+        from backend.app.routing.types import RouteKindEnum
+        geom = {
+            "type": "LineString",
+            "coordinates": [[effective_lng, effective_lat], [effective_lng + 0.01, effective_lat + 0.01]],
+        }
+        return {
+            "route_id": f"rt_mock_{uuid4().hex[:8]}",
+            "route_version": 1,
+            "valid_until": _now_utc(),
+            "kind": RouteKindEnum.MOCK.value,
+            "destination": None,
+            "alternatives": [],
+            "geometry": geom,
+            "route": geom,  # Legacy field for test_stretch_hazard_aware_route
+            "distance_m": 1200.0,
+            "duration_s": 1000.0,
+            "steps": ["Head northeast on Gandhi Road toward shelter", "Arrive at shelter"],
+            "warnings": [],
+            "hazard_cells_avoided": 2,
+            "maps_urls": None,
+            "attribution": None,
+            "provider": "mock",
+            "reroute": reroute,
+            "is_replay": False,
+            "mode_of_data": "mock",
+            "generated_at": _now_utc(),
+        }
+
+    ctx = _get_context()
+    return calculate_safe_route(
+        lat=effective_lat,
+        lng=effective_lng,
+        mode=mode,
+        to_shelter=to_shelter,
+        reroute=reroute,
+        device_id=device_id,
+        client_ip=client_ip,
+        ctx=ctx,
+        shelter_repo=_SHELTER_REPO,
+        service_bbox=settings.service_bbox,
+    )
 
 
 # --- Authority Endpoints (Protected by X-Authority-Key) ---

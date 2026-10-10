@@ -1,5 +1,4 @@
-"""Tourist check-in submission, latest-per-device triage clustering, and 48h retention purging."""
-
+import time
 import uuid
 from collections import defaultdict
 from datetime import datetime, timedelta, timezone
@@ -21,6 +20,32 @@ from backend.app.services.context import DataContext
 from backend.app.services.templates import SUPPORTED_LANGUAGES
 
 RETENTION_WINDOW_HOURS: int = 48
+CHECKIN_RATE_LIMIT_PER_MIN: int = 15
+CHECKIN_RATE_LIMIT_WINDOW: float = 60.0
+_CHECKIN_TIMESTAMPS: Dict[str, List[float]] = {}
+
+
+def clear_checkin_rate_limits() -> None:
+    """Reset check-in rate limiting timestamps (for testing)."""
+    _CHECKIN_TIMESTAMPS.clear()
+
+
+def check_checkin_rate_limit(key: str) -> None:
+    """Enforce per-key rate limit of 15 check-ins per minute."""
+    now = time.time()
+    ts_list = _CHECKIN_TIMESTAMPS.get(key, [])
+    ts_list = [t for t in ts_list if now - t < CHECKIN_RATE_LIMIT_WINDOW]
+    if len(ts_list) >= CHECKIN_RATE_LIMIT_PER_MIN:
+        oldest = ts_list[0]
+        retry_after = max(1, int(CHECKIN_RATE_LIMIT_WINDOW - (now - oldest)))
+        _CHECKIN_TIMESTAMPS[key] = ts_list
+        raise HTTPException(
+            status_code=429,
+            detail=f"Rate limit exceeded: only {CHECKIN_RATE_LIMIT_PER_MIN} check-ins per minute.",
+            headers={"Retry-After": str(retry_after)},
+        )
+    ts_list.append(now)
+    _CHECKIN_TIMESTAMPS[key] = ts_list
 
 
 def validate_checkin_payload(payload: CheckinCreate) -> None:
@@ -59,15 +84,31 @@ def submit_checkin(
     payload: CheckinCreate,
     ctx: DataContext,
     checkin_repo: CheckinRepo,
+    wall_clock: Optional[datetime] = None,
+    client_ip: Optional[str] = None,
 ) -> CheckinCreateResponse:
-    """Process, validate, and persist a tourist safety check-in."""
+    """Process, validate, rate-limit, and persist a tourist safety check-in.
+    
+    Check-ins ALWAYS record wall-clock UTC (real-world event), even during replay.
+    is_replay is retained strictly as an illustrative badge.
+    """
     validate_checkin_payload(payload)
+
+    # Rate-limit per IP and per device
+    if client_ip:
+        check_checkin_rate_limit(f"ip:{client_ip}")
+    check_checkin_rate_limit(f"dev:{payload.device_id}")
 
     # Compute parent H3 resolution-7 cell for neighborhood triage
     cell8 = latlng_to_cell(payload.lat, payload.lng, 8)
     cell7 = cell_to_parent(cell8, 7)
 
-    now_iso = ctx.now.isoformat()
+    # Wall-clock UTC timestamp (not simulation time)
+    wall_dt = wall_clock or datetime.now(timezone.utc)
+    if wall_dt.tzinfo is None:
+        wall_dt = wall_dt.replace(tzinfo=timezone.utc)
+    now_iso = wall_dt.astimezone(timezone.utc).isoformat()
+
     record = checkin_repo.add(
         checkin=payload,
         cell7=cell7,

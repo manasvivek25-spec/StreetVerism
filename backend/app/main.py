@@ -46,6 +46,16 @@ async def lifespan(app: FastAPI):
     else:
         logger.info("StreetVerism backend started in LIVE mode (MOCK=0). Real external integrations enabled.")
 
+        # Check single-worker concurrency guarantee
+        web_concurrency = int(os.getenv("WEB_CONCURRENCY", "1"))
+        if web_concurrency > 1:
+            logger.warning(
+                "CRITICAL WARNING: WEB_CONCURRENCY is %d. "
+                "StreetVerism relies on in-memory state (scenario clock, rate limiters, route cache). "
+                "Deploy with exactly ONE worker (--workers 1).",
+                web_concurrency,
+            )
+
         # 1. Initialize SQLite schema idempotently
         init_db(settings.database_url)
 

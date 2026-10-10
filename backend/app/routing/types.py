@@ -29,6 +29,7 @@ class RouteWarningEnum(str, Enum):
     UNVERIFIED_REPORTS_NEARBY = "unverified_reports_nearby"
     OUTSIDE_COVERAGE = "outside_coverage"
     START_IN_HAZARD = "start_in_hazard"
+    SHELTER_UNREACHABLE = "shelter_unreachable"
 
 
 class RouteKindEnum(str, Enum):
@@ -54,7 +55,8 @@ class StructuredStep(BaseModel):
 
 class SafeDestination(BaseModel):
     """Emergency evacuation destination with spatial relative bearing and hazard status."""
-    id: str = Field(..., description="Unique shelter identifier")
+    shelter_id: str = Field(..., description="Unique shelter identifier")
+    id: Optional[str] = Field(default=None, description="Alias for shelter_id")
     name: str = Field(..., description="English shelter name")
     name_local: str = Field(..., description="Localized shelter name")
     lat: float = Field(..., ge=-90.0, le=90.0)
@@ -64,11 +66,39 @@ class SafeDestination(BaseModel):
     compass_direction: str = Field(..., description="8-point compass sector: N, NE, E, SE, S, SW, W, NW")
     cell: str = Field(..., description="H3 resolution-8 cell of the shelter")
     status: str = Field(..., description="Bayesian hazard status of shelter cell")
+    is_safe: bool = Field(default=True, description="Whether shelter is in a safe cell")
     is_demo: bool = Field(default=True, description="Whether location is an illustrative demo center")
+
+    def model_post_init(self, __context: Any) -> None:
+        if self.id is None:
+            self.id = self.shelter_id
+
+
+class RouteWarningItem(BaseModel):
+    """Structured warning with machine-readable key and human explanation."""
+    key: str = Field(..., description="Fixed route warning enum key")
+    detail: str = Field(..., description="Detailed explanation of the routing constraint")
+
+
+class MapsUrls(BaseModel):
+    """Native navigation links for universal fallback."""
+    google: str
+    apple: str
+    geo: str
 
 
 # Official attribution wording required by HeiGIT and OpenStreetMap
 DEFAULT_ORS_ATTRIBUTION = "© openrouteservice by HeiGIT | Map data © OpenStreetMap contributors"
+
+ROUTE_WARNING_DETAILS: Dict[str, str] = {
+    RouteWarningEnum.DESTINATION_IN_HAZARD.value: "Selected shelter is located inside or adjacent to an active hazard zone.",
+    RouteWarningEnum.NO_HAZARD_FREE_ROUTE.value: "No road path completely free of water could be found. Exercise extreme caution.",
+    RouteWarningEnum.ROUTING_UNAVAILABLE.value: "Road navigation provider is currently offline or rate-limited. Straight-line bearing displayed.",
+    RouteWarningEnum.UNVERIFIED_REPORTS_NEARBY.value: "Unverified crowd reports exist near your travel corridor. Exercise caution.",
+    RouteWarningEnum.OUTSIDE_COVERAGE.value: "Your location is outside the active emergency monitoring boundary.",
+    RouteWarningEnum.START_IN_HAZARD.value: "Your current position is inside an active flood hazard zone. Move immediately toward safety.",
+    RouteWarningEnum.SHELTER_UNREACHABLE.value: "All known shelters are unreachable or flooded. Seek nearest high ground.",
+}
 
 
 class AvoidSetResult(BaseModel):
@@ -97,3 +127,27 @@ class RouteResult(BaseModel):
     warnings: List[RouteWarningEnum] = Field(default_factory=list)
     hazard_cells_avoided: int = Field(default=0, description="Honest count of hazard cells avoided")
     attribution: Optional[str] = Field(default=None, description="Legal provider map attribution string")
+
+
+class RouteResponse(BaseModel):
+    """Complete public safe-route response complying with frozen contract specification."""
+    route_id: str
+    route_version: int = 1
+    valid_until: str
+    kind: RouteKindEnum
+    destination: Optional[SafeDestination] = None
+    alternatives: List[SafeDestination] = Field(default_factory=list)
+    geometry: Optional[Dict[str, Any]] = None
+    distance_m: float = 0.0
+    duration_s: Optional[float] = None
+    steps: List[StructuredStep] = Field(default_factory=list)
+    warnings: List[RouteWarningItem] = Field(default_factory=list)
+    hazard_cells_avoided: int = 0
+    maps_urls: Optional[MapsUrls] = None
+    attribution: Optional[str] = None
+    provider: Optional[str] = None
+    reroute: bool = False
+    reason_hint: Optional[str] = None
+    is_replay: bool = False
+    mode_of_data: Literal["live", "replay", "mock"] = "live"
+    generated_at: str

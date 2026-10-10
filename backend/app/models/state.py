@@ -46,6 +46,7 @@ class StateResponse(BaseModel):
     lang: str = Field(default="en", description="Language code actually served")
     coverage: Literal["covered", "outside"] = Field(default="covered", description="Service bbox or scenario group coverage status")
     mode: Literal["live", "replay", "mock"] = Field(default="live", description="Operating mode of the system")
+    weather_available: bool = Field(default=False, description="Whether live weather sensor data is currently active")
 
 
 class HealthResponse(BaseModel):

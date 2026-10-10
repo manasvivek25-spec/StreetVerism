@@ -295,6 +295,101 @@ Submits a tourist safety status check-in for emergency triage.
 }
 ```
 
+#### `GET /api/route`
+Computes an emergency hazard-aware safe route to the nearest vetted evacuation shelter, avoiding active flood cells.
+
+- **Query Parameters**:
+  - `lat` (float, required): Tourist origin latitude [-90.0, 90.0]
+  - `lng` (float, required): Tourist origin longitude [-180.0, 180.0]
+  - `mode` (string, optional): `"walk"` (default) or `"drive"`
+  - `to_shelter` (string, optional): Explicit target shelter ID; if omitted, automatically selects nearest safe shelter.
+  - `reroute` (bool, optional): Default `false`. If `true`, requests an updated route with 15s debounce limiter.
+  - `device_id` (string, optional): Anonymous device token used solely for in-memory 15s reroute debouncing.
+
+- **Response `200 OK`**:
+```json
+{
+  "route_id": "rt_20261010_adyar_01",
+  "route_version": 1,
+  "valid_until": "2026-10-10T15:15:00Z",
+  "kind": "road_route",
+  "destination": {
+    "shelter_id": "sh_chennai_01",
+    "name": "Anna University Indoor Stadium",
+    "name_local": "அண்ணா பல்கலைக்கழக உள்விளையாட்டு அரங்கம்",
+    "lat": 13.0115,
+    "lng": 80.2355,
+    "distance_m": 1250.0,
+    "bearing_deg": 142.3,
+    "compass_direction": "SE",
+    "cell": "88618c4f1dfffff",
+    "status": "clear",
+    "is_safe": true
+  },
+  "alternatives": [
+    {
+      "shelter_id": "sh_chennai_02",
+      "name": "Guindy Community Hall",
+      "name_local": "கிண்டி சமுதாயக் கூடம்",
+      "lat": 13.0078,
+      "lng": 80.2134,
+      "distance_m": 1820.0,
+      "bearing_deg": 215.1,
+      "compass_direction": "SW",
+      "cell": "88618c4f11fffff",
+      "status": "clear",
+      "is_safe": true
+    }
+  ],
+  "geometry": {
+    "type": "LineString",
+    "coordinates": [
+      [80.225, 13.015],
+      [80.228, 13.013],
+      [80.2355, 13.0115]
+    ]
+  },
+  "distance_m": 1420.0,
+  "duration_s": 1180.0,
+  "steps": [
+    {
+      "maneuver": "depart",
+      "street_name": "Sardar Patel Road",
+      "distance_m": 350.0
+    },
+    {
+      "maneuver": "turn_left",
+      "street_name": "Gandhi Mandapam Road",
+      "distance_m": 1070.0
+    },
+    {
+      "maneuver": "arrive",
+      "street_name": null,
+      "distance_m": 0.0
+    }
+  ],
+  "warnings": [
+    {
+      "key": "unverified_reports_nearby",
+      "detail": "Unverified crowd reports exist near your travel corridor. Exercise caution."
+    }
+  ],
+  "hazard_cells_avoided": 12,
+  "maps_urls": {
+    "google": "https://www.google.com/maps/dir/?api=1&origin=13.015,80.225&destination=13.0115,80.2355&travelmode=walking",
+    "apple": "https://maps.apple.com/?saddr=13.015,80.225&daddr=13.0115,80.2355&dirflg=w",
+    "geo": "geo:13.0115,80.2355?q=13.0115,80.2355"
+  },
+  "attribution": "© openrouteservice by HeiGIT | Map data © OpenStreetMap contributors",
+  "provider": "openrouteservice",
+  "reroute": false,
+  "reason_hint": null,
+  "is_replay": false,
+  "mode_of_data": "live",
+  "generated_at": "2026-10-10T14:55:00Z"
+}
+```
+
 ---
 
 ### 3.3 Authority Endpoints (Requires `X-Authority-Key`)
@@ -547,28 +642,43 @@ Hazard-aware route avoiding cells marked `official_hazard` or `likely_hazard`.
 
 ### 3.7 Changes Since Contract v1
 
-The operational service layer and live API retain full backward compatibility with v1 clients while adding explicit metadata and controls:
+The operational service layer and live API retain full backward compatibility with v1 clients while adding explicit metadata, safe routing, and operational controls:
 
 1. **Additive Metadata Fields**:
-   - `StateResponse`: adds `coverage` (`"covered"` | `"outside"`), `mode` (`"live"` | `"replay"` | `"mock"`).
+   - `StateResponse`: adds `coverage` (`"covered"` | `"outside"`), `mode` (`"live"` | `"replay"` | `"mock"`), `weather_available` (boolean flag: `false` when weather radar/gauges are inactive or unconfigured; `true` when active).
    - `HealthResponse`: adds `mode` (`"live"` | `"replay"` | `"mock"`), `replay` (object with `label`, `disclaimer`, `sim_time` during replay).
    - `ScenarioStatus`: adds `start_time`, `end_time`, `duration_s`, `finished`, `bookmarks`, `label`, `disclaimer`.
    - `ScenarioSeek`: supports seeking by `bookmark` name in addition to `t` and `offset_s` (exact one-of required).
    - `CheckinCluster`: adds `unhandled_need_help` integer counter for incident commander triage.
+   - `CheckinItem`: `device_id` is strictly omitted from dictionary responses (no null key); `created_at` records wall-clock UTC timestamp even during scenario playback (`is_replay` retained as label).
    - `RenderedInstruction`: carries `original_en` string when `reviewed=false` (e.g. machine-translated de/fr/ja); `original_en=null` when `reviewed=true` (en/hi/ta).
 
-2. **Standard Error Shapes**:
+2. **Emergency Safe Routing (`GET /api/route`)**:
+   - `kind`: `"road_route" | "direct_line" | "none" | "mock"`
+   - `destination`: SafeDestination object containing nearest safe shelter details, distance, bearing, and compass sector.
+   - `alternatives`: list of up to 2 alternative safe shelters.
+   - `geometry`: GeoJSON LineString coordinates `[[lng, lat], ...]`.
+   - `distance_m`: total travel distance in meters.
+   - `duration_s`: estimated walking/driving duration in seconds, or `null`.
+   - `steps`: turn-by-turn navigation steps with standardized `maneuver` enum and `street_name`.
+   - `warnings`: list of structured warning objects `[{"key": "...", "detail": "..."}]` (`no_hazard_free_route`, `unverified_reports_nearby`, `routing_unavailable`, `shelter_unreachable`, `outside_coverage`, `start_in_hazard`).
+   - `hazard_cells_avoided`: honest count of acute hazard cells avoided.
+   - `maps_urls`: `{google, apple, geo}` deep links for native navigation app fallback.
+   - `attribution`: string constant `"© openrouteservice by HeiGIT | Map data © OpenStreetMap contributors"` when road route is returned; `null` otherwise.
+   - `route_id`, `route_version`, `valid_until`, `reroute`, `reason_hint`, `is_replay`, `mode_of_data`, `generated_at`, `provider`.
+
+3. **Standard Error Shapes**:
    - `401 Unauthorized`: Missing `X-Authority-Key` header on `/api/alerts` or `/api/checkins`.
    - `403 Forbidden`: Invalid `X-Authority-Key`.
    - `404 Not Found`: Alert or Checkin ID not found, or scenario file not found.
    - `409 Conflict`: Manual alert publication attempted during active scenario replay without override.
    - `422 Unprocessable Entity`: Coordinate out of range, bbox delta > 0.3° or > 3,000 cells, invalid claim, or seek XOR violation.
-   - `429 Too Many Requests`: 600s per-device rate limit exceeded on `/api/reports`.
+   - `429 Too Many Requests`: Per-device or per-IP rate limit exceeded; returns header `Retry-After: <seconds>` indicating remaining cooldown duration in seconds.
 
-3. **Operational Limits**:
+4. **Operational Limits**:
    - Max bbox span for `/api/cells`: 0.3° per side.
    - Max evaluated cells per request: 3,000 H3 resolution-8 cells.
    - GeoJSON geometry vertex coordinate precision: 5 decimal places (~1.1 meter resolution).
-   - Check-in retention period: 48 hours (hourly automated background purge).
-   - Privacy guarantee: `device_id` is stripped from `/api/checkins` responses in live and replay modes; coordinates rounded to 4 decimals at write time.
+   - Check-in retention period: 48 hours based on wall-clock UTC (hourly automated background purge).
+   - Privacy guarantee: `device_id` is never emitted in public or authority `/api/checkins` lists; coordinates rounded to 4 decimals at write time.
 

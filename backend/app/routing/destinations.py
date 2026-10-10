@@ -92,8 +92,10 @@ def select_safe_destinations(
         bearing = calculate_initial_bearing(origin_lat, origin_lng, lat, lng)
         compass = bearing_to_compass(bearing)
 
+        sh_id = str(sh.get("id") or sh.get("shelter_id", ""))
         candidate = SafeDestination(
-            id=str(sh.get("id", "")),
+            shelter_id=sh_id,
+            id=sh_id,
             name=str(sh.get("name", "Shelter")),
             name_local=str(sh.get("name_local") or sh.get("name", "")),
             lat=lat,
@@ -103,6 +105,7 @@ def select_safe_destinations(
             compass_direction=compass,
             cell=cell,
             status=status,
+            is_safe=True,
             is_demo=bool(sh.get("is_demo", True)),
         )
         safe_candidates.append(candidate)

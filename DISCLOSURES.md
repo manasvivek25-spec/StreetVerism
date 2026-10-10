@@ -18,7 +18,14 @@ This document tracks all third-party libraries, APIs, external data sources, and
 ## External APIs & Data Sources (Planned & Ingested)
 - **Open-Meteo**: Free weather API for precipitation, rainfall rates, and historical data.
 - **Common Alerting Protocol (CAP v1.2)**: Public open standard (OASIS) used for alert ingestion parser and schema normalization.
-- **OpenStreetMap / Humanitarian Data Exchange (HDX)**: Reference shelter and boundary geo-coordinates.
+- **OpenRouteService (HeiGIT)**: Open-source routing service provided by Heidelberg Institute for Geoinformation Technology. Subject to [HeiGIT Terms of Service](https://heigit.org/terms-of-service/). Routing results licensed under CC-BY-SA 4.0.
+- **OpenStreetMap**: Map data © OpenStreetMap contributors under the Open Database License (ODbL).
+- **Humanitarian Data Exchange (HDX)**: Reference shelter and boundary geo-coordinates.
+
+## Routing Privacy & Data Flow
+- **Third-Party Data Flow**: Origin and destination coordinates are sent to OpenRouteService (HeiGIT) solely when a road route is requested by a client.
+- **Zero GPS Tracking**: The StreetVerism server never stores, logs, or streams user GPS track histories.
+- **Device ID Protection**: `device_id` is used solely by an ephemeral in-memory rate limiter and is never persisted alongside routes or exposed in public query responses.
 
 ## Replay Scenario & Geographic Reconstruction
 - **Cyclone Michaung (Dec 2023, Chennai)**: Qualitative background and timeline only (heavy rain ramping over 24 sim-hours, low-lying southern/southwestern basins worst affected, official alerts issued in phases).
