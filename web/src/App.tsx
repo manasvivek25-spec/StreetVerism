@@ -345,30 +345,37 @@ function App() {
     setRefreshIndex((k) => k + 1);
   };
 
-  // Fetch state for current location and language
+  // Fetch state for current location and language (with 10s auto-polling for published alerts)
   useEffect(() => {
     let isCancelled = false;
-    getState(userLocation.lat, userLocation.lng, language)
-      .then((data) => {
-        if (!isCancelled) {
-          setStateData(data);
-          setError(null);
-          setIsFallback(false);
-          setLoading(false);
-        }
-      })
-      .catch((err: unknown) => {
-        if (!isCancelled) {
-          const msg = err instanceof Error ? err.message : 'Unable to connect to safety server.';
-          setError(msg);
-          setStateData(fallbackState);
-          setIsFallback(true);
-          setLoading(false);
-        }
-      });
+
+    const pollState = () => {
+      getState(userLocation.lat, userLocation.lng, language)
+        .then((data) => {
+          if (!isCancelled) {
+            setStateData(data);
+            setError(null);
+            setIsFallback(false);
+            setLoading(false);
+          }
+        })
+        .catch((err: unknown) => {
+          if (!isCancelled) {
+            const msg = err instanceof Error ? err.message : 'Unable to connect to safety server.';
+            setError(msg);
+            setStateData(fallbackState);
+            setIsFallback(true);
+            setLoading(false);
+          }
+        });
+    };
+
+    pollState();
+    const interval = setInterval(pollState, 10000);
 
     return () => {
       isCancelled = true;
+      clearInterval(interval);
     };
   }, [userLocation, language, refreshIndex]);
 

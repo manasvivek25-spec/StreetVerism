@@ -1108,6 +1108,26 @@ export const ConsoleApp: React.FC = () => {
               >
                 🔄 Reset Scenario to Live Mode
               </button>
+              {!scenario?.is_replay && (
+                <button
+                  className="scenario-btn primary"
+                  onClick={async () => {
+                    setScenarioActioning(true);
+                    try {
+                      await startOrResumeScenario('michaung_replay', 0.0);
+                      const updated = await seekScenario('golden_moment');
+                      setScenario(updated);
+                    } catch (err: any) {
+                      alert(`Failed to restart replay: ${err.message}`);
+                    } finally {
+                      setScenarioActioning(false);
+                    }
+                  }}
+                  disabled={scenarioActioning}
+                >
+                  ⏮️ Return to Replay (at golden_moment)
+                </button>
+              )}
             </div>
           </div>
         )}
