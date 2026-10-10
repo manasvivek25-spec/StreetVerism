@@ -86,10 +86,10 @@ def run_smoke_test(base_url: str, authority_key: str, timeout: float = 15.0) -> 
         instructions = data.get("instructions", [])
         assert len(instructions) > 0, "No instructions returned"
         first_inst = instructions[0]
-        # In Tamil, translation is human-reviewed: reviewed=True and original_en is None
-        assert first_inst.get("reviewed") is True, f"Expected reviewed=True for ta, got {first_inst.get('reviewed')}"
-        assert first_inst.get("original_en") is None, "Expected original_en=None for reviewed translation"
-        print(f"[PASS] 4. /api/state (ta) -> 200 OK (status={data['status']}, reviewed=True, native text present)")
+        # In Tamil, without fluent reviewer confirmation, reviewed=False and original_en is present
+        assert first_inst.get("reviewed") is False, f"Expected reviewed=False for unverified ta, got {first_inst.get('reviewed')}"
+        assert first_inst.get("original_en") is not None, "Expected original_en present for unverified ta"
+        print(f"[PASS] 4. /api/state (ta) -> 200 OK (status={data['status']}, reviewed={first_inst['reviewed']}, original_en present)")
         steps_passed += 1
     except Exception as exc:
         print(f"[FAIL] 4. /api/state (ta) -> {exc}")

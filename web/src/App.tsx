@@ -822,7 +822,7 @@ function App() {
                 🌐 Language / भाषा / மொழி
               </h3>
               <p style={{ fontSize: '0.82rem', color: '#94a3b8', margin: '0 0 14px 0' }}>
-                Select language for instructions. Human-reviewed: en, ta, hi. Machine-translated: de, fr, ja.
+                Select language for instructions. Human-reviewed: en. Unreviewed translations: ta, hi, de, fr, ja.
               </p>
 
               <select
@@ -833,8 +833,8 @@ function App() {
               >
                 <option value="de">🇩🇪 Deutsch (German) · Machine-translated</option>
                 <option value="en">🇬🇧 English · Human-reviewed</option>
-                <option value="ta">🇮🇳 தமிழ் (Tamil) · Human-reviewed</option>
-                <option value="hi">🇮🇳 हिन्दी (Hindi) · Human-reviewed</option>
+                <option value="ta">🇮🇳 தமிழ் (Tamil) · Unreviewed</option>
+                <option value="hi">🇮🇳 हिन्दी (Hindi) · Unreviewed</option>
                 <option value="fr">🇫🇷 Français (French) · Machine-translated</option>
                 <option value="ja">🇯🇵 日本語 (Japanese) · Machine-translated</option>
               </select>

@@ -1,6 +1,6 @@
 {
   "lang": "hi",
-  "reviewed": true,
+  "reviewed": false,
   "templates": {
     "MOVE_TO_HIGHER_GROUND": "तुरंत ऊंचे स्थानों पर जाएं। प्रतीक्षा न करें।",
     "AVOID_FLOODED_ROADS": "जलमग्न सड़कों और अंडरपास से बचें।",
