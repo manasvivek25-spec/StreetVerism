@@ -100,12 +100,24 @@ fun OfflineMeshScreen(
 
         // 1-Tap Emergency Check-in Buttons
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            Text(
-                text = "1-TAP CRISIS STATUS CHECK-IN",
-                fontSize = 11.sp,
-                fontWeight = FontWeight.Bold,
-                color = TextSecondary
-            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "1-TAP CRISIS STATUS CHECK-IN",
+                    fontSize = 11.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = TextSecondary
+                )
+                Text(
+                    text = String.format(java.util.Locale.US, "📍 Live GPS: %.4f, %.4f", userLat, userLng),
+                    fontSize = 10.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = SafeGreen
+                )
+            }
 
             Row(
                 modifier = Modifier.fillMaxWidth(),

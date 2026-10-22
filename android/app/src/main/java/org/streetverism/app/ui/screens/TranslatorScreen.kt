@@ -272,7 +272,7 @@ fun TranslatorScreen(
                             )
                         }
 
-                        Divider(color = DarkBorder, thickness = 1.dp, modifier = Modifier.padding(vertical = 8.dp))
+                        HorizontalDivider(color = DarkBorder, thickness = 1.dp, modifier = Modifier.padding(vertical = 8.dp))
 
                         Text(
                             text = "English: ${phrase.english}",

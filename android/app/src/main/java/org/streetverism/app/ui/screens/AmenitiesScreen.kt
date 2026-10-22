@@ -184,7 +184,7 @@ fun AmenitiesScreen(
                             )
                         }
 
-                        Divider(color = DarkBorder, thickness = 1.dp, modifier = Modifier.padding(vertical = 2.dp))
+                        HorizontalDivider(color = DarkBorder, thickness = 1.dp, modifier = Modifier.padding(vertical = 2.dp))
 
                         Row(
                             modifier = Modifier.fillMaxWidth(),
