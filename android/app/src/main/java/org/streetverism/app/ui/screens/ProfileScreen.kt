@@ -42,13 +42,13 @@ fun ProfileScreen(
     )
 
     val supportedLanguages = listOf(
-        Pair("en", "🇬🇧 English"),
-        Pair("ta", "🇮🇳 தமிழ் (Tamil)"),
-        Pair("hi", "🇮🇳 हिन्दी (Hindi)"),
-        Pair("de", "🇩🇪 Deutsch (German)"),
-        Pair("fr", "🇫🇷 Français (French)"),
-        Pair("ja", "🇯🇵 日本語 (Japanese)"),
-        Pair("es", "🇪🇸 Español (Spanish)")
+        Pair("en", "English"),
+        Pair("ta", "Tamil (தமிழ்)"),
+        Pair("hi", "Hindi (हिन्दी)"),
+        Pair("de", "German (Deutsch)"),
+        Pair("fr", "French (Français)"),
+        Pair("ja", "Japanese (日本語)"),
+        Pair("es", "Spanish (Español)")
     )
 
     Column(
@@ -62,17 +62,18 @@ fun ProfileScreen(
         // Header
         Column {
             Text(
-                text = "Emergency User Profile",
-                fontSize = 22.sp,
-                fontWeight = FontWeight.ExtraBold,
-                color = Color.White
+                text = "EMERGENCY USER PROFILE",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Black,
+                color = Color.White,
+                letterSpacing = 0.5.sp
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = "Only 4 essential fields collected for zero-friction disaster response. All data is saved on-device.",
-                fontSize = 13.sp,
+                text = "Only 4 essential fields required for triage and credibility calibration. Stored 100% locally.",
+                fontSize = 12.sp,
                 color = TextSecondary,
-                lineHeight = 18.sp
+                lineHeight = 16.sp
             )
         }
 
@@ -81,17 +82,18 @@ fun ProfileScreen(
             value = name,
             onValueChange = { name = it },
             label = { Text("Full Name", color = TextSecondary) },
-            placeholder = { Text("e.g. Alex Smith", color = TextMuted) },
+            placeholder = { Text("e.g. Alex Mercer", color = TextMuted) },
             singleLine = true,
             modifier = Modifier.fillMaxWidth(),
             colors = OutlinedTextFieldDefaults.colors(
                 focusedTextColor = Color.White,
                 unfocusedTextColor = Color.White,
-                focusedBorderColor = ActionBlue,
+                focusedBorderColor = ActionSlateActive,
                 unfocusedBorderColor = DarkBorder,
                 focusedContainerColor = DarkSurface,
                 unfocusedContainerColor = DarkSurface
-            )
+            ),
+            shape = RoundedCornerShape(6.dp)
         )
 
         // Field 2: Age
@@ -111,11 +113,12 @@ fun ProfileScreen(
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedTextColor = Color.White,
                     unfocusedTextColor = Color.White,
-                    focusedBorderColor = ActionBlue,
+                    focusedBorderColor = ActionSlateActive,
                     unfocusedBorderColor = DarkBorder,
                     focusedContainerColor = DarkSurface,
                     unfocusedContainerColor = DarkSurface
-                )
+                ),
+                shape = RoundedCornerShape(6.dp)
             )
 
             Spacer(modifier = Modifier.height(6.dp))
@@ -124,9 +127,9 @@ fun ProfileScreen(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clip(RoundedCornerShape(8.dp))
+                    .clip(RoundedCornerShape(6.dp))
                     .background(DarkSurfaceElevated)
-                    .border(1.dp, DarkBorder, RoundedCornerShape(8.dp))
+                    .border(1.dp, DarkBorder, RoundedCornerShape(6.dp))
                     .padding(12.dp)
             ) {
                 Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
@@ -137,9 +140,10 @@ fun ProfileScreen(
                     ) {
                         Text(
                             text = "AGE TRIAGE METRIC",
-                            fontSize = 11.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = ActionBlue
+                            fontSize = 10.sp,
+                            fontWeight = FontWeight.Black,
+                            color = TextSecondary,
+                            letterSpacing = 1.sp
                         )
                         Text(
                             text = previewProfile.vulnerabilityTier(),
@@ -150,11 +154,11 @@ fun ProfileScreen(
                     }
 
                     Text(
-                        text = "• Credibility Multiplier: ${String.format("%.2f", previewProfile.calculateCredibilityFactor())}x\n" +
-                               "• Why age matters: Used by on-device trust engine to calibrate crowd reports and automatically flag children (<14) and elderly (>65) for prioritized rescue dispatch.",
-                        fontSize = 12.sp,
+                        text = "• Credibility Multiplier: ${String.format(java.util.Locale.US, "%.2f", previewProfile.calculateCredibilityFactor())}x\n" +
+                               "• Triage Role: Calibrates report credibility in Bayesian fusion and flags children (<14) and seniors (>65) for prioritized evacuation.",
+                        fontSize = 11.sp,
                         color = TextSecondary,
-                        lineHeight = 16.sp
+                        lineHeight = 15.sp
                     )
                 }
             }
@@ -163,8 +167,8 @@ fun ProfileScreen(
         // Field 3: Language
         Column {
             Text(
-                text = "Preferred Crisis Language",
-                fontSize = 14.sp,
+                text = "Primary Crisis Language",
+                fontSize = 13.sp,
                 fontWeight = FontWeight.SemiBold,
                 color = Color.White
             )
@@ -173,9 +177,9 @@ fun ProfileScreen(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clip(RoundedCornerShape(8.dp))
+                    .clip(RoundedCornerShape(6.dp))
                     .background(DarkSurface)
-                    .border(1.dp, ActionBlue, RoundedCornerShape(8.dp))
+                    .border(1.dp, DarkBorder, RoundedCornerShape(6.dp))
                     .clickable { expandedLangDropdown = true }
                     .padding(14.dp)
             ) {
@@ -186,7 +190,7 @@ fun ProfileScreen(
                 ) {
                     val currentLabel = supportedLanguages.firstOrNull { it.first == selectedLanguage }?.second ?: "English"
                     Text(text = currentLabel, color = Color.White, fontWeight = FontWeight.Bold)
-                    Text(text = "▼", color = ActionBlue, fontSize = 12.sp)
+                    Text(text = "▼", color = TextSecondary, fontSize = 11.sp)
                 }
 
                 DropdownMenu(
@@ -196,7 +200,7 @@ fun ProfileScreen(
                 ) {
                     supportedLanguages.forEach { (code, label) ->
                         DropdownMenuItem(
-                            text = { Text(text = label, color = Color.White) },
+                            text = { Text(text = label, color = Color.White, fontSize = 13.sp) },
                             onClick = {
                                 selectedLanguage = code
                                 expandedLangDropdown = false
@@ -211,23 +215,24 @@ fun ProfileScreen(
         OutlinedTextField(
             value = nationality,
             onValueChange = { nationality = it },
-            label = { Text("Nationality / Country of Origin", color = TextSecondary) },
+            label = { Text("Nationality / Home Country", color = TextSecondary) },
             placeholder = { Text("e.g. United Kingdom, Germany, Japan", color = TextMuted) },
             singleLine = true,
             modifier = Modifier.fillMaxWidth(),
             colors = OutlinedTextFieldDefaults.colors(
                 focusedTextColor = Color.White,
                 unfocusedTextColor = Color.White,
-                focusedBorderColor = ActionBlue,
+                focusedBorderColor = ActionSlateActive,
                 unfocusedBorderColor = DarkBorder,
                 focusedContainerColor = DarkSurface,
                 unfocusedContainerColor = DarkSurface
-            )
+            ),
+            shape = RoundedCornerShape(6.dp)
         )
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Save Button
+        // Save Button (Tactical Charcoal/Slate)
         Button(
             onClick = {
                 val finalName = if (name.isBlank()) "Tourist" else name.trim()
@@ -243,15 +248,16 @@ fun ProfileScreen(
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .height(52.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = ActionBlue),
-            shape = RoundedCornerShape(10.dp)
+                .height(48.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = ActionSlate),
+            shape = RoundedCornerShape(6.dp)
         ) {
             Text(
-                text = "✓ Save Profile & Launch Emergency Mode",
-                fontSize = 15.sp,
+                text = "SAVE PROFILE & ENTER CRISIS MODE",
+                fontSize = 13.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color.White
+                color = Color.White,
+                letterSpacing = 0.5.sp
             )
         }
     }

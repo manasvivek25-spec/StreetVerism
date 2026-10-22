@@ -36,19 +36,20 @@ fun SafetyGuideScreen(
         // Title
         Column {
             Text(
-                text = "Crisis Precautions & First Aid",
-                fontSize = 20.sp,
-                fontWeight = FontWeight.ExtraBold,
-                color = Color.White
+                text = "DISASTER PROTOCOLS & FIRST AID",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Black,
+                color = Color.White,
+                letterSpacing = 0.5.sp
             )
             Text(
-                text = "100% offline emergency procedures and injury response protocols.",
+                text = "100% offline emergency procedures, hazard precautions, and step-by-step triage.",
                 fontSize = 12.sp,
                 color = TextSecondary
             )
         }
 
-        // Two Primary Segmented Tabs
+        // Two Segmented Tabs
         TabRow(
             selectedTabIndex = activeTab,
             containerColor = DarkSurfaceElevated,
@@ -57,12 +58,12 @@ fun SafetyGuideScreen(
             Tab(
                 selected = activeTab == 0,
                 onClick = { activeTab = 0 },
-                text = { Text("🛡️ Weather Precautions", fontWeight = FontWeight.Bold, fontSize = 13.sp) }
+                text = { Text("WEATHER PRECAUTIONS", fontWeight = FontWeight.Bold, fontSize = 12.sp) }
             )
             Tab(
                 selected = activeTab == 1,
                 onClick = { activeTab = 1 },
-                text = { Text("🩹 Emergency First Aid", fontWeight = FontWeight.Bold, fontSize = 13.sp) }
+                text = { Text("FIRST AID PROTOCOLS", fontWeight = FontWeight.Bold, fontSize = 12.sp) }
             )
         }
 
@@ -77,9 +78,9 @@ fun SafetyGuideScreen(
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clip(RoundedCornerShape(12.dp))
+                            .clip(RoundedCornerShape(8.dp))
                             .background(DarkSurface)
-                            .border(1.dp, DarkBorder, RoundedCornerShape(12.dp))
+                            .border(1.dp, DarkBorder, RoundedCornerShape(8.dp))
                             .padding(14.dp)
                     ) {
                         Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
@@ -87,11 +88,19 @@ fun SafetyGuideScreen(
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.spacedBy(8.dp)
                             ) {
-                                Text(prec.icon, fontSize = 22.sp)
+                                Box(
+                                    modifier = Modifier
+                                        .clip(RoundedCornerShape(4.dp))
+                                        .background(ActionSlate)
+                                        .padding(horizontal = 6.dp, vertical = 3.dp)
+                                ) {
+                                    Text("PROTOCOL", fontSize = 9.sp, fontWeight = FontWeight.Black, color = Color.White)
+                                }
+
                                 Column {
                                     Text(
-                                        text = prec.crisisType,
-                                        fontSize = 16.sp,
+                                        text = prec.crisisType.uppercase(),
+                                        fontSize = 15.sp,
                                         fontWeight = FontWeight.Bold,
                                         color = Color.White
                                     )
@@ -107,15 +116,15 @@ fun SafetyGuideScreen(
                             Box(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .clip(RoundedCornerShape(8.dp))
-                                    .background(Color(0x1F10B981))
-                                    .border(1.dp, SafeGreen, RoundedCornerShape(8.dp))
+                                    .clip(RoundedCornerShape(6.dp))
+                                    .background(SafeGreenSurface)
+                                    .border(1.dp, SafeGreen, RoundedCornerShape(6.dp))
                                     .padding(10.dp)
                             ) {
                                 Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                                     Text(
-                                        text = "✓ CRITICAL ACTIONS (DO THIS):",
-                                        fontSize = 12.sp,
+                                        text = "CRITICAL ACTIONS (DO THIS):",
+                                        fontSize = 11.sp,
                                         fontWeight = FontWeight.Bold,
                                         color = SafeGreen
                                     )
@@ -129,15 +138,15 @@ fun SafetyGuideScreen(
                             Box(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .clip(RoundedCornerShape(8.dp))
-                                    .background(Color(0x1FEF4444))
-                                    .border(1.dp, AlertRed, RoundedCornerShape(8.dp))
+                                    .clip(RoundedCornerShape(6.dp))
+                                    .background(AlertRedSurface)
+                                    .border(1.dp, AlertRed, RoundedCornerShape(6.dp))
                                     .padding(10.dp)
                             ) {
                                 Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                                     Text(
-                                        text = "✕ FORBIDDEN ACTIONS (NEVER DO THIS):",
-                                        fontSize = 12.sp,
+                                        text = "PROHIBITED ACTIONS (NEVER DO THIS):",
+                                        fontSize = 11.sp,
                                         fontWeight = FontWeight.Bold,
                                         color = AlertRed
                                     )
@@ -160,9 +169,9 @@ fun SafetyGuideScreen(
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clip(RoundedCornerShape(12.dp))
+                            .clip(RoundedCornerShape(8.dp))
                             .background(DarkSurface)
-                            .border(1.dp, DarkBorder, RoundedCornerShape(12.dp))
+                            .border(1.dp, DarkBorder, RoundedCornerShape(8.dp))
                             .padding(14.dp)
                     ) {
                         Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
@@ -171,22 +180,20 @@ fun SafetyGuideScreen(
                                 horizontalArrangement = Arrangement.SpaceBetween,
                                 verticalAlignment = Alignment.Top
                             ) {
-                                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                                    Text(guide.icon, fontSize = 22.sp)
+                                Column {
                                     Text(
-                                        text = guide.condition,
-                                        fontSize = 16.sp,
+                                        text = guide.condition.uppercase(),
+                                        fontSize = 15.sp,
                                         fontWeight = FontWeight.Bold,
                                         color = Color.White
                                     )
+                                    Text(
+                                        text = "PRIORITY: ${guide.urgency.uppercase()}",
+                                        fontSize = 11.sp,
+                                        fontWeight = FontWeight.Black,
+                                        color = AlertRed
+                                    )
                                 }
-
-                                Text(
-                                    text = guide.urgency,
-                                    fontSize = 11.sp,
-                                    fontWeight = FontWeight.Black,
-                                    color = AlertRed
-                                )
                             }
 
                             // Step-by-Step Triage
@@ -199,14 +206,14 @@ fun SafetyGuideScreen(
                                     ) {
                                         Box(
                                             modifier = Modifier
-                                                .size(22.dp)
+                                                .size(20.dp)
                                                 .clip(RoundedCornerShape(4.dp))
-                                                .background(ActionBlue),
+                                                .background(ActionSlate),
                                             contentAlignment = Alignment.Center
                                         ) {
                                             Text(
                                                 text = "${index + 1}",
-                                                fontSize = 12.sp,
+                                                fontSize = 11.sp,
                                                 fontWeight = FontWeight.Bold,
                                                 color = Color.White
                                             )
@@ -228,14 +235,14 @@ fun SafetyGuideScreen(
                                 Box(
                                     modifier = Modifier
                                         .fillMaxWidth()
-                                        .clip(RoundedCornerShape(8.dp))
-                                        .background(Color(0x28EF4444))
-                                        .border(1.dp, AlertRed, RoundedCornerShape(8.dp))
+                                        .clip(RoundedCornerShape(6.dp))
+                                        .background(AlertRedSurface)
+                                        .border(1.dp, AlertRed, RoundedCornerShape(6.dp))
                                         .padding(10.dp)
                                 ) {
                                     Column(verticalArrangement = Arrangement.spacedBy(3.dp)) {
                                         Text(
-                                            text = "⚠️ LIFE-CRITICAL WARNINGS:",
+                                            text = "LIFE-CRITICAL WARNINGS:",
                                             fontSize = 11.sp,
                                             fontWeight = FontWeight.Bold,
                                             color = AlertRed

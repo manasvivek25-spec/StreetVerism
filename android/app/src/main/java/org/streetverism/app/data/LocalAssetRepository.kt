@@ -91,85 +91,80 @@ class LocalAssetRepository(private val context: Context) {
 
     fun getAmenitiesForLocation(userLat: Double, userLng: Double): List<Amenity> {
         val base = getAmenities()
-        val dLat = Math.toRadians(userLat - 13.015)
-        val dLng = Math.toRadians(userLng - 80.225)
-        val a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-                Math.cos(Math.toRadians(13.015)) * Math.cos(Math.toRadians(userLat)) *
-                Math.sin(dLng / 2) * Math.sin(dLng / 2)
-        val distToChennaiMeters = 6371000.0 * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
 
-        if (distToChennaiMeters <= 50000.0) {
-            return base
-        }
+        // Anchor local tactical points to the user's localized sector (~500m block)
+        // so the pins remain fixed on the ground while walking, and distance updates in real-time
+        val sectorLat = Math.round(userLat * 200.0) / 200.0
+        val sectorLng = Math.round(userLng * 200.0) / 200.0
 
-        // Dynamically provide local crisis amenities scaled around user's real-time live GPS fix
         val localAmenities = listOf(
             Amenity(
-                id = "live-gps-shelter-1",
-                name = "Designated High-Ground Safe Shelter",
+                id = "live-local-shelter",
+                name = "Neighborhood Evacuation Safe Shelter",
                 type = AmenityType.SHELTER,
-                lat = userLat + 0.0035,
-                lng = userLng + 0.0025,
-                address = "Local Disaster Relief Center",
+                lat = sectorLat + 0.0028,
+                lng = sectorLng + 0.0019,
+                address = "Designated Elevated Assembly Ground",
                 contactNumber = "112 / 108",
                 is24x7 = true,
-                suppliesAvailable = listOf("Blankets", "Dry Food Rations", "Drinking Water", "Device Power"),
+                suppliesAvailable = listOf("Blankets", "Dry Rations", "Drinking Water", "Device Power"),
                 capacity = "500 evacuees",
                 verifiedOffline = true
             ),
             Amenity(
-                id = "live-gps-water-1",
-                name = "Municipal Clean Potable Water Point",
+                id = "live-local-water",
+                name = "Emergency Food Supply & Water Depot",
                 type = AmenityType.FOOD_WATER,
-                lat = userLat + 0.0018,
-                lng = userLng - 0.0022,
-                address = "Emergency Potable Water Depot",
+                lat = sectorLat + 0.0015,
+                lng = sectorLng - 0.0018,
+                address = "Relief Food Store & Clean Water Point",
                 contactNumber = "112",
                 is24x7 = true,
-                suppliesAvailable = listOf("Clean Water", "Electrolyte Packets", "Water Purification Tablets"),
-                capacity = "Continuous Tanker",
+                suppliesAvailable = listOf("Potable Water", "Emergency Rations", "Water Purification Tablets"),
+                capacity = "Continuous Supply",
                 verifiedOffline = true
             ),
             Amenity(
-                id = "live-gps-pharmacy-1",
-                name = "24x7 Emergency First-Aid Pharmacy",
+                id = "live-local-pharmacy",
+                name = "24x7 Emergency Medical Store & Pharmacy",
                 type = AmenityType.PHARMACY,
-                lat = userLat - 0.0024,
-                lng = userLng + 0.0018,
-                address = "Emergency Trauma Supplies",
+                lat = sectorLat - 0.0019,
+                lng = sectorLng + 0.0014,
+                address = "Essential Trauma & Prescription Drug Depot",
                 contactNumber = "108",
                 is24x7 = true,
-                suppliesAvailable = listOf("Antiseptic", "Bandages", "EpiPens", "Insulin Support", "Tourniquets"),
+                suppliesAvailable = listOf("Antiseptics", "Bandages", "Insulin", "Inhalers", "Tourniquets"),
                 capacity = "Open 24 Hours",
                 verifiedOffline = true
             ),
             Amenity(
-                id = "live-gps-firstaid-1",
-                name = "Civil Defence Rapid Triage & First-Aid Post",
+                id = "live-local-firstaid",
+                name = "Civil Defence First-Aid & Triage Post",
                 type = AmenityType.FIRST_AID,
-                lat = userLat - 0.0031,
-                lng = userLng - 0.0020,
-                address = "Mobile Emergency Treatment Tent",
+                lat = sectorLat - 0.0024,
+                lng = sectorLng - 0.0016,
+                address = "Emergency Trauma Treatment Post",
                 contactNumber = "112",
                 is24x7 = true,
                 suppliesAvailable = listOf("CPR Defibrillator", "Splints", "Burn Dressing", "Stretchers"),
-                capacity = "4 Paramedics",
+                capacity = "Rapid Response Unit",
                 verifiedOffline = true
             ),
             Amenity(
-                id = "live-gps-hospital-1",
-                name = "Regional Emergency & Trauma Hospital",
+                id = "live-local-hospital",
+                name = "District Critical Care & Emergency Hospital",
                 type = AmenityType.HOSPITAL,
-                lat = userLat + 0.0062,
-                lng = userLng - 0.0041,
-                address = "District Critical Care Center",
+                lat = sectorLat + 0.0048,
+                lng = sectorLng - 0.0032,
+                address = "Regional Emergency Trauma Center",
                 contactNumber = "108 / 112",
                 is24x7 = true,
-                suppliesAvailable = listOf("ICU Beds", "Trauma Surgeons", "Ambulance Fleet", "Oxygen Units"),
+                suppliesAvailable = listOf("Emergency ICU", "Trauma Surgeons", "Ambulance Fleet", "Oxygen"),
                 capacity = "Level 1 Trauma",
                 verifiedOffline = true
             )
         )
+
         return localAmenities + base
     }
 
@@ -385,8 +380,8 @@ class LocalAssetRepository(private val context: Context) {
             name = "Low-Lying Stormwater Runoff Hazard",
             status = HazardStatus.LIKELY_HAZARD,
             pHazard = 0.82f,
-            colorHex = "#F97316",
-            icon = "⚠️",
+            colorHex = "#EA580C",
+            icon = "CAUTION",
             description = "Local low-lying drainage area prone to rapid accumulation.",
             centerLat = userLat - 0.004,
             centerLng = userLng - 0.003,

@@ -43,25 +43,26 @@ fun OfflineMeshScreen(
         // Title
         Column {
             Text(
-                text = "P2P Offline Crisis Mesh",
-                fontSize = 20.sp,
-                fontWeight = FontWeight.ExtraBold,
-                color = Color.White
+                text = "P2P ZERO-NETWORK CRISIS MESH",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Black,
+                color = Color.White,
+                letterSpacing = 0.5.sp
             )
             Text(
-                text = "Broadcast check-ins and hazard reports peer-to-peer without cell towers.",
+                text = "Direct device-to-device radio broadcasts over BLE / Wi-Fi ad-hoc without cellular infrastructure.",
                 fontSize = 12.sp,
                 color = TextSecondary
             )
         }
 
-        // Live Mesh Status Banner
+        // Live Mesh Status Banner (Tactical Dark Slate)
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .clip(RoundedCornerShape(10.dp))
+                .clip(RoundedCornerShape(8.dp))
                 .background(DarkSurfaceElevated)
-                .border(1.dp, SafeGreen, RoundedCornerShape(10.dp))
+                .border(1.dp, SafeGreen, RoundedCornerShape(8.dp))
                 .padding(12.dp)
         ) {
             Row(
@@ -71,9 +72,14 @@ fun OfflineMeshScreen(
             ) {
                 Column {
                     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                        Text("🟢", fontSize = 12.sp)
+                        Box(
+                            modifier = Modifier
+                                .size(6.dp)
+                                .clip(RoundedCornerShape(3.dp))
+                                .background(SafeGreen)
+                        )
                         Text(
-                            text = "LOCAL MESH ACTIVE (ZERO NETWORK)",
+                            text = "OFFLINE MESH ACTIVE",
                             fontSize = 11.sp,
                             fontWeight = FontWeight.Black,
                             color = SafeGreen
@@ -81,7 +87,7 @@ fun OfflineMeshScreen(
                     }
                     Spacer(modifier = Modifier.height(2.dp))
                     Text(
-                        text = "${meshState.connectedPeerCount} nearby smartphones in direct range",
+                        text = "${meshState.connectedPeerCount} nearby devices in direct transmission range",
                         fontSize = 12.sp,
                         color = Color.White
                     )
@@ -89,11 +95,11 @@ fun OfflineMeshScreen(
 
                 Box(
                     modifier = Modifier
-                        .clip(RoundedCornerShape(6.dp))
-                        .background(Color(0x3010B981))
+                        .clip(RoundedCornerShape(4.dp))
+                        .background(ActionSlate)
                         .padding(horizontal = 8.dp, vertical = 4.dp)
                 ) {
-                    Text(text = "BLE / Ad-Hoc", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = SafeGreen)
+                    Text(text = "BLE / Direct", fontSize = 10.sp, fontWeight = FontWeight.Bold, color = Color.White)
                 }
             }
         }
@@ -106,13 +112,13 @@ fun OfflineMeshScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "1-TAP CRISIS STATUS CHECK-IN",
+                    text = "STATUS BROADCAST BEACON",
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Bold,
                     color = TextSecondary
                 )
                 Text(
-                    text = String.format(java.util.Locale.US, "📍 Live GPS: %.4f, %.4f", userLat, userLng),
+                    text = String.format(java.util.Locale.US, "GPS: %.4f, %.4f", userLat, userLng),
                     fontSize = 10.sp,
                     fontWeight = FontWeight.Bold,
                     color = SafeGreen
@@ -132,15 +138,15 @@ fun OfflineMeshScreen(
                             isSafe = true,
                             note = "Safe at high ground"
                         )
-                        statusFeedback = "✓ Broadcasted 'SAFE' packet #${packet.packetId} to local swarm"
+                        statusFeedback = "Dispatched SAFE packet #${packet.packetId} to local swarm"
                     },
                     modifier = Modifier
                         .weight(1f)
-                        .height(48.dp),
+                        .height(46.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = SafeGreen),
-                    shape = RoundedCornerShape(8.dp)
+                    shape = RoundedCornerShape(6.dp)
                 ) {
-                    Text("✓ I Am Safe", fontWeight = FontWeight.Bold, color = Color.White)
+                    Text("STATUS: SAFE", fontWeight = FontWeight.Bold, color = Color.White, fontSize = 12.sp)
                 }
 
                 Button(
@@ -150,17 +156,17 @@ fun OfflineMeshScreen(
                             lat = userLat,
                             lng = userLng,
                             isSafe = false,
-                            note = "URGENT: Evacuation needed for ${userProfile.name} (Age ${userProfile.age})"
+                            note = "EVACUATION: Required for ${userProfile.name} (Age ${userProfile.age})"
                         )
-                        statusFeedback = "🚨 Broadcasted RESCUE REQUEST #${packet.packetId} (Priority: ${userProfile.vulnerabilityTier()})"
+                        statusFeedback = "Dispatched SOS REQUEST #${packet.packetId} (Priority: ${userProfile.vulnerabilityTier()})"
                     },
                     modifier = Modifier
                         .weight(1f)
-                        .height(48.dp),
+                        .height(46.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = AlertRed),
-                    shape = RoundedCornerShape(8.dp)
+                    shape = RoundedCornerShape(6.dp)
                 ) {
-                    Text("🚨 I Need Help", fontWeight = FontWeight.Bold, color = Color.White)
+                    Text("BROADCAST SOS", fontWeight = FontWeight.Bold, color = Color.White, fontSize = 12.sp)
                 }
             }
         }
@@ -169,37 +175,40 @@ fun OfflineMeshScreen(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .clip(RoundedCornerShape(10.dp))
+                .clip(RoundedCornerShape(8.dp))
                 .background(DarkSurface)
-                .border(1.dp, DarkBorder, RoundedCornerShape(10.dp))
+                .border(1.dp, DarkBorder, RoundedCornerShape(8.dp))
                 .padding(12.dp)
         ) {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text(
-                    text = "REPORT LOCAL HAZARD (OFFLINE SWARM)",
+                    text = "REPORT LOCAL SECTOR HAZARD",
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Bold,
-                    color = ActionBlue
+                    color = TextSecondary
                 )
 
-                // Claim Radios
+                // Claim Radios (Tactical labels)
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     listOf(
-                        Pair("flooded", "🌊 Flooded"),
-                        Pair("blocked", "🚧 Blocked"),
-                        Pair("safe", "🛡️ Clear")
+                        Pair("flooded", "INUNDATED"),
+                        Pair("blocked", "BLOCKED ROAD"),
+                        Pair("safe", "CLEAR PASSAGE")
                     ).forEach { (claimKey, claimLabel) ->
                         FilterChip(
                             selected = selectedClaim == claimKey,
                             onClick = { selectedClaim = claimKey },
-                            label = { Text(claimLabel, fontSize = 11.sp) },
+                            label = { Text(claimLabel, fontSize = 10.sp, fontWeight = FontWeight.Bold) },
                             colors = FilterChipDefaults.filterChipColors(
-                                selectedContainerColor = ActionBlue,
-                                selectedLabelColor = Color.White
-                            )
+                                selectedContainerColor = ActionSlateActive,
+                                selectedLabelColor = Color.White,
+                                containerColor = DarkSurfaceElevated,
+                                labelColor = TextSecondary
+                            ),
+                            shape = RoundedCornerShape(4.dp)
                         )
                     }
                 }
@@ -207,17 +216,18 @@ fun OfflineMeshScreen(
                 OutlinedTextField(
                     value = reportNote,
                     onValueChange = { reportNote = it },
-                    placeholder = { Text("Water depth, landmark, street name...", color = TextMuted) },
+                    placeholder = { Text("Water depth, landmark, street obstacle...", color = TextMuted, fontSize = 12.sp) },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedTextColor = Color.White,
                         unfocusedTextColor = Color.White,
-                        focusedBorderColor = ActionBlue,
+                        focusedBorderColor = ActionSlateActive,
                         unfocusedBorderColor = DarkBorder,
                         focusedContainerColor = DarkSurfaceElevated,
                         unfocusedContainerColor = DarkSurfaceElevated
-                    )
+                    ),
+                    shape = RoundedCornerShape(6.dp)
                 )
 
                 Button(
@@ -227,75 +237,102 @@ fun OfflineMeshScreen(
                             lat = userLat,
                             lng = userLng,
                             claim = selectedClaim,
-                            details = reportNote
+                            details = reportNote.ifBlank { "Hazard reported in sector" }
                         )
-                        statusFeedback = "Broadcasted hazard report #${packet.packetId} over P2P mesh"
                         reportNote = ""
+                        statusFeedback = "Hazard observation #${packet.packetId} broadcasted to mesh"
                     },
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = ButtonDefaults.buttonColors(containerColor = ActionBlue),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(40.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = ActionSlate),
                     shape = RoundedCornerShape(6.dp)
                 ) {
-                    Text("Broadcast Report Over Mesh", fontWeight = FontWeight.Bold, color = Color.White)
+                    Text("Broadcast Observation to Swarm", fontWeight = FontWeight.Bold, fontSize = 12.sp)
+                }
+
+                if (statusFeedback != null) {
+                    Text(
+                        text = statusFeedback!!,
+                        fontSize = 11.sp,
+                        color = SafeGreen,
+                        fontWeight = FontWeight.SemiBold
+                    )
                 }
             }
         }
 
-        if (statusFeedback != null) {
-            Text(
-                text = statusFeedback!!,
-                fontSize = 12.sp,
-                fontWeight = FontWeight.Bold,
-                color = SafeGreen
-            )
+        // Live Swarm Packets Feed
+        val allPackets = remember(meshState) {
+            meshState.localPackets + meshState.receivedRelayedPackets
         }
 
-        // Swarm Packet Feed
-        Column(modifier = Modifier.weight(1f)) {
+        Column(
+            modifier = Modifier.weight(1f),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
             Text(
-                text = "STORE & FORWARD MESH PACKET FEED (${meshState.localPackets.size + meshState.receivedRelayedPackets.size})",
+                text = "SWARM PACKET INBOX (${allPackets.size})",
                 fontSize = 11.sp,
                 fontWeight = FontWeight.Bold,
-                color = TextSecondary,
-                modifier = Modifier.padding(bottom = 6.dp)
+                color = TextSecondary
             )
 
-            val allPackets = meshState.localPackets + meshState.receivedRelayedPackets
-
-            LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
                 items(allPackets) { packet ->
-                    val badgeColor = when (packet.packetType) {
-                        MeshPacketType.CHECKIN_HELP -> AlertRed
-                        MeshPacketType.CHECKIN_SAFE -> SafeGreen
-                        MeshPacketType.HAZARD_REPORT -> WarningYellow
-                    }
+                    val isSos = packet.packetType == MeshPacketType.CHECKIN_HELP
+                    val isSafe = packet.packetType == MeshPacketType.CHECKIN_SAFE
 
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clip(RoundedCornerShape(8.dp))
+                            .clip(RoundedCornerShape(6.dp))
                             .background(DarkSurfaceElevated)
-                            .border(1.dp, if (packet.packetType == MeshPacketType.CHECKIN_HELP) AlertRed else DarkBorder, RoundedCornerShape(8.dp))
+                            .border(
+                                1.dp,
+                                if (isSos) AlertRed else DarkBorder,
+                                RoundedCornerShape(6.dp)
+                            )
                             .padding(10.dp)
                     ) {
-                        Column(verticalArrangement = Arrangement.spacedBy(3.dp)) {
+                        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.SpaceBetween,
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Text(
-                                    text = "${packet.senderName} (${packet.senderNationality}, Age ${packet.senderAge})",
-                                    fontSize = 13.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    color = Color.White
-                                )
+                                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                                    Box(
+                                        modifier = Modifier
+                                            .clip(RoundedCornerShape(3.dp))
+                                            .background(
+                                                if (isSos) AlertRedSurface else if (isSafe) SafeGreenSurface else ActionSlate
+                                            )
+                                            .padding(horizontal = 4.dp, vertical = 2.dp)
+                                    ) {
+                                        Text(
+                                            text = if (isSos) "SOS" else if (isSafe) "SAFE" else "REPORT",
+                                            fontSize = 9.sp,
+                                            fontWeight = FontWeight.Black,
+                                            color = if (isSos) AlertRed else if (isSafe) SafeGreen else TextPrimary
+                                        )
+                                    }
+
+                                    Text(
+                                        text = "${packet.senderName} (Age ${packet.senderAge}, ${packet.senderNationality})",
+                                        fontSize = 12.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = Color.White
+                                    )
+                                }
 
                                 Text(
-                                    text = if (packet.isRelayed) "Relayed (Hop ${packet.hopCount})" else "Local Origin",
+                                    text = "Hop ${packet.hopCount}/5",
                                     fontSize = 10.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    color = if (packet.isRelayed) ActionBlue else SafeGreen
+                                    color = TextMuted
                                 )
                             }
 
@@ -310,14 +347,15 @@ fun OfflineMeshScreen(
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ) {
                                 Text(
-                                    text = "GPS: ${String.format("%.4f", packet.lat)}, ${String.format("%.4f", packet.lng)}",
+                                    text = "Location: ${String.format(java.util.Locale.US, "%.4f, %.4f", packet.lat, packet.lng)}",
                                     fontSize = 10.sp,
                                     color = TextMuted
                                 )
                                 Text(
-                                    text = "ID: #${packet.packetId}",
+                                    text = if (packet.isRelayed) "Relayed Swarm" else "Direct Broadcast",
                                     fontSize = 10.sp,
-                                    color = TextMuted
+                                    fontWeight = FontWeight.Bold,
+                                    color = if (packet.isRelayed) SafeGreen else TextSecondary
                                 )
                             }
                         }

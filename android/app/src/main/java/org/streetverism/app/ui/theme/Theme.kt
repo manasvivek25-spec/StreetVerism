@@ -6,8 +6,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
 private val CrisisDarkColorScheme = darkColorScheme(
-    primary = ActionBlue,
-    onPrimary = Color.White,
+    primary = SlatePrimary,
+    onPrimary = DarkBackground,
     secondary = SafeGreen,
     onSecondary = Color.White,
     tertiary = WarningYellow,

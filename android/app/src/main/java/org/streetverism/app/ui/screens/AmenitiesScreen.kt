@@ -36,7 +36,7 @@ fun AmenitiesScreen(
     var selectedType by remember { mutableStateOf<AmenityType?>(null) }
     var searchQuery by remember { mutableStateOf("") }
 
-    // Sorted by distance to current user coordinates
+    // Dynamic distance sorting based on real-time live GPS fix
     val sortedAndFiltered = remember(selectedType, searchQuery, userLat, userLng, amenities) {
         amenities
             .filter { item ->
@@ -57,65 +57,73 @@ fun AmenitiesScreen(
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        // Title
+        // Title Header
         Column {
             Text(
-                text = "Emergency Resource Locator",
-                fontSize = 20.sp,
-                fontWeight = FontWeight.ExtraBold,
-                color = Color.White
+                text = "CRISIS AMENITIES & ESSENTIALS",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Black,
+                color = Color.White,
+                letterSpacing = 0.5.sp
             )
             Text(
-                text = "Verified offline registry: Food, clean water, pharmacies, hospitals, and shelters.",
+                text = "Verified offline emergency supplies within walking distance. Sorted by proximity to live GPS.",
                 fontSize = 12.sp,
                 color = TextSecondary
             )
         }
 
-        // Search Bar
+        // Search Bar (Dark Tactical Slate)
         OutlinedTextField(
             value = searchQuery,
             onValueChange = { searchQuery = it },
-            placeholder = { Text("Search insulin, trauma, water, oxygen...", color = TextMuted) },
+            placeholder = { Text("Search insulin, trauma, clean water, blankets...", color = TextMuted, fontSize = 13.sp) },
             singleLine = true,
             modifier = Modifier.fillMaxWidth(),
             colors = OutlinedTextFieldDefaults.colors(
                 focusedTextColor = Color.White,
                 unfocusedTextColor = Color.White,
-                focusedBorderColor = ActionBlue,
+                focusedBorderColor = ActionSlateActive,
                 unfocusedBorderColor = DarkBorder,
                 focusedContainerColor = DarkSurface,
                 unfocusedContainerColor = DarkSurface
-            )
+            ),
+            shape = RoundedCornerShape(6.dp)
         )
 
-        // Type Filter Chips
+        // Type Filter Chips (Monochrome Slate)
         LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             item {
                 FilterChip(
                     selected = selectedType == null,
                     onClick = { selectedType = null },
-                    label = { Text("All (${amenities.size})") },
+                    label = { Text("All Resources (${amenities.size})", fontSize = 11.sp, fontWeight = FontWeight.Bold) },
                     colors = FilterChipDefaults.filterChipColors(
-                        selectedContainerColor = ActionBlue,
-                        selectedLabelColor = Color.White
-                    )
+                        selectedContainerColor = ActionSlateActive,
+                        selectedLabelColor = Color.White,
+                        containerColor = DarkSurface,
+                        labelColor = TextSecondary
+                    ),
+                    shape = RoundedCornerShape(6.dp)
                 )
             }
             items(AmenityType.values()) { type ->
                 FilterChip(
                     selected = selectedType == type,
                     onClick = { selectedType = type },
-                    label = { Text("${type.icon} ${type.label}") },
+                    label = { Text("[${type.code}] ${type.label}", fontSize = 11.sp, fontWeight = FontWeight.Bold) },
                     colors = FilterChipDefaults.filterChipColors(
-                        selectedContainerColor = ActionBlue,
-                        selectedLabelColor = Color.White
-                    )
+                        selectedContainerColor = ActionSlateActive,
+                        selectedLabelColor = Color.White,
+                        containerColor = DarkSurface,
+                        labelColor = TextSecondary
+                    ),
+                    shape = RoundedCornerShape(6.dp)
                 )
             }
         }
 
-        // Amenities List
+        // Amenities List (Sorted live by proximity)
         LazyColumn(
             modifier = Modifier.weight(1f),
             verticalArrangement = Arrangement.spacedBy(10.dp)
@@ -128,12 +136,13 @@ fun AmenitiesScreen(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clip(RoundedCornerShape(12.dp))
+                        .clip(RoundedCornerShape(8.dp))
                         .background(DarkSurface)
-                        .border(1.dp, DarkBorder, RoundedCornerShape(12.dp))
+                        .border(1.dp, DarkBorder, RoundedCornerShape(8.dp))
+                        .clickable { onNavigateToAmenityOnMap(item) }
                         .padding(14.dp)
                 ) {
-                    Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween,
@@ -141,7 +150,14 @@ fun AmenitiesScreen(
                         ) {
                             Column(modifier = Modifier.weight(1f)) {
                                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                                    Text(item.type.icon, fontSize = 18.sp)
+                                    Box(
+                                        modifier = Modifier
+                                            .clip(RoundedCornerShape(3.dp))
+                                            .background(ActionSlate)
+                                            .padding(horizontal = 5.dp, vertical = 2.dp)
+                                    ) {
+                                        Text(item.type.code, fontSize = 9.sp, fontWeight = FontWeight.Black, color = Color.White)
+                                    }
                                     Text(
                                         text = item.name,
                                         fontSize = 15.sp,
@@ -153,23 +169,22 @@ fun AmenitiesScreen(
                                     text = item.address,
                                     fontSize = 12.sp,
                                     color = TextSecondary,
-                                    modifier = Modifier.padding(top = 2.dp)
+                                    modifier = Modifier.padding(top = 3.dp)
                                 )
                             }
 
-                            // Distance Badge
+                            // Live Distance Badge
                             Column(horizontalAlignment = Alignment.End) {
                                 Text(
-                                    text = if (distMeters < 1000) "${distMeters.toInt()}m" else "${String.format("%.1f", distMeters / 1000)}km",
-                                    fontSize = 15.sp,
+                                    text = if (distMeters < 1000) "${distMeters.toInt()}m" else "${String.format(java.util.Locale.US, "%.1f", distMeters / 1000)}km",
+                                    fontSize = 16.sp,
                                     fontWeight = FontWeight.ExtraBold,
                                     color = SafeGreen
                                 )
                                 Text(
-                                    text = "Head $compass (~${walkMins}m)",
+                                    text = "Head $compass · ~${walkMins}m",
                                     fontSize = 11.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    color = ActionBlue
+                                    color = TextMuted
                                 )
                             }
                         }
@@ -184,7 +199,7 @@ fun AmenitiesScreen(
                             )
                         }
 
-                        HorizontalDivider(color = DarkBorder, thickness = 1.dp, modifier = Modifier.padding(vertical = 2.dp))
+                        HorizontalDivider(color = DarkBorder, thickness = 1.dp)
 
                         Row(
                             modifier = Modifier.fillMaxWidth(),
@@ -192,8 +207,8 @@ fun AmenitiesScreen(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
-                                text = if (item.is24x7) "● 24x7 OPEN" else "● LIMITED HOURS",
-                                fontSize = 11.sp,
+                                text = if (item.is24x7) "24x7 OPEN" else "LIMITED HOURS",
+                                fontSize = 10.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = if (item.is24x7) SafeGreen else CautionOrange
                             )
@@ -209,17 +224,17 @@ fun AmenitiesScreen(
                                     },
                                     contentPadding = PaddingValues(horizontal = 8.dp, vertical = 2.dp)
                                 ) {
-                                    Text("📞 Call", fontSize = 12.sp, color = ActionBlue, fontWeight = FontWeight.Bold)
+                                    Text("Dial ${item.contactNumber.take(12)}", fontSize = 11.sp, color = TextPrimary, fontWeight = FontWeight.Bold)
                                 }
 
-                                // Show on crisis map button
+                                // Route button
                                 Button(
                                     onClick = { onNavigateToAmenityOnMap(item) },
-                                    colors = ButtonDefaults.buttonColors(containerColor = ActionBlue),
-                                    shape = RoundedCornerShape(6.dp),
-                                    contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp)
+                                    colors = ButtonDefaults.buttonColors(containerColor = ActionSlate),
+                                    shape = RoundedCornerShape(4.dp),
+                                    contentPadding = PaddingValues(horizontal = 10.dp, vertical = 2.dp)
                                 ) {
-                                    Text("Compass 🧭", fontSize = 12.sp, color = Color.White, fontWeight = FontWeight.Bold)
+                                    Text("Route Path ➔", fontSize = 11.sp, color = Color.White, fontWeight = FontWeight.Bold)
                                 }
                             }
                         }

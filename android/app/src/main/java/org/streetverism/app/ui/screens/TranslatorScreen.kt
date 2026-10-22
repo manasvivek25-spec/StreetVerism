@@ -34,24 +34,24 @@ fun TranslatorScreen(
     var fullScreenPhrase by remember { mutableStateOf<TranslationPhrase?>(null) }
 
     val languages = listOf(
-        Pair("ta", "🇮🇳 தமிழ் (Tamil)"),
-        Pair("hi", "🇮🇳 हिन्दी (Hindi)"),
-        Pair("en", "🇬🇧 English"),
-        Pair("de", "🇩🇪 Deutsch"),
-        Pair("fr", "🇫🇷 Français"),
-        Pair("ja", "🇯🇵 日本語"),
-        Pair("es", "🇪🇸 Español")
+        Pair("ta", "Tamil (தமிழ்)"),
+        Pair("hi", "Hindi (हिन्दी)"),
+        Pair("en", "English"),
+        Pair("de", "German (Deutsch)"),
+        Pair("fr", "French (Français)"),
+        Pair("ja", "Japanese (日本語)"),
+        Pair("es", "Spanish (Español)")
     )
 
     val categories = listOf(
-        Pair(null, "All Phrases"),
-        Pair("sos", "🚨 Life SOS"),
-        Pair("medical", "🏥 Medical"),
-        Pair("food_water", "🍲 Water & Food"),
-        Pair("directions", "🧭 Roads & Escape"),
-        Pair("authorities", "🛡️ Civil Defence"),
-        Pair("identity", "🛂 Embassy & ID"),
-        Pair("essentials", "⚡ Essentials")
+        Pair(null, "All"),
+        Pair("sos", "SOS Emergency"),
+        Pair("medical", "Medical & Injury"),
+        Pair("food_water", "Food & Water"),
+        Pair("directions", "Escape & Roads"),
+        Pair("authorities", "Civil Defence"),
+        Pair("identity", "Embassy & ID"),
+        Pair("essentials", "Utilities")
     )
 
     val filteredPhrases = remember(searchQuery, selectedCategory, targetLanguage, phrases) {
@@ -75,30 +75,48 @@ fun TranslatorScreen(
         // Header
         Column {
             Text(
-                text = "Offline Crisis Translator",
-                fontSize = 20.sp,
-                fontWeight = FontWeight.ExtraBold,
-                color = Color.White
+                text = "OFFLINE BILINGUAL TRANSLATOR",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Black,
+                color = Color.White,
+                letterSpacing = 0.5.sp
             )
             Text(
-                text = "100% offline fixed dictionary. Tap any phrase to display full-screen to a local.",
+                text = "Fixed pre-compiled emergency lexicon. Tap any card for full-screen rescuer view.",
                 fontSize = 12.sp,
                 color = TextSecondary
             )
         }
 
-        // Target Language Selector Bar
-        LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            items(languages) { (code, label) ->
-                FilterChip(
-                    selected = targetLanguage == code,
-                    onClick = { targetLanguage = code },
-                    label = { Text(label, fontSize = 12.sp) },
-                    colors = FilterChipDefaults.filterChipColors(
-                        selectedContainerColor = ActionBlue,
-                        selectedLabelColor = Color.White
-                    )
-                )
+        // Language Selector Row (Tactical Slate)
+        Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+            Text(
+                text = "TRANSLATE INTO:",
+                fontSize = 10.sp,
+                fontWeight = FontWeight.Bold,
+                color = TextMuted,
+                letterSpacing = 1.sp
+            )
+
+            LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                items(languages) { (code, label) ->
+                    val isSelected = targetLanguage == code
+                    Box(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(6.dp))
+                            .background(if (isSelected) ActionSlateActive else DarkSurface)
+                            .border(1.dp, if (isSelected) Color.White else DarkBorder, RoundedCornerShape(6.dp))
+                            .clickable { targetLanguage = code }
+                            .padding(horizontal = 10.dp, vertical = 6.dp)
+                    ) {
+                        Text(
+                            text = label,
+                            fontSize = 11.sp,
+                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
+                            color = if (isSelected) Color.White else TextSecondary
+                        )
+                    }
+                }
             }
         }
 
@@ -106,41 +124,39 @@ fun TranslatorScreen(
         OutlinedTextField(
             value = searchQuery,
             onValueChange = { searchQuery = it },
-            placeholder = { Text("Search symptom, need water, trapped, road...", color = TextMuted) },
+            placeholder = { Text("Search English phrase or phonetics...", color = TextMuted, fontSize = 13.sp) },
             singleLine = true,
             modifier = Modifier.fillMaxWidth(),
             colors = OutlinedTextFieldDefaults.colors(
                 focusedTextColor = Color.White,
                 unfocusedTextColor = Color.White,
-                focusedBorderColor = ActionBlue,
+                focusedBorderColor = ActionSlateActive,
                 unfocusedBorderColor = DarkBorder,
                 focusedContainerColor = DarkSurface,
                 unfocusedContainerColor = DarkSurface
-            )
+            ),
+            shape = RoundedCornerShape(6.dp)
         )
 
-        // Category Pills
-        LazyRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-            items(categories) { (catId, catLabel) ->
-                val isSelected = selectedCategory == catId
-                Box(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(16.dp))
-                        .background(if (isSelected) ActionBlue else DarkSurfaceElevated)
-                        .clickable { selectedCategory = catId }
-                        .padding(horizontal = 12.dp, vertical = 6.dp)
-                ) {
-                    Text(
-                        text = catLabel,
-                        fontSize = 12.sp,
-                        fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
-                        color = if (isSelected) Color.White else TextSecondary
-                    )
-                }
+        // Category Filter Chips
+        LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            items(categories) { (catKey, catLabel) ->
+                FilterChip(
+                    selected = selectedCategory == catKey,
+                    onClick = { selectedCategory = catKey },
+                    label = { Text(catLabel, fontSize = 11.sp, fontWeight = FontWeight.Bold) },
+                    colors = FilterChipDefaults.filterChipColors(
+                        selectedContainerColor = ActionSlateActive,
+                        selectedLabelColor = Color.White,
+                        containerColor = DarkSurface,
+                        labelColor = TextSecondary
+                    ),
+                    shape = RoundedCornerShape(6.dp)
+                )
             }
         }
 
-        // Phrase List
+        // Phrases List
         LazyColumn(
             modifier = Modifier.weight(1f),
             verticalArrangement = Arrangement.spacedBy(10.dp)
@@ -151,56 +167,64 @@ fun TranslatorScreen(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clip(RoundedCornerShape(12.dp))
+                        .clip(RoundedCornerShape(8.dp))
                         .background(DarkSurface)
-                        .border(1.dp, DarkBorder, RoundedCornerShape(12.dp))
+                        .border(1.dp, DarkBorder, RoundedCornerShape(8.dp))
                         .clickable { fullScreenPhrase = phrase }
                         .padding(14.dp)
                 ) {
                     Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                        // English Original
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = phrase.category.uppercase(),
+                                fontSize = 10.sp,
+                                fontWeight = FontWeight.Black,
+                                color = TextMuted,
+                                letterSpacing = 1.sp
+                            )
+                            Text(
+                                text = "TAP TO EXPAND ➔",
+                                fontSize = 10.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = SafeGreen
+                            )
+                        }
+
+                        // Local Script (High contrast)
                         Text(
-                            text = phrase.english,
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.SemiBold,
+                            text = translation.text,
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.ExtraBold,
                             color = Color.White
                         )
 
-                        // Target Native Translation
-                        Text(
-                            text = translation.text,
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = ActionBlue
-                        )
-
-                        // Phonetic pronunciation guide
+                        // Phonetic pronunciation
                         if (translation.phonetic.isNotBlank() && translation.phonetic != translation.text) {
                             Text(
-                                text = "🗣️ Pronounce: \"${translation.phonetic}\"",
+                                text = "Pronunciation: \"${translation.phonetic}\"",
                                 fontSize = 12.sp,
-                                color = WarningYellow
+                                color = WarningYellow,
+                                fontWeight = FontWeight.Medium
                             )
                         }
 
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.End
-                        ) {
-                            Text(
-                                text = "Tap for Fullscreen Emergency Card ➔",
-                                fontSize = 11.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = TextMuted
-                            )
-                        }
+                        // English meaning
+                        Text(
+                            text = phrase.english,
+                            fontSize = 13.sp,
+                            color = TextSecondary
+                        )
                     }
                 }
             }
         }
     }
 
-    // --- FULLSCREEN EMERGENCY FLASHCARD MODAL ---
+    // Fullscreen Rescuer Flashcard Mode
     if (fullScreenPhrase != null) {
         val phrase = fullScreenPhrase!!
         val translation = phrase.resolve(targetLanguage)
@@ -212,7 +236,7 @@ fun TranslatorScreen(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color.Black)
+                    .background(Color(0xFF090A0C))
                     .padding(24.dp)
             ) {
                 Column(
@@ -227,30 +251,33 @@ fun TranslatorScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "EMERGENCY PHRASE CARD",
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = AlertRed
+                            text = "EMERGENCY BILINGUAL CARD",
+                            fontSize = 11.sp,
+                            fontWeight = FontWeight.Black,
+                            color = AlertRed,
+                            letterSpacing = 1.sp
                         )
 
                         Button(
                             onClick = { fullScreenPhrase = null },
-                            colors = ButtonDefaults.buttonColors(containerColor = DarkSurfaceElevated)
+                            colors = ButtonDefaults.buttonColors(containerColor = ActionSlate),
+                            shape = RoundedCornerShape(4.dp)
                         ) {
-                            Text("✕ Close", color = Color.White)
+                            Text("CLOSE", color = Color.White, fontSize = 11.sp, fontWeight = FontWeight.Bold)
                         }
                     }
 
-                    // Main Giant Display (Show to local first responder)
+                    // Main Display
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.spacedBy(20.dp)
                     ) {
                         Text(
-                            text = "SHOW THIS SCREEN TO RESCUER / CITIZEN:",
+                            text = "SHOW THIS DISPLAY TO FIRST RESPONDERS / LOCALS:",
                             fontSize = 11.sp,
                             color = TextMuted,
-                            textAlign = TextAlign.Center
+                            textAlign = TextAlign.Center,
+                            letterSpacing = 1.sp
                         )
 
                         Text(
@@ -259,13 +286,13 @@ fun TranslatorScreen(
                             fontWeight = FontWeight.Black,
                             color = Color.White,
                             textAlign = TextAlign.Center,
-                            lineHeight = 42.sp
+                            lineHeight = 44.sp
                         )
 
                         if (translation.phonetic.isNotBlank() && translation.phonetic != translation.text) {
                             Text(
-                                text = "🗣️ Phonetic: \"${translation.phonetic}\"",
-                                fontSize = 18.sp,
+                                text = "Phonetic: \"${translation.phonetic}\"",
+                                fontSize = 17.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = WarningYellow,
                                 textAlign = TextAlign.Center
@@ -282,11 +309,10 @@ fun TranslatorScreen(
                         )
                     }
 
-                    // Bottom instruction
                     Text(
-                        text = "High Contrast Mode · 100% Offline · No Data Required",
-                        fontSize = 12.sp,
-                        color = SafeGreen
+                        text = "100% Offline · Zero Network Required",
+                        fontSize = 11.sp,
+                        color = TextMuted
                     )
                 }
             }

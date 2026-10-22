@@ -33,12 +33,12 @@ import org.streetverism.app.ui.components.IntuitiveCrisisMap
 import org.streetverism.app.ui.screens.*
 import org.streetverism.app.ui.theme.*
 
-enum class AppTab(val label: String, val icon: String) {
-    MAP("Crisis Map", "🗺️"),
-    AMENITIES("Amenities", "🍲"),
-    TRANSLATOR("Translator", "🗣️"),
-    SAFETY("First Aid", "🩹"),
-    MESH("P2P Mesh", "📡")
+enum class AppTab(val label: String, val tag: String) {
+    MAP("Crisis Map", "MAP"),
+    AMENITIES("Amenities", "AID"),
+    TRANSLATOR("Translator", "LANG"),
+    SAFETY("First Aid", "CARE"),
+    MESH("P2P Mesh", "MESH")
 }
 
 class MainActivity : ComponentActivity() {
@@ -141,12 +141,12 @@ fun MainAppContainer(
                     ) {
                         Box(
                             modifier = Modifier
-                                .size(32.dp)
-                                .clip(RoundedCornerShape(8.dp))
-                                .background(ActionBlue),
+                                .size(28.dp)
+                                .clip(RoundedCornerShape(6.dp))
+                                .background(ActionSlate),
                             contentAlignment = Alignment.Center
                         ) {
-                            Text("S", color = Color.White, fontWeight = FontWeight.Black, fontSize = 16.sp)
+                            Text("SV", color = Color.White, fontWeight = FontWeight.Black, fontSize = 12.sp)
                         }
 
                         Column {
@@ -159,15 +159,15 @@ fun MainAppContainer(
                                 )
                                 Box(
                                     modifier = Modifier
-                                        .clip(RoundedCornerShape(4.dp))
-                                        .background(if (gpsState.isLive) Color(0x3510B981) else Color(0x353B82F6))
+                                        .clip(RoundedCornerShape(3.dp))
+                                        .background(if (gpsState.isLive) SafeGreenSurface else ActionSlate)
                                         .padding(horizontal = 4.dp, vertical = 2.dp)
                                 ) {
                                     Text(
                                         text = if (gpsState.isLive) "GPS LIVE" else "OFFLINE",
                                         fontSize = 8.sp,
-                                        fontWeight = FontWeight.Bold,
-                                        color = if (gpsState.isLive) SafeGreen else ActionBlue
+                                        fontWeight = FontWeight.Black,
+                                        color = if (gpsState.isLive) SafeGreen else Color.White
                                     )
                                 }
                             }
@@ -183,12 +183,12 @@ fun MainAppContainer(
                     // Live GPS Status Pill
                     Box(
                         modifier = Modifier
-                            .clip(RoundedCornerShape(16.dp))
+                            .clip(RoundedCornerShape(4.dp))
                             .background(DarkSurfaceElevated)
                             .border(
                                 1.dp,
                                 if (gpsState.isLive) SafeGreen else if (!gpsState.hasPermission) AlertRed else CautionOrange,
-                                RoundedCornerShape(16.dp)
+                                RoundedCornerShape(4.dp)
                             )
                             .clickable {
                                 if (!gpsState.hasPermission) {
@@ -204,19 +204,24 @@ fun MainAppContainer(
                             }
                             .padding(horizontal = 8.dp, vertical = 4.dp)
                     ) {
-                        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                            Text(text = if (gpsState.isLive) "🛰️" else "📍", fontSize = 11.sp)
+                        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(5.dp)) {
+                            Box(
+                                modifier = Modifier
+                                    .size(6.dp)
+                                    .clip(CircleShape)
+                                    .background(if (gpsState.isLive) SafeGreen else if (!gpsState.hasPermission) AlertRed else CautionOrange)
+                            )
                             Text(
                                 text = if (!gpsState.hasPermission) {
                                     "Allow GPS"
                                 } else if (!gpsState.isGpsEnabled) {
                                     "Enable GPS"
                                 } else if (gpsState.isLive) {
-                                    "±${gpsState.accuracy.toInt()}m"
+                                    "GPS ±${gpsState.accuracy.toInt()}m"
                                 } else {
                                     "Acquiring"
                                 },
-                                fontSize = 11.sp,
+                                fontSize = 10.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = if (gpsState.isLive) SafeGreen else if (!gpsState.hasPermission) AlertRed else CautionOrange
                             )
@@ -225,25 +230,22 @@ fun MainAppContainer(
 
                     Spacer(modifier = Modifier.width(6.dp))
 
-                    // Profile button / avatar
+                    // Profile button
                     Box(
                         modifier = Modifier
                             .padding(end = 12.dp)
-                            .clip(RoundedCornerShape(16.dp))
+                            .clip(RoundedCornerShape(4.dp))
                             .background(DarkSurfaceElevated)
-                            .border(1.dp, if (userProfile?.isVulnerable() == true) AlertRed else ActionBlue, RoundedCornerShape(16.dp))
+                            .border(1.dp, if (userProfile?.isVulnerable() == true) AlertRed else DarkBorder, RoundedCornerShape(4.dp))
                             .clickable { showProfileModal = true }
                             .padding(horizontal = 8.dp, vertical = 4.dp)
                     ) {
-                        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                            Text(text = "👤", fontSize = 11.sp)
-                            Text(
-                                text = userProfile?.name?.take(8) ?: "Profile",
-                                fontSize = 11.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = Color.White
-                            )
-                        }
+                        Text(
+                            text = "PROFILE: ${userProfile?.name?.take(8) ?: "SETUP"}",
+                            fontSize = 10.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White
+                        )
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -260,12 +262,27 @@ fun MainAppContainer(
                     NavigationBarItem(
                         selected = currentTab == tab,
                         onClick = { currentTab = tab },
-                        icon = { Text(tab.icon, fontSize = 18.sp) },
-                        label = { Text(tab.label, fontSize = 11.sp, fontWeight = if (currentTab == tab) FontWeight.Bold else FontWeight.Normal) },
+                        icon = {
+                            Box(
+                                modifier = Modifier
+                                    .size(24.dp)
+                                    .clip(RoundedCornerShape(4.dp))
+                                    .background(if (currentTab == tab) ActionSlateActive else DarkSurfaceElevated),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = tab.tag,
+                                    fontSize = 8.sp,
+                                    fontWeight = FontWeight.Black,
+                                    color = if (currentTab == tab) Color.White else TextMuted
+                                )
+                            }
+                        },
+                        label = { Text(tab.label, fontSize = 10.sp, fontWeight = if (currentTab == tab) FontWeight.Bold else FontWeight.Normal) },
                         colors = NavigationBarItemDefaults.colors(
-                            selectedIconColor = ActionBlue,
+                            selectedIconColor = Color.White,
                             selectedTextColor = Color.White,
-                            indicatorColor = DarkSurfaceElevated,
+                            indicatorColor = ActionSlate,
                             unselectedTextColor = TextMuted
                         )
                     )
@@ -322,7 +339,7 @@ fun MainAppContainer(
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(Color(0xE6090D16))
+                        .background(Color(0xF0090A0C))
                 ) {
                     ProfileScreen(
                         currentProfile = userProfile,

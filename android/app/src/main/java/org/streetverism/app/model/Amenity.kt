@@ -2,12 +2,12 @@ package org.streetverism.app.model
 
 import kotlin.math.*
 
-enum class AmenityType(val label: String, val icon: String, val markerColorHex: String) {
-    HOSPITAL("Hospital / Trauma", "🏥", "#EF4444"),
-    PHARMACY("Pharmacy / Medicals", "💊", "#10B981"),
-    FOOD_WATER("Food & Clean Water", "🍲", "#3B82F6"),
-    FIRST_AID("First Aid Station", "🩹", "#F59E0B"),
-    SHELTER("Safe Relief Shelter", "🛡️", "#8B5CF6")
+enum class AmenityType(val label: String, val code: String, val markerColorHex: String) {
+    HOSPITAL("Hospital & Trauma Center", "HOSP", "#DC2626"),
+    PHARMACY("Pharmacy & Medical Store", "PHARM", "#16A34A"),
+    FOOD_WATER("Food Supply & Potable Water", "FOOD", "#475569"),
+    FIRST_AID("First Aid & Triage Outpost", "AID", "#D97706"),
+    SHELTER("Emergency Evacuation Shelter", "SAFE", "#CBD5E1")
 }
 
 data class Amenity(

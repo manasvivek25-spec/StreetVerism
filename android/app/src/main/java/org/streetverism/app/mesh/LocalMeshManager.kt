@@ -28,9 +28,9 @@ data class MeshPacket(
 ) {
     fun toSummary(): String {
         val typeBadge = when (packetType) {
-            MeshPacketType.CHECKIN_HELP -> "🚨 RESCUE NEEDED"
-            MeshPacketType.CHECKIN_SAFE -> "✓ REPORTED SAFE"
-            MeshPacketType.HAZARD_REPORT -> "🌊 HAZARD CLAIM"
+            MeshPacketType.CHECKIN_HELP -> "RESCUE NEEDED"
+            MeshPacketType.CHECKIN_SAFE -> "REPORTED SAFE"
+            MeshPacketType.HAZARD_REPORT -> "HAZARD CLAIM"
         }
         return "[$typeBadge] $senderName (Age $senderAge, $senderNationality): $note @ (${String.format("%.4f", lat)}, ${String.format("%.4f", lng)})"
     }
