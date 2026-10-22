@@ -191,14 +191,12 @@ fun AmenitiesScreen(
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Row(horizontalAlignment = Alignment.CenterHorizontally, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                                Text(
-                                    text = if (item.is24x7) "● 24x7 OPEN" else "● LIMITED HOURS",
-                                    fontSize = 11.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    color = if (item.is24x7) SafeGreen else CautionOrange
-                                )
-                            }
+                            Text(
+                                text = if (item.is24x7) "● 24x7 OPEN" else "● LIMITED HOURS",
+                                fontSize = 11.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = if (item.is24x7) SafeGreen else CautionOrange
+                            )
 
                             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                                 // Call facility button
