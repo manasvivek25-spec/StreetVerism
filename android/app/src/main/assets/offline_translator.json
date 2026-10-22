@@ -1,0 +1,271 @@
+{
+  "version": "1.0.0",
+  "disclaimer": "Fixed-coded, 100% offline comprehensive crisis translator. Zero network required. Includes native script and phonetic transliteration.",
+  "languages": [
+    { "code": "en", "name": "English", "flag": "🇬🇧" },
+    { "code": "ta", "name": "தமிழ் (Tamil)", "flag": "🇮🇳" },
+    { "code": "hi", "name": "हिन्दी (Hindi)", "flag": "🇮🇳" },
+    { "code": "de", "name": "Deutsch (German)", "flag": "🇩🇪" },
+    { "code": "fr", "name": "Français (French)", "flag": "🇫🇷" },
+    { "code": "ja", "name": "日本語 (Japanese)", "flag": "🇯🇵" },
+    { "code": "es", "name": "Español (Spanish)", "flag": "🇪🇸" }
+  ],
+  "categories": [
+    { "id": "sos", "label": "🚨 Life SOS & Rescue", "priority": 1 },
+    { "id": "medical", "label": "🏥 Medical & First Aid", "priority": 2 },
+    { "id": "food_water", "label": "🍲 Clean Water & Food", "priority": 3 },
+    { "id": "directions", "label": "🧭 Evacuation & Roads", "priority": 4 },
+    { "id": "authorities", "label": "🛡️ Police & Civil Defence", "priority": 5 },
+    { "id": "identity", "label": "🛂 Tourist & Embassy Help", "priority": 6 },
+    { "id": "essentials", "label": "⚡ Shelter & Essentials", "priority": 7 }
+  ],
+  "phrases": [
+    {
+      "id": "sos_01",
+      "category": "sos",
+      "en": "HELP! We are trapped here! Please rescue us!",
+      "translations": {
+        "ta": { "text": "உதவி! நாங்கள் இங்கு சிக்கியுள்ளோம்! எங்களைக் காப்பாற்றுங்கள்!", "phonetic": "Udhavi! Naangal ingu sikkiyullom! Engalai kaapaatrungal!" },
+        "hi": { "text": "मदद! हम यहाँ फँस गए हैं! कृपया हमें बचाइए!", "phonetic": "Madad! Hum yahaan phans gaye hain! Kripya hamein bachaiye!" },
+        "de": { "text": "HILFE! Wir sind hier eingeschlossen! Bitte retten Sie uns!", "phonetic": "HIL-feh! Veer zint heer ein-geh-shlos-sen! Bit-teh ret-ten zee oons!" },
+        "fr": { "text": "À L'AIDE! Nous sommes piégés ici! Sauvez-nous s'il vous plaît!", "phonetic": "Ah laid! Noo sohm pee-ay-zhay ee-see! Soh-vay noo seel voo play!" },
+        "ja": { "text": "助けて！ここに閉じ込められています！救助してください！", "phonetic": "Tasukete! Koko ni tojikomerarete imasu! Kyuujo shite kudasai!" },
+        "es": { "text": "¡AYUDA! ¡Estamos atrapados aquí! ¡Por favor rescátennos!", "phonetic": "Ah-yoo-dah! Es-tah-mohs ah-trah-pah-dohs ah-kee! Por fah-vor res-cah-teh-nohs!" }
+      }
+    },
+    {
+      "id": "sos_02",
+      "category": "sos",
+      "en": "Water is rising rapidly inside! We need immediate evacuation!",
+      "translations": {
+        "ta": { "text": "உள்ளே தண்ணீர் வேகமாக உயர்கிறது! உடனடியாக வெளியேற்ற வேண்டும்!", "phonetic": "Ulle thanneer vegamaaga uyarugiradhu! Udanadiyaaga veliyetra vendum!" },
+        "hi": { "text": "अंदर पानी तेजी से बढ़ रहा है! तुरंत निकासी चाहिए!", "phonetic": "Andar paani tezi se badh raha hai! Turant nikaasi chahiye!" },
+        "de": { "text": "Das Wasser steigt drinnen rapide! Wir brauchen sofortige Evakuierung!", "phonetic": "Dahs Vahs-ser shteigt drin-nen rah-pee-deh! Veer brow-khen zoh-for-tee-geh Eh-vah-koo-ee-roong!" },
+        "fr": { "text": "L'eau monte très vite à l'intérieur! Nous devons évacuer d'urgence!", "phonetic": "Loh mohnt tray veet ah lan-tay-ryuhr! Noo duh-vohn ay-vah-kyu-ay door-zhahns!" },
+        "ja": { "text": "水が急激に増水しています！すぐに避難が必要です！", "phonetic": "Mizu ga kyuugeki ni zousui shite imasu! Sugu ni hinan ga hitsuyou desu!" },
+        "es": { "text": "¡El agua está subiendo muy rápido adentro! ¡Necesitamos evacuación inmediata!", "phonetic": "El ah-gwah es-tah soo-byen-doh moo-ee rah-pee-doh ah-den-troh!" }
+      }
+    },
+    {
+      "id": "sos_03",
+      "category": "sos",
+      "en": "Someone is drowning! Throw a rope or life buoy!",
+      "translations": {
+        "ta": { "text": "ஒருவர் நீரில் மூழ்குகிறார்! கயிறு அல்லது மிதவையை வீசுங்கள்!", "phonetic": "Oruvar neeril moozhgugiraar! Kayiru alladhu midhavaiyai veesungal!" },
+        "hi": { "text": "कोई डूब रहा है! रस्सी या लाइफबॉय फेंकिए!", "phonetic": "Koi doob raha hai! Rassi ya life-buoy phenkiye!" },
+        "de": { "text": "Jemand ertrinkt! Werft ein Seil oder einen Rettungsring!", "phonetic": "Yeh-mahnt er-trinkt! Vairft ein Zyle oh-der eye-nen Ret-toongs-ring!" },
+        "fr": { "text": "Quelqu'un se noie! Lancez une corde ou une bouée!", "phonetic": "Kel-kun suh nwah! Lahn-say oon kohrd oo oon boo-ay!" },
+        "ja": { "text": "人が溺れています！ロープか救命具を投げてください！", "phonetic": "Hito ga oborete imasu! Ro-pu ka kyuumeigu wo nagete kudasai!" },
+        "es": { "text": "¡Alguien se está ahogando! ¡Lancen una cuerda o un salvavidas!", "phonetic": "Ahl-gyen seh es-tah ah-oh-gahn-doh! Lahn-sen oo-nah kwer-dah oh oon sahl-vah-vee-dahs!" }
+      }
+    },
+    {
+      "id": "sos_04",
+      "category": "sos",
+      "en": "We have an elderly person and a baby with us.",
+      "translations": {
+        "ta": { "text": "எங்களுடன் ஒரு முதியவரும் ஒரு குழந்தையும் உள்ளனர்.", "phonetic": "Engaludan oru mudhi-yavarum oru kuzhan-thaiyum ullanar." },
+        "hi": { "text": "हमारे साथ एक बुजुर्ग और एक छोटा बच्चा है।", "phonetic": "Hamaare saath ek buzoorg aur ek chhota bachha hai." },
+        "de": { "text": "Wir haben eine ältere Person und ein Baby bei uns.", "phonetic": "Veer hah-ben eye-neh el-teh-reh Per-zohn oont ein Bah-bee bye oons." },
+        "fr": { "text": "Nous avons une personne âgée et un bébé avec nous.", "phonetic": "Noo zah-vohn oon pair-sohn ah-zhay ay oon bay-bay ah-vek noo." },
+        "ja": { "text": "高齢者と赤ちゃんが一緒にいます。", "phonetic": "Koureisha to akachan ga issho ni imasu." },
+        "es": { "text": "Tenemos a un anciano y a un bebé con nosotros.", "phonetic": "Teh-neh-mohs ah oon ahn-syah-noh ee ah oon beh-beh kohn noh-soh-trohs." }
+      }
+    },
+    {
+      "id": "med_01",
+      "category": "medical",
+      "en": "I need urgent medical help! He is bleeding heavily!",
+      "translations": {
+        "ta": { "text": "எனக்கு அவசர மருத்துவ உதவி தேவை! அவருக்கு அதிகமாக ரத்தம் கசிகிறது!", "phonetic": "Enakku avasara maruthuva udhavi thevai! Avarukku adhigamaaga ratham kasigiradhu!" },
+        "hi": { "text": "मुझे तत्काल चिकित्सा सहायता चाहिए! बहुत ज्यादा खून बह रहा है!", "phonetic": "Mujhe tatkaal chikitsa sahaayata chahiye! Bahut zyada khoon beh raha hai!" },
+        "de": { "text": "Ich brauche dringende medizinische Hilfe! Er blutet stark!", "phonetic": "Ikh brow-kheh dring-en-deh meh-dee-tsee-nee-sheh Hil-feh! Air bloo-tet shtark!" },
+        "fr": { "text": "J'ai besoin d'une aide médicale urgente! Il saigne abondamment!", "phonetic": "Zhay buh-zwan doon aid may-dee-kahl oor-zhahnt! Eel sehn ah-bohn-dah-mahn!" },
+        "ja": { "text": "至急医療支援が必要です！大量に出血しています！", "phonetic": "Shikyuu iryou shien ga hitsuyou desu! Tairyou ni shukketsu shite imasu!" },
+        "es": { "text": "¡Necesito ayuda médica urgente! ¡Está sangrando mucho!", "phonetic": "Neh-seh-see-toh ah-yoo-dah meh-dee-kah oor-khen-teh! Es-tah sahn-grahn-doh moo-choh!" }
+      }
+    },
+    {
+      "id": "med_02",
+      "category": "medical",
+      "en": "I cannot breathe properly / I have severe chest pain.",
+      "translations": {
+        "ta": { "text": "என்னால் சரியாக சுவாசிக்க முடியவில்லை / நெஞ்சு வலி கடுமையாக உள்ளது.", "phonetic": "Ennaal sariyaaga suvaasikka mudiyavillai / Nenju vali kadumaiyaaga ulladhu." },
+        "hi": { "text": "मुझे सांस लेने में तकलीफ है / सीने में बहुत तेज दर्द है।", "phonetic": "Mujhe saans lene mein takleef hai / Seene mein bahut tez dard hai." },
+        "de": { "text": "Ich kann kaum atmen / Ich habe starke Brustschmerzen.", "phonetic": "Ikh kahn kowm aht-men / Ikh hah-beh shtar-keh Broost-shmair-tsen." },
+        "fr": { "text": "J'ai du mal à respirer / J'ai une douleur thoracique intense.", "phonetic": "Zhay doo mahl ah res-pee-ray / Zhay oon doo-luhr toh-rah-seek an-tahns." },
+        "ja": { "text": "呼吸が苦しいです／胸がひどく痛みます。", "phonetic": "Kokyuu ga kurushii desu / Mune ga hidoku itamimasu." },
+        "es": { "text": "No puedo respirar bien / Tengo un dolor fuerte en el pecho.", "phonetic": "Noh pweh-doh res-pee-rahr byen / Teng-goh oon doh-lor fwer-teh en el peh-choh." }
+      }
+    },
+    {
+      "id": "med_03",
+      "category": "medical",
+      "en": "A bone is broken / cannot move leg or arm.",
+      "translations": {
+        "ta": { "text": "எலும்பு முறிந்துள்ளது / கால் அல்லது கையை அசைக்க முடியவில்லை.", "phonetic": "Elumbu murindhulladhu / Kaal alladhu kaiyai asaikka mudiyavillai." },
+        "hi": { "text": "हड्डी टूट गई है / पैर या हाथ हिला नहीं पा रहे हैं।", "phonetic": "Haddi toot gayi hai / Pair ya haath hila nahi paa rahe hain." },
+        "de": { "text": "Ein Knochen ist gebrochen / Bein oder Arm lässt sich nicht bewegen.", "phonetic": "Ein Kno-khen ist geh-brokh-en / Byne oh-der Ahrm lesst zikh nikht beh-vay-gen." },
+        "fr": { "text": "Un os est cassé / Impossible de bouger la jambe ou le bras.", "phonetic": "Oon ohs ay kah-say / An-poh-see-bluh duh boo-zhay lah zhahnb oo luh brah." },
+        "ja": { "text": "骨折しています／足や腕を動かせません。", "phonetic": "Kossetsu shite imasu / Ashi ya ude wo ugokasemasen." },
+        "es": { "text": "Hay un hueso roto / No puedo mover la pierna o el brazo.", "phonetic": "Eye oon weh-soh roh-toh / Noh pweh-doh moh-vehr lah pyer-nah oh el brah-soh." }
+      }
+    },
+    {
+      "id": "med_04",
+      "category": "medical",
+      "en": "I need insulin / asthma inhaler / heart medicine.",
+      "translations": {
+        "ta": { "text": "எனக்கு இன்சுலின் / ஆஸ்துமா இன்ஹேலர் / இதய மாத்திரை தேவை.", "phonetic": "Enakku insulin / aasthumaa inhaler / idhaya maathirai thevai." },
+        "hi": { "text": "मुझे इंसुलिन / अस्थमा इनहेलर / दिल की दवा की सख्त जरूरत है।", "phonetic": "Mujhe insulin / asthma inhaler / dil ki dava ki sakht zaroorat hai." },
+        "de": { "text": "Ich brauche dringend Insulin / Asthmaspray / Herzmedikamente.", "phonetic": "Ikh brow-kheh dring-ent In-soo-leen / Ahst-mah-shpray / Hairts-meh-dee-kah-men-teh." },
+        "fr": { "text": "J'ai besoin d'insuline / d'un inhalateur pour l'asthme / de médicaments pour le cœur.", "phonetic": "Zhay buh-zwan dan-soo-leen / doon an-nah-lah-tuhr poor lahsm / duh may-dee-kah-mahn poor luh kuhr." },
+        "ja": { "text": "インスリン／喘息の吸入器／心臓の薬が必要です。", "phonetic": "Insurin / Zensoku no kyuunyuuki / Shinzou no kusuri ga hitsuyou desu." },
+        "es": { "text": "Necesito insulina / inhalador para asma / medicina para el corazón.", "phonetic": "Neh-seh-see-toh een-soo-lee-nah / een-ah-lah-dor pah-rah ahs-mah / meh-dee-see-nah pah-rah el koh-rah-zohn." }
+      }
+    },
+    {
+      "id": "food_01",
+      "category": "food_water",
+      "en": "Where can we find clean drinking water?",
+      "translations": {
+        "ta": { "text": "சுத்தமான குடிநீர் எங்கு கிடைக்கும்?", "phonetic": "Suthamaana kudineer engu kidaikkum?" },
+        "hi": { "text": "पीने का साफ पानी कहाँ मिलेगा?", "phonetic": "Peene ka saaf paani kahaan milega?" },
+        "de": { "text": "Wo gibt es sauberes Trinkwasser?", "phonetic": "Voh geebt es zow-beh-res Trink-vahs-ser?" },
+        "fr": { "text": "Où pouvons-nous trouver de l'eau potable propre?", "phonetic": "Oo poo-vohn noo troo-vay duh loh poh-tah-bluh proh-pruh?" },
+        "ja": { "text": "安全な飲み水はどこで手に入りますか？", "phonetic": "Anzen na nomimizu wa doko de te ni hairimasu ka?" },
+        "es": { "text": "¿Dónde podemos conseguir agua potable limpia?", "phonetic": "Dohn-deh poh-deh-mohs kohn-seh-geer ah-gwah poh-tah-bleh leem-pyah?" }
+      }
+    },
+    {
+      "id": "food_02",
+      "category": "food_water",
+      "en": "Is this water safe to drink without boiling?",
+      "translations": {
+        "ta": { "text": "இந்த தண்ணீரை கொதிக்க வைக்காமல் குடிக்கலாமா?", "phonetic": "Indha thanneerai kodhikka vaikkaamal kudikkalaamaa?" },
+        "hi": { "text": "क्या यह पानी बिना उबाले पीने के लिए सुरक्षित है?", "phonetic": "Kya yeh paani bina ubaale peene ke liye surakshit hai?" },
+        "de": { "text": "Kann man dieses Wasser ohne Abkochen trinken?", "phonetic": "Kahn mahn dee-zes Vahs-ser oh-neh Ahp-kokh-en trink-en?" },
+        "fr": { "text": "Cette eau est-elle potable sans être bouillie?", "phonetic": "Set oh ayt-el poh-tah-bluh sahn zetr boo-yee?" },
+        "ja": { "text": "この水は沸騰させずに飲んでも安全ですか？", "phonetic": "Kono mizu wa futtou sasezu ni nonde mo anzen desu ka?" },
+        "es": { "text": "¿Es seguro beber esta agua sin hervirla?", "phonetic": "Es seh-goo-roh beh-behr es-tah ah-gwah seen ehr-veer-lah?" }
+      }
+    },
+    {
+      "id": "food_03",
+      "category": "food_water",
+      "en": "We have had no food for 24 hours. Do you have emergency rations?",
+      "translations": {
+        "ta": { "text": "நாங்கள் 24 மணி நேரமாக சாப்பிடவில்லை. அவசர உணவு உள்ளதா?", "phonetic": "Naangal irubathi naangu mani neramaaga saapidavillai. Avasara unavu ulladhaa?" },
+        "hi": { "text": "हमने 24 घंटे से कुछ नहीं खाया है। क्या कोई आपातकालीन राशन है?", "phonetic": "Humne chaubees ghante se kuch nahi khaaya hai. Kya koi aapaatkaaleen ration hai?" },
+        "de": { "text": "Wir haben seit 24 Stunden nichts gegessen. Gibt es Notrationen?", "phonetic": "Veer hah-ben zyte veer-oont-tsvahn-tsikh Shtoon-den nikhts geh-gess-en. Geebt es Noht-rah-tsyoh-nen?" },
+        "fr": { "text": "Nous n'avons rien mangé depuis 24 heures. Avez-vous des rations de secours?", "phonetic": "Noo nah-vohn ryang mahn-zhay duh-pwee van-katr uhr. Ah-vay voo day rah-syohn duh suh-koor?" },
+        "ja": { "text": "24時間何も食べていません。非常食はありますか？", "phonetic": "Nijuuyojikan nanimo tabete imasen. Hijoushoku wa arimasu ka?" },
+        "es": { "text": "No hemos comido en 24 horas. ¿Tienen raciones de emergencia?", "phonetic": "Noh eh-mohs koh-mee-doh en veyn-tee-kwah-troh oh-rahs. Tyeh-nen rah-syoh-nes deh eh-mehr-khen-syah?" }
+      }
+    },
+    {
+      "id": "dir_01",
+      "category": "directions",
+      "en": "Which road leads safely to higher ground?",
+      "translations": {
+        "ta": { "text": "உயரமான பகுதிக்கு செல்லும் பாதுகாப்பான சாலை எது?", "phonetic": "Uyaramaana pagudhiku sellum paadhugaapaana saalai edhu?" },
+        "hi": { "text": "ऊँचे और सुरक्षित स्थान की ओर जाने वाला रास्ता कौन सा है?", "phonetic": "Oonche aur surakshit sthaan ki aur jaane waala raasta kaun sa hai?" },
+        "de": { "text": "Welcher Weg führt sicher zu höher gelegenem Gelände?", "phonetic": "Vel-kher Vayg fuehrt zee-kher tsoo hoe-her geh-lay-geh-nem Geh-len-deh?" },
+        "fr": { "text": "Quelle route mène en sécurité vers les hauteurs?", "phonetic": "Kel root men ahn say-koo-ree-tay vair lay oh-tuhr?" },
+        "ja": { "text": "高台へ安全に行ける道はどちらですか？", "phonetic": "Takadai e anzen ni ikeru michi wa dochira desu ka?" },
+        "es": { "text": "¿Qué camino lleva de forma segura hacia terreno alto?", "phonetic": "Keh kah-mee-noh yeh-vah deh for-mah seh-goo-rah ah-syah teh-rreh-noh ahl-toh?" }
+      }
+    },
+    {
+      "id": "dir_02",
+      "category": "directions",
+      "en": "DO NOT GO THAT WAY! The road ahead is flooded and submerged!",
+      "translations": {
+        "ta": { "text": "அந்த வழியில் செல்லாதீர்கள்! முன்னால் உள்ள சாலை வெள்ளத்தில் மூழ்கியுள்ளது!", "phonetic": "Andha vazhiyil sellaadheergal! Munnaal ulla saalai vellathil moozhgi-yulladhu!" },
+        "hi": { "text": "उस रास्ते पर मत जाइए! आगे की सड़क पूरी तरह पानी में डूबी है!", "phonetic": "Us raaste par mat jaaiye! Aage ki sadak poori tarah paani mein doobi hai!" },
+        "de": { "text": "NICHT DORT ENTLANG GEHEN! Die Straße vorne ist komplett überflutet!", "phonetic": "NIKHT DORT ENT-LAHNG GAY-HEN! Dee Shtrah-seh for-neh ist kom-plett ue-ber-floo-tet!" },
+        "fr": { "text": "N'ALLEZ PAS PAR LÀ! La route devant est inondée et submergée!", "phonetic": "NAH-LAY PAH PAHR LAH! Lah root duh-vahn ayt ee-nohn-day ay soob-mair-zhay!" },
+        "ja": { "text": "そちらへ行ってはいけません！前方の道路は冠水しています！", "phonetic": "Sochira e itte wa ikemasen! Zempou no douro wa kansui shite imasu!" },
+        "es": { "text": "¡NO VAYAN POR AHÍ! ¡El camino adelante está totalmente inundado!", "phonetic": "NOH VAH-YAHN POR AH-EE! El kah-mee-noh ah-deh-lahn-teh es-tah toh-tahl-men-teh ee-noon-dah-doh!" }
+      }
+    },
+    {
+      "id": "dir_03",
+      "category": "directions",
+      "en": "Where is the nearest official cyclone / flood relief shelter?",
+      "translations": {
+        "ta": { "text": "அருகிலுள்ள அதிகாரப்பூர்வ புயல் / வெள்ள நிவாரண முகாம் எங்குள்ளது?", "phonetic": "Arugilulla adhigaara-poorva puyal / vella nivaarana mugaam engulladhu?" },
+        "hi": { "text": "सबसे पास का सरकारी चक्रवात / बाढ़ राहत शिविर कहाँ है?", "phonetic": "Sabse paas ka sarkaari chakravat / baadh raahat shivir kahaan hai?" },
+        "de": { "text": "Wo ist die nächste offizielle Notunterkunft für Flutopfer?", "phonetic": "Voh ist dee nekh-steh of-fee-tsyel-leh Noht-oon-ter-koonft fuer Floot-op-fer?" },
+        "fr": { "text": "Où se trouve le refuge d'évacuation officiel le plus proche?", "phonetic": "Oo suh troov luh ruh-foozh day-vah-kyu-ah-syohn oh-fee-syel luh ploo prohsh?" },
+        "ja": { "text": "最も近い公式の台風・洪水避難所はどこですか？", "phonetic": "Mottomo chikai koushiki no taifuu / kouzui hinanjo wa doko desu ka?" },
+        "es": { "text": "¿Dónde está el refugio oficial de evacuación más cercano?", "phonetic": "Dohn-deh es-tah el reh-foo-gyoh oh-fee-syahl deh eh-vah-kwah-syohn mahs sehr-kah-noh?" }
+      }
+    },
+    {
+      "id": "auth_01",
+      "category": "authorities",
+      "en": "Are you police / civil defence rescue officers?",
+      "translations": {
+        "ta": { "text": "நீங்கள் காவல்துறை அல்லது பேரிடர் மீட்புப் படையினரா?", "phonetic": "Neengal kaavalthurai alladhu peridar meetpup padaiyinaraa?" },
+        "hi": { "text": "क्या आप पुलिस या आपदा बचाव दल के अधिकारी हैं?", "phonetic": "Kya aap police ya aapda bachaav dal ke adhikaari hain?" },
+        "de": { "text": "Sind Sie Polizei oder Rettungskräfte des Katastrophenschutzes?", "phonetic": "Zint Zee Poh-lee-tsye oh-der Ret-toongs-kref-teh des Kah-tahs-troh-fen-shoot-tses?" },
+        "fr": { "text": "Êtes-vous de la police ou des sauveteurs de la protection civile?", "phonetic": "Eht-voo duh lah poh-lees oo day soh-vuh-tuhr duh lah proh-tek-syohn see-veel?" },
+        "ja": { "text": "警察または防災救助隊員の方ですか？", "phonetic": "Keisatsu matawa bousai kyuujotaiin no kata desu ka?" },
+        "es": { "text": "¿Son policías o rescatistas de protección civil?", "phonetic": "Sohn poh-lee-see-ahs oh res-kah-tees-tahs deh proh-tek-syohn see-veel?" }
+      }
+    },
+    {
+      "id": "auth_02",
+      "category": "authorities",
+      "en": "DANGER: Fallen electrical power lines ahead. Stay back at least 10 meters!",
+      "translations": {
+        "ta": { "text": "ஆபத்து: முன்னால் மின்கம்பிகள் அறுந்து விழுந்துள்ளன. குறைந்தது 10 மீட்டர் தள்ளி இருங்கள்!", "phonetic": "Aabathu: Munnaal min-kambigal arundhu vizhundhullana. Kuraindhadhu 10 meter thalli irungal!" },
+        "hi": { "text": "खतरा: आगे बिजली का तार टूटा हुआ पड़ा है। कम से कम 10 मीटर दूर रहें!", "phonetic": "Khatra: Aage bijli ka taar toota hua pada hai. Kam se kam 10 meter door rahein!" },
+        "de": { "text": "GEFAHR: Heruntergefallene Hochspannungsleitungen vorne. Mindestens 10 Meter Abstand halten!", "phonetic": "GEH-FAHR: Heh-roon-ter-geh-fahl-leh-neh Hohkh-shpan-noongs-lye-toong-en for-neh. Min-des-tens zehn May-ter Ahp-shtahnt hahl-ten!" },
+        "fr": { "text": "DANGER: Lignes électriques tombées à terre. Gardez au moins 10 mètres de distance!", "phonetic": "DAHN-ZHAY: Leen ay-lek-treek tohm-bay ah tair. Gahr-day oh mwang dees meh-truh duh dees-tahns!" },
+        "ja": { "text": "危険：前方に切断された電線があります。最低10メートル離れてください！", "phonetic": "Kiken: Zempou ni setsudan sareta densen ga arimasu. Saitei juumētoru hanarete kudasai!" },
+        "es": { "text": "PELIGRO: Cables de alta tensión caídos adelante. ¡Manténgase a al menos 10 metros de distancia!", "phonetic": "PEH-LEE-GROH: Kah-bles deh ahl-tah ten-syohn kah-ee-dohs ah-deh-lahn-teh!" }
+      }
+    },
+    {
+      "id": "ident_01",
+      "category": "identity",
+      "en": "I am a foreign tourist. Please help me contact my embassy / family.",
+      "translations": {
+        "ta": { "text": "நான் ஒரு வெளிநாட்டு சுற்றுலாப் பயணி. தூதரகம் / குடும்பத்தைத் தொடர்பு கொள்ள உதவுங்கள்.", "phonetic": "Naan oru velinaattu sutrulaap payani. Thoodharagam / kudumbathai thodarbu kolla udhavungal." },
+        "hi": { "text": "मैं एक विदेशी पर्यटक हूँ। कृपया दूतावास / मेरे परिवार से संपर्क कराने में मदद करें।", "phonetic": "Main ek videshi paryatak hoon. Kripya dootaavaas / mere parivaar se sampark karaane mein madad karein." },
+        "de": { "text": "Ich bin ausländischer Tourist. Bitte helfen Sie mir, meine Botschaft / Familie zu erreichen.", "phonetic": "Ikh bin ows-len-dee-sher Too-reest. Bit-teh hel-fen Zee meer, mye-neh Boht-shahft / Fah-mee-lyeh tsoo air-rye-khen." },
+        "fr": { "text": "Je suis un touriste étranger. Aidez-moi à contacter mon ambassade / ma famille.", "phonetic": "Zhuh swee oon too-reest ay-trahn-zhay. Ay-day mwah ah kohn-tahk-tay mohn ahm-bah-sahd / mah fah-mee." },
+        "ja": { "text": "私は外国人観光客です。大使館／家族に連絡するのを手伝ってください。", "phonetic": "Watashi wa gaikokujin kankoukyaku desu. Taishikan / kazoku ni renraku suru no wo tetsudatte kudasai." },
+        "es": { "text": "Soy un turista extranjero. Por favor ayúdenme a contactar a mi embajada / familia.", "phonetic": "Soy oon too-rees-tah eks-trahn-kheh-roh. Por fah-vor ah-yoo-den-meh ah kohn-tahk-tahr ah mee em-bah-khah-dah / fah-mee-lyah." }
+      }
+    },
+    {
+      "id": "ess_01",
+      "category": "essentials",
+      "en": "Is there a dry blanket and warm clothes available?",
+      "translations": {
+        "ta": { "text": "உலர் கம்பளி மற்றும் சூடான ஆடைகள் கிடைக்குமா?", "phonetic": "Ular kambali matrum soodaana aadaigal kidaikkumaa?" },
+        "hi": { "text": "क्या कोई सूखा कंबल और गर्म कपड़े उपलब्ध हैं?", "phonetic": "Kya koi sookha kambal aur garm kapde uplabdh hain?" },
+        "de": { "text": "Gibt es eine trockene Decke und warme Kleidung?", "phonetic": "Geebt es eye-neh trok-keh-neh Dek-keh oont vahr-meh Klye-doong?" },
+        "fr": { "text": "Y a-t-il une couverture sèche et des vêtements chauds disponibles?", "phonetic": "Ee ah tee-eel oon koo-vair-toor sesh ay day vet-mahn shoh dees-poh-neebl?" },
+        "ja": { "text": "乾いた毛布や暖かい服はありますか？", "phonetic": "Kawaita moufu ya atatakai fuku wa arimasu ka?" },
+        "es": { "text": "¿Hay alguna manta seca y ropa de abrigo disponible?", "phonetic": "Eye ahl-goo-nah mahn-tah seh-kah ee roh-pah deh ah-bree-goh dees-poh-nee-bleh?" }
+      }
+    },
+    {
+      "id": "ess_02",
+      "category": "essentials",
+      "en": "Can I charge my phone for 10 minutes to send an emergency message?",
+      "translations": {
+        "ta": { "text": "அவசர செய்தி அனுப்ப 10 நிமிடம் போனை சார்ஜ் செய்யலாமா?", "phonetic": "Avasara seidhi anuppa pathu nimidam phone-ai charge seyyalaamaa?" },
+        "hi": { "text": "आपातकालीन संदेश भेजने के लिए क्या मैं 10 मिनट फोन चार्ज कर सकता हूँ?", "phonetic": "Aapaatkaaleen sandesh bhejne ke liye kya main 10 minute phone charge kar sakta hoon?" },
+        "de": { "text": "Kann ich mein Handy 10 Minuten laden, um eine Notfallnachricht zu senden?", "phonetic": "Kahn ikh myne Hen-dee zehn Mee-noo-ten lah-den, oom eye-neh Noht-fahl-nakh-rikht tsoo zen-den?" },
+        "fr": { "text": "Puis-je charger mon téléphone 10 minutes pour envoyer un SMS d'urgence?", "phonetic": "Pwee-zhuh shahr-zhay mohn tay-lay-fohn dees mee-noot poor ahn-vwah-yay oon es-em-es door-zhahns?" },
+        "ja": { "text": "緊急連絡をするため、10分間携帯電話を充電させてもらえますか？", "phonetic": "Kinkyuu renraku wo suru tame, juppunkan keitaidenwa wo juuden sasete moraemasu ka?" },
+        "es": { "text": "¿Puedo cargar mi teléfono 10 minutos para enviar un mensaje de emergencia?", "phonetic": "Pweh-doh kahr-gahr mee teh-leh-foh-noh dees mee-noo-tohs pah-rah en-vyahr oon men-sah-kheh deh eh-mehr-khen-syah?" }
+      }
+    }
+  ]
+}

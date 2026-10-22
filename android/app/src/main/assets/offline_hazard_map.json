@@ -1,0 +1,76 @@
+{
+  "version": "1.0.0",
+  "city": "Chennai",
+  "disclaimer": "Pre-packaged offline vector polygon map and H3 cells for zero-network hazard visualization.",
+  "bbox": [80.10, 12.80, 80.40, 13.30],
+  "zones": [
+    {
+      "id": "zone_adyar",
+      "name": "Adyar River Basin & Flood Plain",
+      "status": "official_hazard",
+      "p_hazard": 0.99,
+      "color": "#EF4444",
+      "icon": "🚨",
+      "description": "Acute water inundation up to 1.8 meters along canal bank. Mandatory evacuation ordered.",
+      "center": [13.015, 80.225],
+      "polygon": [
+        [80.210, 13.005],
+        [80.245, 13.005],
+        [80.255, 13.025],
+        [80.230, 13.030],
+        [80.210, 13.005]
+      ]
+    },
+    {
+      "id": "zone_velachery",
+      "name": "Velachery Lowland Depression",
+      "status": "likely_hazard",
+      "p_hazard": 0.84,
+      "color": "#F97316",
+      "icon": "⚠️",
+      "description": "Corroborated multiple crowd reports of 1.2m waterlogging. Lake overflow active.",
+      "center": [12.9815, 80.218],
+      "polygon": [
+        [80.205, 12.970],
+        [80.235, 12.970],
+        [80.235, 12.995],
+        [80.205, 12.995],
+        [80.205, 12.970]
+      ]
+    },
+    {
+      "id": "zone_central_rumor",
+      "name": "Central Chennai Commercial Sector",
+      "status": "unverified",
+      "p_hazard": 0.52,
+      "color": "#EAB308",
+      "icon": "❓",
+      "description": "Unverified social media rumor regarding canal breach. No official corroboration.",
+      "center": [13.055, 80.225],
+      "polygon": [
+        [80.215, 13.045],
+        [80.235, 13.045],
+        [80.235, 13.065],
+        [80.215, 13.065],
+        [80.215, 13.045]
+      ]
+    },
+    {
+      "id": "zone_calm_safe",
+      "name": "Saidapet Elevated Ridge & Safe Refuge Zone",
+      "status": "clear",
+      "p_hazard": 0.08,
+      "color": "#10B981",
+      "icon": "🛡️",
+      "description": "Elevated topography, dry roadways, active power generator, open shelter hub.",
+      "center": [13.021, 80.223],
+      "polygon": [
+        [80.218, 13.018],
+        [80.230, 13.018],
+        [80.230, 13.028],
+        [80.218, 13.028],
+        [80.218, 13.018]
+      ]
+    }
+  ]
+}

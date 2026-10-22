@@ -20,8 +20,9 @@ During localized flash floods, tropical storms, and extreme monsoon inundations,
 
 **StreetVerism** establishes an explainable, probabilistic crisis action layer connecting tourists and emergency coordinators:
 1. **Bayesian Spatial Trust Engine**: Computes posterior hazard probabilities per Uber H3 resolution-8 hexagonal cell on demand, fusing rainfall prior models, crowdsourced reports, and official hazard polygons.
-2. **Tourist Safety Web Companion (`/`)**: A responsive mobile web application providing emergency instructions, transparent translation notices, nearest registered shelters with Google Maps navigation, and rate-limited status check-ins.
-3. **Authority Operations Console (`/console`)**: A unified dispatch interface allowing disaster operators to triage distress check-ins in real time, broadcast verified alerts, and control historical disaster replays.
+2. **Offline-First Android Companion (`android/`)**: A native Kotlin application designed for 100% zero-network survivability during grid collapses. Features a minimal 4-field onboarding profile, age-credibility weighting, calming crisis map with escape azimuth needle, complete offline translator with fullscreen emergency flashcards, survival amenities locator (food, water, pharmacies, 24x7 trauma centers), weather precautions, step-by-step first-aid protocols, and P2P store-and-forward crisis mesh sharing.
+3. **Tourist Safety Web Companion (`/`)**: A responsive mobile web application providing emergency instructions, transparent translation notices, nearest registered shelters with Google Maps navigation, and rate-limited status check-ins.
+4. **Authority Operations Console (`/console`)**: A unified dispatch interface allowing disaster operators to triage distress check-ins in real time, broadcast verified alerts, and control historical disaster replays.
 
 ---
 
@@ -227,6 +228,7 @@ The following roadmap items represent planned production enhancements beyond the
 
 ## 10. Documentation Links
 
+- [Offline-First Android App Guide (docs/ANDROID_APP.md)](docs/ANDROID_APP.md)
 - [Frozen API Specification (docs/API.md)](docs/API.md)
 - [Trust Engine Specification (docs/TRUST_ENGINE.md)](docs/TRUST_ENGINE.md)
 - [Hazard-Aware Safe Routing Specification (docs/ROUTING.md)](docs/ROUTING.md)

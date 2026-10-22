@@ -1,0 +1,196 @@
+{
+  "version": "1.0.0",
+  "disclaimer": "Offline emergency medical and crisis precaution guidelines verified by standard disaster civil defence protocols. Designed for immediate field application without internet connectivity.",
+  "precautions": [
+    {
+      "id": "prec_floods",
+      "crisis_type": "Severe Urban Flooding & Inundation",
+      "severity": "extreme",
+      "color": "#EF4444",
+      "icon": "🌊",
+      "summary": "Rapid water level rise, breached drainage canals, and contaminated floodwaters.",
+      "dos": [
+        "Move to the highest floor or elevated roof structure immediately.",
+        "Turn off the main electrical breaker and LPG gas cylinder valves before water reaches switches.",
+        "Probe water depth and hidden manholes with a sturdy walking stick before taking any step.",
+        "Store drinking water in sealed bottles on top shelves.",
+        "Keep emergency ID, passport, medicines, and phone in double ziplock waterproof bags."
+      ],
+      "donts": [
+        "DO NOT walk into moving floodwater deeper than 6 inches (sweeps adults off balance).",
+        "DO NOT drive a vehicle into submerged underpasses (vehicles float in 12-18 inches).",
+        "DO NOT touch metal railings, lamp posts, or wet walls near electrical meters.",
+        "DO NOT drink standing tap water or floodwater under any circumstances."
+      ]
+    },
+    {
+      "id": "prec_cyclone",
+      "crisis_type": "Gale-Force Cyclone & Flying Debris",
+      "severity": "high",
+      "color": "#F97316",
+      "icon": "🌪️",
+      "summary": "Sustained winds >90 km/h, uprooted trees, detached tin sheets, and structural impacts.",
+      "dos": [
+        "Take shelter in an interior windowless hallway, stairwell, or reinforced bathroom.",
+        "Secure or tape large glass panels and close all heavy curtains to catch flying glass.",
+        "Charge power banks, mobile phones, and emergency flashlights before landfall.",
+        "Keep a battery-operated radio or StreetVerism app ready for civil updates."
+      ],
+      "donts": [
+        "DO NOT go outside during the calm 'eye' of the storm; ferocious winds return suddenly from the reverse direction.",
+        "DO NOT stand near glass windows, sliding doors, or skylights.",
+        "DO NOT park vehicles under large trees, old billboards, or temporary tin roofs."
+      ]
+    },
+    {
+      "id": "prec_electrical",
+      "crisis_type": "Downed Power Lines & Electrocution Hazard",
+      "severity": "extreme",
+      "color": "#EAB308",
+      "icon": "⚡",
+      "summary": "Submerged transformers, snapped high-voltage cables, and charged standing water.",
+      "dos": [
+        "Assume every dangling or submerged wire is live, energized, and lethal.",
+        "Maintain a minimum distance of at least 10 meters (33 feet) from any fallen wire.",
+        "If you feel an electric tingling in your feet, hop away with both feet glued together or shuffle without lifting your feet.",
+        "Report sparking transformers to local civil defence personnel immediately."
+      ],
+      "donts": [
+        "DO NOT touch any person who is in contact with a live electrical current with your bare hands.",
+        "DO NOT walk through standing water that has fallen cables touching it anywhere within 50 meters.",
+        "DO NOT use corded electrical equipment or plug in wet phone chargers."
+      ]
+    },
+    {
+      "id": "prec_sanitation",
+      "crisis_type": "Water Contamination & Disease Prevention",
+      "severity": "medium",
+      "color": "#10B981",
+      "icon": "🛡️",
+      "summary": "Sewage overflow, leptospirosis, cholera, and vector-borne infection risks.",
+      "dos": [
+        "Boil all water vigorously for at least 3 minutes before drinking or cooking.",
+        "Use chlorine purification tablets (1 tablet per 20 liters) if boiling is impossible.",
+        "Wash feet and hands thoroughly with soap or antiseptic Dettol after any floodwater contact.",
+        "Wear enclosed waterproof footwear or wrap plastic over shoes if forced to wade."
+      ],
+      "donts": [
+        "DO NOT eat open food or fruits that came in contact with floodwater.",
+        "DO NOT allow children to play or swim in floodwater.",
+        "DO NOT ignore minor cuts or abrasions; disinfect and bandage them immediately to prevent leptospirosis."
+      ]
+    }
+  ],
+  "first_aid": [
+    {
+      "id": "fa_cpr",
+      "condition": "Near-Drowning & Respiratory Arrest (Hands-Only CPR)",
+      "urgency": "IMMEDIATE LIFE THREAT",
+      "icon": "🫀",
+      "color": "#EF4444",
+      "steps": [
+        "SAFE RESCUE: Pull victim from water to dry, stable ground. Do not put yourself in danger of drowning.",
+        "CHECK RESPONSE: Tap victim firmly on collarbone and shout loudly: 'Are you OK? Can you hear me?'",
+        "CALL FOR HELP: Shout loudly for emergency medical services (dial 108 or 112).",
+        "CHECK BREATHING: Look at chest and listen for breathing for 10 seconds. If not breathing or only gasping:",
+        "HAND PLACEMENT: Place the heel of one hand in the center of the victim's chest (between nipples). Place other hand on top and interlock fingers.",
+        "CHEST COMPRESSIONS: Lock elbows straight. Push hard and fast at 100 to 120 beats per minute (depth: 5-6 cm). Allow chest to completely rise between each compression.",
+        "CONTINUOUS: Do not stop compressions until the victim coughs/breathes or professional medics arrive."
+      ],
+      "warnings": [
+        "DO NOT waste time trying to drain water from lungs with abdominal pushes; start CPR compressions immediately.",
+        "DO NOT stop chest compressions for more than 10 seconds."
+      ]
+    },
+    {
+      "id": "fa_bleeding",
+      "condition": "Severe Bleeding & Arterial Hemorrhage",
+      "urgency": "CRITICAL",
+      "icon": "🩸",
+      "color": "#DC2626",
+      "steps": [
+        "DIRECT PRESSURE: Press a clean, thick cloth, folded towel, or shirt directly against the bleeding wound.",
+        "CONTINUOUS HOLD: Press firmly with both hands without lifting the cloth for at least 10 unbroken minutes.",
+        "ADD LAYERS: If blood soaks through, DO NOT remove the first cloth (it breaks developing blood clots). Add a second thick cloth over it and press harder.",
+        "ELEVATE: Raise the bleeding limb above heart level (only if no broken bones are suspected).",
+        "TOURNIQUET (LAST RESORT): If bright red blood is spurting from an arm or leg and cannot be stopped, wrap a wide belt or cloth strip 2-3 inches above the wound. Twist with a stick until bleeding stops. Mark exact time on victim's forehead."
+      ],
+      "warnings": [
+        "DO NOT lift the cloth to 'peek' at the wound during the first 10 minutes.",
+        "DO NOT apply a tourniquet over a joint (elbow or knee)."
+      ]
+    },
+    {
+      "id": "fa_fracture",
+      "condition": "Bone Fractures, Dislocations & Severe Sprains",
+      "urgency": "HIGH",
+      "icon": "🦴",
+      "color": "#F59E0B",
+      "steps": [
+        "IMMOBILIZE: Keep the injured limb in the exact position it was found. Do NOT attempt to straighten or force the bone.",
+        "SUPPORT SPLINT: Place rigid materials (thick wooden sticks, rolled newspapers, umbrellas, or folded cardboard) along both sides of the injured limb.",
+        "SECURE SPLINT: Tie strips of cloth or bandages above and below the fracture site. Ensure the joints both above and below the break are stabilized.",
+        "CHECK CIRCULATION: Gently press a fingernail or toenail on the splinted limb. It should turn pink within 2 seconds. If it stays pale or cold, loosen the ties slightly.",
+        "COLD COMPRESS: Apply a cold pack or cloth soaked in cold rainwater wrapped in plastic around the area to reduce swelling."
+      ],
+      "warnings": [
+        "DO NOT attempt to push an exposed broken bone back beneath the skin.",
+        "DO NOT give the victim food or water if surgery might be required shortly."
+      ]
+    },
+    {
+      "id": "fa_hypothermia",
+      "condition": "Hypothermia & Cold Shock Exposure",
+      "urgency": "HIGH",
+      "icon": "🥶",
+      "color": "#3B82F6",
+      "steps": [
+        "DRY ENVIRONMENT: Move victim out of water, rain, and cold winds into a covered shelter immediately.",
+        "STRIP WET CLOTHES: Gently peel off cold, soaked clothing. Do not roughly shake the victim.",
+        "CORE WARMING: Wrap victim in dry blankets, towels, or emergency silver thermal foil. Cover the head (leaves face exposed).",
+        "WARM LIQUIDS: If fully conscious, provide warm sweet tea or warm sugar water in small sips.",
+        "BODY HEAT: Place warm dry cloths or warm water bottles wrapped in cloth against the chest, neck, and armpits."
+      ],
+      "warnings": [
+        "DO NOT rub or massage the victim's arms or legs (can force cold blood into heart and trigger fatal arrest).",
+        "DO NOT give alcohol or coffee."
+      ]
+    },
+    {
+      "id": "fa_electrocution",
+      "condition": "Electrical Shock & High-Voltage Burns",
+      "urgency": "CRITICAL",
+      "icon": "⚡",
+      "color": "#EAB308",
+      "steps": [
+        "DISCONNECT SOURCE: Do NOT touch the victim directly. Turn off circuit breaker or push wire away using a dry non-conductive object (wooden broom handle or dry rope).",
+        "CHECK ABCs: Check Airway, Breathing, and Circulation. Begin CPR immediately if victim is unresponsive.",
+        "COOL BURNS: Gently pour clean bottled water over entry and exit burns for 10-15 minutes.",
+        "COVER BURNS: Cover burned areas with a clean, dry, lint-free cloth or sterile gauze. Keep victim lying down with feet elevated slightly to combat shock."
+      ],
+      "warnings": [
+        "DO NOT touch victim with bare hands or wet materials while they are still in contact with power.",
+        "DO NOT pop burn blisters or apply butter, oil, or ointments."
+      ]
+    },
+    {
+      "id": "fa_snakebite",
+      "condition": "Floodwater Snakebite & Puncture Wounds",
+      "urgency": "URGENT",
+      "icon": "🐍",
+      "color": "#8B5CF6",
+      "steps": [
+        "CALM VICTIM: Keep the person completely calm and still. Panic increases heart rate and pumps venom faster through bloodstream.",
+        "IMMOBILIZE LIMB: Keep the bitten limb completely immobilized and positioned BELOW the level of the heart.",
+        "REMOVE CONSTRICTIONS: Quickly remove rings, bracelets, watches, and tight shoes before tissue swelling begins.",
+        "CLEAN & BANDAGE: Clean wound gently with soap and water. Wrap a firm, broad pressure bandage over bite site and upward along limb (snug like a sprain wrap, not cutting arterial pulse).",
+        "TRANSPORT: Carry or transport victim immediately to government anti-venom hospital (Government Royapettah or Saidapet Multi-Specialty)."
+      ],
+      "warnings": [
+        "DO NOT cut the wound with a blade.",
+        "DO NOT attempt to suck venom with your mouth.",
+        "DO NOT apply ice or tight arterial tourniquets."
+      ]
+    }
+  ]
+}
